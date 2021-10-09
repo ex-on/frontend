@@ -12,7 +12,7 @@ class SplashView extends StatelessWidget {
     const double _logoWidth = 130;
     const double _logoHeight = 35;
 
-    Timer(const Duration(seconds: 5), () => Get.offNamed('/auth'));
+    Timer(const Duration(seconds: 3), () => Get.offNamed('/auth'));
 
     return Scaffold(
         body: Container(
