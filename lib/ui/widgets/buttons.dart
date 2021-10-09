@@ -3,16 +3,14 @@ import 'package:get/get.dart';
 
 class ElevatedActionButton extends StatelessWidget {
   final String buttonText;
-  final Function onPressed;
+  dynamic Function()? onPressed;
   final Color backgroundColor;
-  // final Color textColor;
 
-  const ElevatedActionButton({
+  ElevatedActionButton({
     Key? key,
     required this.buttonText,
-    required this.onPressed,
+    required dynamic Function() this.onPressed,
     required this.backgroundColor,
-    // required this.textColor,
   }) : super(key: key);
 
   @override
@@ -30,7 +28,6 @@ class ElevatedActionButton extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
     );
-
     return ElevatedButton(
       child: Text(
         buttonText,
@@ -42,7 +39,7 @@ class ElevatedActionButton extends StatelessWidget {
               : Colors.black,
         ),
       ),
-      onPressed: onPressed(),
+      onPressed: onPressed,
       style: style,
     );
   }

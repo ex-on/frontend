@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:exon_app/core/controllers/auth_controller.dart';
 import 'package:exon_app/ui/widgets/buttons.dart';
 import 'package:exon_app/constants/colors.dart';
+import 'package:get/get.dart';
 
-class AuthLandingPage extends StatelessWidget {
-  final AuthController authController = AuthController.authControl;
-  AuthLandingPage({Key? key}) : super(key: key);
+const String _title = '환영합니다';
+const String _titleLabel = 'EXON에서 운동을 기록하고\n사람들과 공유해보세요';
+const String _kakaoLoginButtonText = '카카오로 로그인';
+const String _googleLoginButtonText = 'Google로 로그인';
+const String _facebookLoginButtonText = '페이스북으로 로그인';
+const String _registerButtonText = '회원가입';
+const String _loginLabelText = '이미 계정이 있으신가요?';
+const String _loginButtonText = '로그인';
+const Color _registerButtonColor = Color(0xffEEEEEE);
+
+class AuthLandingView extends StatelessWidget {
+  const AuthLandingView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const String _title = '환영합니다';
-    const String _titleLabel = 'EXON에서 운동을 기록하고\n사람들과 공유해보세요';
-    const String _kakaoLoginButtonText = '카카오로 로그인';
-    const String _googleLoginButtonText = 'Google로 로그인';
-    const String _facebookLoginButtonText = '페이스북으로 로그인';
-    const String _registerButtonText = '회원가입';
-    const String _loginLabelText = '이미 계정이 있으신가요?';
-    const String _loginButtonText = '로그인';
-    const Color _registerButtonColor = Color(0xffEEEEEE);
-
     Widget _titleSection = Align(
       alignment: Alignment.center,
       child: Container(
@@ -47,30 +46,29 @@ class AuthLandingPage extends StatelessWidget {
       ),
     );
 
-    Widget _buttonSection = SizedBox(
+    Widget _registerButtonSection = SizedBox(
       height: 260,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedActionButton(
-            buttonText: _kakaoLoginButtonText,
-            backgroundColor: kakaoLoginColor,
-            onPressed: () => authController.jumpToPage(1),
-          ),
+              buttonText: _kakaoLoginButtonText,
+              backgroundColor: kakaoLoginColor,
+              onPressed: () => Get.toNamed('/register')),
           ElevatedActionButton(
             buttonText: _googleLoginButtonText,
             backgroundColor: Colors.white,
-            onPressed: () => authController.jumpToPage(1),
+            onPressed: () => Get.toNamed('/register'),
           ),
           ElevatedActionButton(
             buttonText: _facebookLoginButtonText,
             backgroundColor: facebookLoginColor,
-            onPressed: () => authController.jumpToPage(1),
+            onPressed: () => Get.toNamed('/register'),
           ),
           ElevatedActionButton(
             buttonText: _registerButtonText,
             backgroundColor: _registerButtonColor,
-            onPressed: () => authController.jumpToPage(1),
+            onPressed: () => Get.toNamed('/register'),
           ),
         ],
       ),
@@ -130,15 +128,16 @@ class AuthLandingPage extends StatelessWidget {
         ),
       ],
     );
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _titleSection,
-        _buttonSection,
-        _loginButtonSection,
-        _termsOfUseText,
-      ],
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _titleSection,
+          _registerButtonSection,
+          _loginButtonSection,
+          _termsOfUseText,
+        ],
+      ),
     );
   }
 }

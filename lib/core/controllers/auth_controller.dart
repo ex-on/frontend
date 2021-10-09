@@ -1,12 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  static AuthController authControl = Get.find();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  final PageController _pageController = PageController(initialPage: 0);
+  static AuthController get authControl => Get.find();
 
   final birthDate = DateTime.utc(2001, 01, 01).obs;
   final gender = 0.obs;
@@ -14,10 +9,10 @@ class AuthController extends GetxController {
   final weight = 0.obs;
   final bodyFatPercentage = 0.obs;
   final muscleMass = 0.obs;
+  var page = 0.obs;
 
-  PageController get pageController => _pageController;
-
-  void jumpToPage(int page) {
-    _pageController.jumpToPage(page);
+  void jumpToPage(int pageNum) {
+    page.value = pageNum;
+    update();
   }
 }
