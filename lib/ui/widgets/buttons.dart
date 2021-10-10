@@ -1,12 +1,13 @@
+import 'package:exon_app/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ElevatedActionButton extends StatelessWidget {
+class ElevatedRouteButton extends StatelessWidget {
   final String buttonText;
   dynamic Function()? onPressed;
   final Color backgroundColor;
 
-  ElevatedActionButton({
+  ElevatedRouteButton({
     Key? key,
     required this.buttonText,
     required dynamic Function() this.onPressed,
@@ -75,6 +76,48 @@ class TextActionButton extends StatelessWidget {
           decoration: TextDecoration.underline,
         ),
       ),
+      style: style,
+    );
+  }
+}
+
+class ElevatedActionButton extends StatelessWidget {
+  final String buttonText;
+  final dynamic Function()? onPressed;
+  const ElevatedActionButton({
+    Key? key,
+    required this.buttonText,
+    required dynamic Function() this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle style = ButtonStyle(
+      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.disabled)) {
+            return disabledElevatedActionButtonColor;
+          }
+          return elevatedActionButtonColor; // Use the component's default.
+        },
+      ),
+      minimumSize: MaterialStateProperty.all(const Size(250, 50)),
+      textStyle: MaterialStateProperty.all(const TextStyle(
+        fontSize: 16,
+      )),
+      shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+      )),
+    );
+
+    return ElevatedButton(
+      child: Text(
+        buttonText,
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      onPressed: onPressed,
       style: style,
     );
   }

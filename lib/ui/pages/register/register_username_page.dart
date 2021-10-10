@@ -6,19 +6,18 @@ import 'package:exon_app/ui/widgets/input_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RegisterEmailPage extends GetView<RegisterController> {
-  const RegisterEmailPage({Key? key}) : super(key: key);
+class RegisterUsernamePage extends GetView<RegisterController> {
+  const RegisterUsernamePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const String _titleText = '반갑습니다!';
-    const String _titleLabelText = '회원가입을 위한 이메일을 입력해주세요';
-    const String _textFieldLabelText = '이메일';
+    const String _titleText = '닉네임을 입력해 주세요';
+    const String _textFieldLabelText = '닉네임';
     const String _nextButtonText = '다음';
     final double _height = Get.height;
 
     void _onBackPressed() {
-      Get.back();
+      controller.page--;
     }
 
     void _onNextPressed() {
@@ -51,12 +50,6 @@ class RegisterEmailPage extends GetView<RegisterController> {
                             ),
                           ),
                         ),
-                        Text(
-                          _titleLabelText,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -65,7 +58,7 @@ class RegisterEmailPage extends GetView<RegisterController> {
                   ),
                   InputTextField(
                     label: _textFieldLabelText,
-                    controller: controller.emailController,
+                    controller: controller.usernameController,
                   ),
                 ],
               ),
@@ -73,15 +66,14 @@ class RegisterEmailPage extends GetView<RegisterController> {
           ),
         ),
         Flex(
-          direction: Axis.horizontal,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedActionButton(
-              buttonText: _nextButtonText,
-              onPressed: _onNextPressed,
-            ),
-          ],
-        ),
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedActionButton(
+                buttonText: _nextButtonText,
+                onPressed: _onNextPressed,
+              ),
+            ]),
         const SizedBox(
           height: 50,
         ),

@@ -51,21 +51,21 @@ class AuthLandingView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ElevatedActionButton(
+          ElevatedRouteButton(
               buttonText: _kakaoLoginButtonText,
               backgroundColor: kakaoLoginColor,
               onPressed: () => Get.toNamed('/register')),
-          ElevatedActionButton(
+          ElevatedRouteButton(
             buttonText: _googleLoginButtonText,
             backgroundColor: Colors.white,
             onPressed: () => Get.toNamed('/register'),
           ),
-          ElevatedActionButton(
+          ElevatedRouteButton(
             buttonText: _facebookLoginButtonText,
             backgroundColor: facebookLoginColor,
             onPressed: () => Get.toNamed('/register'),
           ),
-          ElevatedActionButton(
+          ElevatedRouteButton(
             buttonText: _registerButtonText,
             backgroundColor: _registerButtonColor,
             onPressed: () => Get.toNamed('/register'),
@@ -91,12 +91,16 @@ class AuthLandingView extends StatelessWidget {
       ),
     );
 
+    Widget _spacer = const SizedBox(
+      height: 30,
+    );
+
     Widget _termsOfUseText = Wrap(
       direction: Axis.horizontal,
-      crossAxisAlignment: WrapCrossAlignment.end,
+      crossAxisAlignment: WrapCrossAlignment.start,
       children: const [
         Padding(
-          padding: EdgeInsets.only(bottom: 3),
+          padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Text(
             '회원가입 시',
             style: TextStyle(fontSize: 10),
@@ -108,9 +112,9 @@ class AuthLandingView extends StatelessWidget {
           fontSize: 10,
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 5),
+          padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Text(
-            '및',
+            '및sdfsdf',
             style: TextStyle(fontSize: 10),
           ),
         ),
@@ -120,7 +124,7 @@ class AuthLandingView extends StatelessWidget {
           fontSize: 10,
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 3),
+          padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Text(
             '에 동의한 것으로 간주됩니다',
             style: TextStyle(fontSize: 10),
@@ -135,6 +139,7 @@ class AuthLandingView extends StatelessWidget {
           _titleSection,
           _registerButtonSection,
           _loginButtonSection,
+          _spacer,
           _termsOfUseText,
         ],
       ),

@@ -6,19 +6,20 @@ import 'package:exon_app/ui/widgets/input_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RegisterEmailPage extends GetView<RegisterController> {
-  const RegisterEmailPage({Key? key}) : super(key: key);
+class RegisterPasswordPage extends GetView<RegisterController> {
+  const RegisterPasswordPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const String _titleText = '반갑습니다!';
-    const String _titleLabelText = '회원가입을 위한 이메일을 입력해주세요';
-    const String _textFieldLabelText = '이메일';
+    const String _titleText = '비밀번호를 입력해주세요';
+    const String _titleLabelText = '영문자, 숫자, 특수문자를\n각각 하나 이상 포함해야 합니다';
+    const String _passwordInputFieldLabelText = '비밀번호';
+    const String _passwordCheckFieldLabelText = '비밀번호 확인';
     const String _nextButtonText = '다음';
     final double _height = Get.height;
 
     void _onBackPressed() {
-      Get.back();
+      controller.page--;
     }
 
     void _onNextPressed() {
@@ -64,8 +65,15 @@ class RegisterEmailPage extends GetView<RegisterController> {
                     height: 20,
                   ),
                   InputTextField(
-                    label: _textFieldLabelText,
-                    controller: controller.emailController,
+                    label: _passwordInputFieldLabelText,
+                    controller: controller.passwordInputController,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  InputTextField(
+                    label: _passwordCheckFieldLabelText,
+                    controller: controller.passwordCheckController,
                   ),
                 ],
               ),

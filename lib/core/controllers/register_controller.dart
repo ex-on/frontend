@@ -4,12 +4,17 @@ import 'package:get/get.dart';
 class RegisterController extends GetxController {
   static RegisterController registerControl = Get.find();
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordInputController = TextEditingController();
+  TextEditingController passwordCheckController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
-  var page = 0.obs;
+  TextEditingController phoneNumController = TextEditingController();
+  TextEditingController phoneAuthNumController = TextEditingController();
+  RxInt page = 0.obs;
+  RxBool phoneAuthNumSent = false.obs;
+  RxBool phoneAuthenticated = false.obs;
 
   void jumpToPage(int pageNum) {
     page.value = pageNum;
-    update(); 
+    update();
   }
 }
