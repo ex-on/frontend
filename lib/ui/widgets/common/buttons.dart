@@ -122,3 +122,67 @@ class ElevatedActionButton extends StatelessWidget {
     );
   }
 }
+
+class AddExcerciseButton extends StatelessWidget {
+  final dynamic Function()? onPressed;
+  const AddExcerciseButton({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const _buttonText = '운동 추가하기';
+
+    final ButtonStyle _style = OutlinedButton.styleFrom(
+      fixedSize: const Size(165, 45),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+      ),
+      side: const BorderSide(color: Color(0xffffffff), width: 0),
+      padding: const EdgeInsets.all(5),
+    );
+
+    const Gradient _gradient = LinearGradient(
+      begin: Alignment.bottomCenter,
+      end: Alignment.topRight,
+      colors: [Color(0xff7896FF), Color(0xff1A49EE)],
+    );
+
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: _gradient,
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+      ),
+      child: Container(
+        margin: const EdgeInsets.all(2),
+        padding: EdgeInsets.zero,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+        ),
+        child: OutlinedButton(
+            style: _style,
+            onPressed: onPressed,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.only(right: 3.0),
+                  child: Icon(
+                    Icons.add,
+                    size: 14,
+                    color: deepPrimaryColor,
+                  ),
+                ),
+                Text(_buttonText,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: deepPrimaryColor,
+                    ))
+              ],
+            )),
+      ),
+    );
+  }
+}

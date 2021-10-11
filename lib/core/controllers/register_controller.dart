@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegisterController extends GetxController {
-  static RegisterController registerControl = Get.find();
+  static RegisterController registerController = Get.find();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordInputController = TextEditingController();
   TextEditingController passwordCheckController = TextEditingController();
@@ -13,8 +13,18 @@ class RegisterController extends GetxController {
   RxBool phoneAuthNumSent = false.obs;
   RxBool phoneAuthenticated = false.obs;
 
-  void jumpToPage(int pageNum) {
-    page.value = pageNum;
-    update();
-  }
+  // void jumpToPage(int pageNum) {
+  //   page.value = pageNum;
+  //   update();
+  // }
+}
+
+class RegisterPhysicalInfoController extends GetxController {
+  static RegisterPhysicalInfoController registerPhysicalInfoController = Get.find();
+  Rxn<DateTime> birthDate = Rxn<DateTime>();
+  Rxn<int> gender = Rxn<int>();
+  Rxn<double> height = Rxn<double>();
+  Rxn<double> weight = Rxn<double>();
+  Rxn<double> bodyFatPercentage = Rxn<double>();
+  Rxn<double> muscleMass = Rxn<double>();
 }

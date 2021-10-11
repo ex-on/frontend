@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:exon_app/ui/widgets/buttons.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/constants/colors.dart';
 import 'package:get/get.dart';
 
@@ -114,7 +114,7 @@ class AuthLandingView extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Text(
-            '및sdfsdf',
+            '및',
             style: TextStyle(fontSize: 10),
           ),
         ),

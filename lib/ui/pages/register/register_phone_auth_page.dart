@@ -1,8 +1,8 @@
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
-import 'package:exon_app/ui/widgets/buttons.dart';
-import 'package:exon_app/ui/widgets/header.dart';
-import 'package:exon_app/ui/widgets/input_text_field.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
+import 'package:exon_app/ui/widgets/common/header.dart';
+import 'package:exon_app/ui/widgets/common/input_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +18,7 @@ class RegisterPhoneAuthPage extends GetView<RegisterController> {
     const String _checkAuthNumButtonText = '인증번호 확인';
     const String _nextButtonText = '다음';
     final double _height = Get.height;
-
+    
     void _onBackPressed() {
       controller.page++;
       controller.phoneAuthNumSent.value = false;
@@ -34,9 +34,10 @@ class RegisterPhoneAuthPage extends GetView<RegisterController> {
     }
 
     void _onNextPressed() {
-      controller.page++;
+      Get.toNamed('/register_physical_info');
       controller.phoneAuthNumSent.value = false;
       controller.phoneAuthenticated.value = false;
+      controller.page.value = 0;
     }
 
     return Obx(() {
