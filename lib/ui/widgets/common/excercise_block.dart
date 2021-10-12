@@ -21,7 +21,7 @@ class ExcerciseBlock extends StatelessWidget {
 
     List<Widget> _excerciseList = [
       const Divider(
-        color: dividerColor,
+        color: lightBlackColor,
         thickness: 0.3,
       )
     ];

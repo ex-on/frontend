@@ -14,4 +14,5 @@ const deepPrimaryColor = Color(0xff1A49EE);
 const incompleteIconColor = Color(0xff292E3C);
 const completeIconColor = Color(0xff31B06B);
 
-const dividerColor = Color(0xff272D47);
+const lightBlackColor = Color(0xff272D47);
+const lightGrayColor = Color(0xffC4C4C4);

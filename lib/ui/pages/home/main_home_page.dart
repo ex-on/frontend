@@ -10,7 +10,9 @@ import 'package:get/get.dart';
 class MainHomePage extends GetView<HomeController> {
   const MainHomePage({Key? key}) : super(key: key);
 
-  void _onAddPressed() {}
+  void _onAddPressed() {
+    controller.jumpToPage(1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +76,7 @@ class MainHomePage extends GetView<HomeController> {
     );
 
     return DisableGlowListView(
+      shrinkWrap: true,
       children: [
         Column(
           children: [

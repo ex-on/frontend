@@ -44,7 +44,7 @@ class RegisterPhysicalInfoView extends GetView<RegisterPhysicalInfoController> {
     }
 
     void _onStartPressed() {
-      Get.offNamed('/home');
+      Get.offAllNamed('/home');
     }
 
     return Scaffold(
