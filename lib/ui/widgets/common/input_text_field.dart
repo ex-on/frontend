@@ -44,3 +44,49 @@ class InputTextField extends StatelessWidget {
     );
   }
 }
+
+class NumberInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final String? hintText;
+  final int? maxLength;
+  const NumberInputField({
+    Key? key,
+    required this.controller,
+    this.hintText,
+    this.maxLength,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 70,
+      height: 50,
+      child: TextField(
+        textAlign: TextAlign.center,
+        textAlignVertical: TextAlignVertical.bottom,
+        scrollPadding: EdgeInsets.zero,
+        keyboardType: TextInputType.number,
+        controller: controller,
+        style: const TextStyle(
+          fontSize: 22,
+        ),
+        maxLength: maxLength,
+        decoration: InputDecoration(
+          counter: const SizedBox.shrink(),
+          contentPadding: const EdgeInsets.only(bottom: 12),
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            fontSize: 22,
+          ),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(
+              color: Color(0xff777777),
+              width: 1.5,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

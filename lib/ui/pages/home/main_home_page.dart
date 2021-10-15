@@ -1,4 +1,5 @@
 import 'package:exon_app/constants/colors.dart';
+import 'package:exon_app/core/controllers/add_excercise_controller.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
@@ -11,7 +12,8 @@ class MainHomePage extends GetView<HomeController> {
   const MainHomePage({Key? key}) : super(key: key);
 
   void _onAddPressed() {
-    controller.jumpToPage(1);
+    Get.find<AddExcerciseController>().jumpToPage(0);
+    Get.toNamed('/add_excercise');
   }
 
   @override

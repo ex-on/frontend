@@ -1,18 +1,20 @@
 import 'package:exon_app/constants/colors.dart';
-import 'package:exon_app/core/controllers/home_controller.dart';
+import 'package:exon_app/core/controllers/add_excercise_controller.dart';
+import 'package:exon_app/dummy_data.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_text_field.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:exon_app/helpers/transformers.dart';
 
-class AddExcercisePage extends StatelessWidget {
-  const AddExcercisePage({Key? key}) : super(key: key);
+class SelectExcercisePage extends StatelessWidget {
+  const SelectExcercisePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(HomeController());
+    final controller = Get.put(AddExcerciseController());
     const _headerTitle = '운동 추가하기';
     const _searchFieldLabelText = '운동을 검색해보세요';
     const List<String> _targetMuscleList = [
@@ -25,16 +27,7 @@ class AddExcercisePage extends StatelessWidget {
       '종아리',
       '엉덩이'
     ];
-    const Map<String, int> _targetMuscleStrToInt = {
-      '전체': 0,
-      '가슴': 1,
-      '어깨': 2,
-      '팔': 3,
-      '복근': 4,
-      '허벅지': 5,
-      '종아리': 6,
-      '엉덩이': 7,
-    };
+
     const List<String> _excerciseMethodList = [
       '전체',
       '머신',
@@ -44,28 +37,7 @@ class AddExcercisePage extends StatelessWidget {
       '케이블',
       '밴드',
     ];
-    const Map<String, int> _excerciseMethodStrToInt = {
-      '전체': 0,
-      '머신': 1,
-      '덤벨': 2,
-      '바벨': 3,
-      '케틀벨': 4,
-      '케이블': 5,
-      '밴드': 6,
-    };
-    const Map<int, String> _excerciseLevelIntToStr = {
-      0: '난이도 하',
-      1: '난이도 중',
-      2: '난이도 상',
-    };
-    const List<List<dynamic>> _excerciseData = [
-      ['벤치프레스', 1],
-      ['인클라인 벤치프레스', 2],
-      ['머신 체스트프레스', 0],
-      ['덤벨 체스트프레스', 2],
-      ['인클라인 덤벨프레스', 2],
-      ['머신 체스트플라이', 0]
-    ];
+
     const double _targetSelectWidth = 340;
     const double _targetMuscleSelectHeight = 50;
     const double _excerciseMethodSelectHeight = 45;
@@ -73,16 +45,25 @@ class AddExcercisePage extends StatelessWidget {
     const double _excerciseMethodSelectFontSize = 12;
 
     void _onBackPressed() {
-      controller.jumpToPage(0);
+      Get.back();
     }
 
     void _onTargetMusclePressed(String target) {
-      controller.targetMuscleSelectUpdate(_targetMuscleStrToInt[target] ?? 0);
+      controller.targetMuscleSelectUpdate(targetMuscleStrToInt[target] ?? 0);
     }
 
     void _onExcerciseMethodPressed(String method) {
       controller
-          .excerciseMethodSelectUpdate(_excerciseMethodStrToInt[method] ?? 0);
+          .excerciseMethodSelectUpdate(excerciseMethodStrToInt[method] ?? 0);
+    }
+
+    void _onExcerciseBlockPressed(String name) {
+      controller.excerciseSelectUpdate(name);
+      controller.jumpToPage(1);
+    }
+
+    void _onInfoButtonPressed(String name) {
+      Get.toNamed('/excercise_info', arguments: name);
     }
 
     Widget _header = Header(onPressed: _onBackPressed, title: _headerTitle);
@@ -117,7 +98,7 @@ class AddExcercisePage extends StatelessWidget {
                     ),
                     onPressed: () =>
                         _onTargetMusclePressed(_targetMuscleList[(index ~/ 2)]),
-                    child: GetBuilder<HomeController>(
+                    child: GetBuilder<AddExcerciseController>(
                       builder: (_) {
                         return Text(
                           _targetMuscleList[(index ~/ 2)],
@@ -157,7 +138,7 @@ class AddExcercisePage extends StatelessWidget {
                 if (index % 2 != 0) {
                   return horizontalSpacer(5);
                 } else {
-                  return GetBuilder<HomeController>(
+                  return GetBuilder<AddExcerciseController>(
                     builder: (_) {
                       return OutlinedButton(
                         style: OutlinedButton.styleFrom(
@@ -200,47 +181,81 @@ class AddExcercisePage extends StatelessWidget {
       return SizedBox(
         width: 330,
         height: 90,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            Container(
+            const Positioned(
+              left: 0,
               width: 215,
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
-              decoration: const BoxDecoration(
-                color: lightPrimaryColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
+              height: 90,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: lightPrimaryColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                  ),
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -2,
-                    ),
+            ),
+            const Positioned(
+              right: 0,
+              width: 115,
+              height: 90,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: lightGrayColor,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
                   ),
-                  Text(
-                    _excerciseLevelIntToStr[level] ??
-                        _excerciseLevelIntToStr[0]!,
-                    style: const TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-            Container(
-              width: 115,
-              decoration: const BoxDecoration(
-                color: lightGrayColor,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+            Positioned(
+              child: Material(
+                type: MaterialType.transparency,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () => _onExcerciseBlockPressed(name),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        color: Colors.transparent,
+                        width: 215,
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              name,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: -2,
+                              ),
+                            ),
+                            Text(
+                              excerciseLevelIntToStr[level] ??
+                                  excerciseLevelIntToStr[0]!,
+                              style: const TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 115,
+                        height: 90,
+                        alignment: Alignment.bottomRight,
+                        child: IconButton(
+                          icon: const Icon(Icons.help, color: deepPrimaryColor),
+                          onPressed: () => _onInfoButtonPressed(name),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -256,13 +271,15 @@ class AddExcercisePage extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: List.generate(
-              _excerciseData.length * 2 - 1,
+              excerciseNameDummyData.length * 2 - 1,
               (index) {
                 if (index % 2 != 0) {
                   return verticalSpacer(15);
                 } else {
-                  return _excerciseBlock(_excerciseData[index ~/ 2][0],
-                      _excerciseData[index ~/ 2][1]);
+                  return _excerciseBlock(
+                    excerciseNameDummyData[index ~/ 2]['name'],
+                    excerciseNameDummyData[index ~/ 2]['difficulty'],
+                  );
                 }
               },
             ),
