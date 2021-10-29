@@ -1,10 +1,11 @@
-import 'package:exon_app/constants/colors.dart';
+import 'package:exon_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 
 class SplashView extends StatelessWidget {
-  const SplashView({Key? key}) : super(key: key);
+  final bool loading;
+  const SplashView({Key? key, required this.loading}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,9 @@ class SplashView extends StatelessWidget {
     const double _logoWidth = 130;
     const double _logoHeight = 35;
 
-    Timer(const Duration(seconds: 3), () => Get.offNamed('/auth'));
+    if (!loading) {
+      Timer(const Duration(seconds: 3), () => Get.offNamed('/auth'));
+    }
 
     return Scaffold(
         body: Container(

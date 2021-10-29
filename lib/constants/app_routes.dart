@@ -9,7 +9,8 @@ import 'package:get/get.dart';
 class AppRoutes {
   AppRoutes._();
   static final routes = [
-    GetPage(name: '/', page: () => const SplashView()),
+    GetPage(name: '/', page: () => const SplashView(loading: false)),
+    GetPage(name: '/loading', page: () => const SplashView(loading: true)),
     GetPage(name: '/auth', page: () => const AuthLandingView()),
     GetPage(name: '/register', page: () => RegistrationView()),
     GetPage(

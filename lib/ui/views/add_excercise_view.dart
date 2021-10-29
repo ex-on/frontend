@@ -1,4 +1,4 @@
-import 'package:exon_app/constants/colors.dart';
+import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_excercise_controller.dart';
 import 'package:exon_app/ui/pages/add_excercise/add_excercise_details_page.dart';
 import 'package:flutter/material.dart';

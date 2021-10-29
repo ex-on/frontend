@@ -1,6 +1,8 @@
+import 'package:exon_app/core/services/amplify_service.dart';
+import 'package:exon_app/helpers/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/constants/colors.dart';
+import 'package:exon_app/constants/constants.dart';
 import 'package:get/get.dart';
 
 const String _title = '환영합니다';
@@ -58,12 +60,16 @@ class AuthLandingView extends StatelessWidget {
           ElevatedRouteButton(
             buttonText: _googleLoginButtonText,
             backgroundColor: Colors.white,
-            onPressed: () => Get.toNamed('/register'),
+            onPressed: () => UrlLauncher.launchInBrowser(
+              AmplifyService.getSocialLoginUrl('Google'),
+            ),
           ),
           ElevatedRouteButton(
             buttonText: _facebookLoginButtonText,
             backgroundColor: facebookLoginColor,
-            onPressed: () => Get.toNamed('/register'),
+            onPressed: () => UrlLauncher.launchInBrowser(
+              AmplifyService.getSocialLoginUrl('Facebook'),
+            ),
           ),
           ElevatedRouteButton(
             buttonText: _registerButtonText,

@@ -1,4 +1,4 @@
-import 'package:exon_app/constants/colors.dart';
+import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/dummy_data.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
