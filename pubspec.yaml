@@ -29,21 +29,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # amplify_flutter:
-  #   path: /Users/aschung/dev_packages/amplify-flutter/packages/amplify_flutter
-  # amplify_analytics_pinpoint:
-  #   path: /Users/aschung/dev_packages/amplify-flutter/packages/amplify_analytics_pinpoint
-  # amplify_auth_cognito:
-  #   path: /Users/aschung/dev_packages/amplify-flutter/packages/amplify_auth_cognito
   amplify_flutter: '<1.0.0'
+  amplify_api: '<1.0.0'
   amplify_analytics_pinpoint: '<1.0.0'
   amplify_auth_cognito: '<1.0.0'
   get: ^4.3.8
   webview_flutter: ^2.1.2
   url_launcher: ^6.0.12
   uni_links: ^0.5.1
+  kakao_flutter_sdk: ^0.8.2
   amazon_cognito_identity_dart_2: ^1.0.3
   dio: ^4.0.1
+  flutter_svg: ^0.23.0+1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -74,6 +71,11 @@ flutter:
   assets:
     - assets/logo.png
     - assets/benchpress.png
+    - assets/icons/chart.svg
+    - assets/icons/desk.svg
+    - assets/icons/home.svg
+    - assets/icons/star.svg
+    - assets/icons/userCircle.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

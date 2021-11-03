@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
@@ -20,10 +22,11 @@ class AmplifyService {
   static configureAmplify() async {
     final auth = AmplifyAuthCognito(); // Auth 서비스 생성
     final analytics = AmplifyAnalyticsPinpoint(); // Analytics 서비스 생성
+    final api = AmplifyAPI();
     bool _amplifyConfigured = false;
 
     if (!_amplifyConfigured) {
-      Amplify.addPlugins([auth, analytics]);
+      Amplify.addPlugins([auth, analytics, api]);
       try {
         await Amplify.configure(amplifyconfig);
         _amplifyConfigured = true;
@@ -37,7 +40,7 @@ class AmplifyService {
     }
   }
 
-  static Future signUserInWithAuthCode(String authCode) async {
+  static Future getUserAuthToken(String authCode) async {
     var dio = Dio();
     String url = "https://$cognitoPoolUrl.amazoncognito.com/oauth2/token";
 
@@ -53,15 +56,17 @@ class AmplifyService {
         contentType: Headers.formUrlEncodedContentType,
       ),
     );
-
     if (response.statusCode != 200) {
       throw Exception("Received bad status code from Cognito for auth code:" +
           response.statusCode.toString() +
           "; body: " +
           response.data);
     }
+    print(response);
+    return response.data;
+  }
 
-    final tokenData = response.data;
+  static Future signUserInWithAuthToken(Map<String, String> tokenData) async {
     final idToken = CognitoIdToken(tokenData['id_token']);
     final accessToken = CognitoAccessToken(tokenData['access_token']);
     final refreshToken = CognitoRefreshToken(tokenData['refresh_token']);
@@ -70,7 +75,7 @@ class AmplifyService {
 
     final userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
     final user = CognitoUser(null, userPool, signInUserSession: session);
-    print(response);
+    print(session);
     // NOTE: in order to get the email from the list of user attributes, make sure you select email in the list of
     // attributes in Cognito and map it to the email field in the identity provider.
     final attributes = await user.getUserAttributes();
@@ -84,5 +89,25 @@ class AmplifyService {
     print("login successfully.");
     print(user.username);
     return user;
+  }
+
+  static Future signUserInWithKakaoLogin(String accessToken) async {
+    const apiName = 'kakaoLogin';
+    const path = '/user/login';
+    var body =
+        Uint8List.fromList('{"access_token": "$accessToken"}'.codeUnits);
+    try {
+      RestOptions options = RestOptions(
+        apiName: apiName,
+        path: path,
+        body: body,
+      );
+      RestOperation restOperation = Amplify.API.post(restOptions: options);
+      RestResponse response = await restOperation.response;
+      print('POST call succeeded');
+      print(String.fromCharCodes(response.data));
+    } on RestException catch (e) {
+      print('POST call failed: $e');
+    }
   }
 }

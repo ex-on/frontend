@@ -1,4 +1,6 @@
+import 'package:exon_app/core/controllers/kakao_login_controller.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
+import 'package:exon_app/core/services/kakao_service.dart';
 import 'package:exon_app/helpers/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
@@ -16,7 +18,21 @@ const String _loginButtonText = '로그인';
 const Color _registerButtonColor = Color(0xffEEEEEE);
 
 class AuthLandingView extends StatelessWidget {
-  const AuthLandingView({Key? key}) : super(key: key);
+  AuthLandingView({Key? key}) : super(key: key);
+  final controller = Get.put<KakaoLoginController>(KakaoLoginController());
+
+  Future<void> _onKakaoLoginPressed() async {
+    if (controller.isKakaoInstalled) {
+      var token = await KakaoService.loginWithKakaoTalk();
+      print(token.runtimeType);
+      var accessToken = token['access_token']!.toString();
+      AmplifyService.signUserInWithKakaoLogin(accessToken);
+    } else {
+      var token = await KakaoService.loginWithKakao();
+      var accessToken = token['access_token'];
+      AmplifyService.signUserInWithKakaoLogin(accessToken);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +72,7 @@ class AuthLandingView extends StatelessWidget {
           ElevatedRouteButton(
               buttonText: _kakaoLoginButtonText,
               backgroundColor: kakaoLoginColor,
-              onPressed: () => Get.toNamed('/register')),
+              onPressed: _onKakaoLoginPressed),
           ElevatedRouteButton(
             buttonText: _googleLoginButtonText,
             backgroundColor: Colors.white,

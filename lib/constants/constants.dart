@@ -23,3 +23,6 @@ const cognitoClientId = '6mf91uqnj2jj25et5hsrdbg8ur';
 const cognitoPoolId = 'ap-northeast-2_EuYr8s0Rp';
 const cognitoPoolUrl = 'exon.auth.ap-northeast-2';
 const redirectUri = 'exon://home';
+
+//Kakao Login
+const kakaoClientId = '9289c2192aae86a9837cf14e90664ffd';

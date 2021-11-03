@@ -13,13 +13,9 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeController>(
-      builder: (_) {
-        if (_.page < 0 || _.page >= _pages.length) {
-          _.jumpToPage(0);
-        }
-        return Scaffold(backgroundColor: Colors.white, body: _pages[_.page]);
-      },
-    );
+    if (controller.page < 0 || controller.page >= _pages.length) {
+      controller.jumpToPage(0);
+    }
+    return _pages[controller.page];
   }
 }
