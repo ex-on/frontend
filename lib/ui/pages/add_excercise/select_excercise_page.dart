@@ -3,7 +3,7 @@ import 'package:exon_app/core/controllers/add_excercise_controller.dart';
 import 'package:exon_app/dummy_data.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
-import 'package:exon_app/ui/widgets/common/input_text_field.dart';
+import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -271,14 +271,14 @@ class SelectExcercisePage extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: List.generate(
-              excerciseNameDummyData.length * 2 - 1,
+              DummyData.excerciseNameList.length * 2 - 1,
               (index) {
                 if (index % 2 != 0) {
                   return verticalSpacer(15);
                 } else {
                   return _excerciseBlock(
-                    excerciseNameDummyData[index ~/ 2]['name'],
-                    excerciseNameDummyData[index ~/ 2]['difficulty'],
+                    DummyData.excerciseNameList[index ~/ 2]['name'],
+                    DummyData.excerciseNameList[index ~/ 2]['difficulty'],
                   );
                 }
               },

@@ -10,10 +10,11 @@ import 'package:get/get.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kakao_flutter_sdk/link.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   Get.put<RegisterController>(RegisterController());
-  Get.put<RegisterPhysicalInfoController>(RegisterPhysicalInfoController());
+  Get.put<RegisterOptionalInfoController>(RegisterOptionalInfoController());
   Get.put<AddExcerciseController>(AddExcerciseController());
   Get.put<ExcerciseInfoController>(ExcerciseInfoController());
   KakaoContext.clientId = kakaoClientId;
@@ -46,6 +47,15 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     Get.put(DeepLinkController());
     return GetMaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('ko', 'KR'),
+      ],
       key: _scaffoldKey,
       initialRoute: '/',
       locale: const Locale('ko', 'KO'),

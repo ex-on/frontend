@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 const Map<String, int> targetMuscleStrToInt = {
   '전체': 0,
   '가슴': 1,
@@ -50,4 +52,23 @@ const Map<int, String> difficultyIntToString = {
   0: '하급',
   1: '중급',
   2: '상급',
+};
+
+String dateTimeToDisplayString(DateTime? dateTime) {
+  if (dateTime == null) {
+    return '';
+  } else {
+    List<String> yMd = DateFormat('yMd').format(dateTime).split('/');
+    String year = yMd[2];
+    String month = yMd[0];
+    String date = yMd[1];
+    return '$year년 $month월 $date일';
+  }
+}
+
+enum Gender { male, female }
+
+Map<Gender, String> genderToString = {
+  Gender.male: '남성',
+  Gender.female: '여성',
 };

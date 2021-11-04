@@ -14,8 +14,8 @@ class AppRoutes {
     GetPage(name: '/auth', page: () => AuthLandingView()),
     GetPage(name: '/register', page: () => RegistrationView()),
     GetPage(
-        name: '/register_physical_info',
-        page: () => const RegisterPhysicalInfoView()),
+        name: '/register_optional_info',
+        page: () => const RegisterOptionalInfoView()),
     GetPage(name: '/home', page: () => HomeNavigationView()),
     GetPage(name: '/add_excercise', page: () => AddExcerciseView()),
     GetPage(name: '/excercise_info', page: () => const ExcerciseInfoView()),

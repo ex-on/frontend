@@ -96,7 +96,7 @@ class ElevatedActionButton extends StatelessWidget {
       backgroundColor: MaterialStateProperty.resolveWith<Color>(
         (Set<MaterialState> states) {
           if (states.contains(MaterialState.disabled)) {
-            return disabledElevatedActionButtonColor;
+            return deepGrayColor;
           }
           return elevatedActionButtonColor; // Use the component's default.
         },

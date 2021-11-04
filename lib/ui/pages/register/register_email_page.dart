@@ -2,7 +2,7 @@ import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
-import 'package:exon_app/ui/widgets/common/input_text_field.dart';
+import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -21,7 +21,7 @@ class ExcerciseInfoView extends StatelessWidget {
     const double _imageWidthHeight = 250;
     const _image = 'assets/benchpress.png';
 
-    final Map<String, dynamic> _data = excerciseDummyData[_excerciseName] ?? {};
+    final Map<String, dynamic> _data = DummyData.excerciseInfoList[_excerciseName] ?? {};
 
     void _onBackPressed() {
       Get.back();

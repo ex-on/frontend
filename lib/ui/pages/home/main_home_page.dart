@@ -3,10 +3,11 @@ import 'package:exon_app/core/controllers/add_excercise_controller.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/excercise_block.dart';
+import 'package:exon_app/ui/widgets/common/excercise_blocks.dart';
 import 'package:exon_app/ui/widgets/home/time_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:exon_app/dummy_data.dart';
 
 class MainHomePage extends GetView<HomeController> {
   const MainHomePage({Key? key}) : super(key: key);
@@ -20,8 +21,8 @@ class MainHomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     const String _userName = '순호님';
     const String _welcomeText = '운동할 준비 되셨나요?';
-    const String _phraseOfTheDay = '인생의 가장 아름다운 순간은 돌아오지 않는다.';
-    const List<String> _titleTextList = ['가슴 운동', '등 운동', '복근 운동'];
+    const String _phraseOfTheDay = '"인생의 가장 아름다운 순간은 돌아오지 않는다."';
+    const List<String> _titleTextList = ['벤치프레스', '바벨 로우', '행잉 니레이즈'];
     const List<String> _excerciseDurationList = [
       '15분 01초',
       '18분 45초',
@@ -95,10 +96,15 @@ class MainHomePage extends GetView<HomeController> {
             const SizedBox(
               height: 10,
             ),
-            ExcerciseBlock(
-              titleText: _titleTextList[0],
-              excerciseDuration: _excerciseDurationList[0],
-              excerciseDataList: _excerciseDataList,
+            ExcercisePlanBlock(
+              exerciseName: DummyData.dailyExercisePlanList[0]['exercise']
+                  ['name'],
+              targetMuscle: DummyData.dailyExercisePlanList[0]['exercise']
+                  ['target_muscle'],
+              numSets: DummyData.dailyExercisePlanList[0]['num_sets'],
+              exerciseMethod: DummyData.dailyExercisePlanList[0]['exercise']
+                  ['exercise_method'],
+              excercisePlanSetData: _excerciseDataList,
             )
           ],
         ),

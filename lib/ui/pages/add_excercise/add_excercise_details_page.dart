@@ -5,7 +5,7 @@ import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
-import 'package:exon_app/ui/widgets/common/input_text_field.dart';
+import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +27,7 @@ class AddExcerciseDetailsPage extends StatelessWidget {
     const double _addIconSize = 25;
     const double _deleteIconSize = 30;
     Color _dividerColor = const Color(0xff777777).withOpacity(0.3);
-    final _data = excerciseDummyData[controller.selectedExcercise] ?? {};
+    final _data = DummyData.excerciseInfoList[controller.selectedExcercise] ?? {};
 
     void _onBackPressed() {
       controller.jumpToPage(0);
