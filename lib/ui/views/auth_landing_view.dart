@@ -99,14 +99,14 @@ class AuthLandingView extends StatelessWidget {
     Widget _loginButtonSection = Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
-        children: const [
-          Text(
+        children: [
+          const Text(
             _loginLabelText,
             style: TextStyle(fontSize: 12),
           ),
           TextActionButton(
             buttonText: _loginButtonText,
-            route: '/login',
+            onPressed: () => Get.toNamed('/login'),
             fontSize: 12,
           ),
         ],
@@ -120,8 +120,8 @@ class AuthLandingView extends StatelessWidget {
     Widget _termsOfUseText = Wrap(
       direction: Axis.horizontal,
       crossAxisAlignment: WrapCrossAlignment.start,
-      children: const [
-        Padding(
+      children: [
+        const Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Text(
             '회원가입 시',
@@ -130,10 +130,10 @@ class AuthLandingView extends StatelessWidget {
         ),
         TextActionButton(
           buttonText: '이용약관',
-          route: '/terms_of_use',
+          onPressed: () => Get.toNamed('/terms_of_use'),
           fontSize: 10,
         ),
-        Padding(
+        const Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Text(
             '및',
@@ -142,10 +142,10 @@ class AuthLandingView extends StatelessWidget {
         ),
         TextActionButton(
           buttonText: '개인정보처리방침',
-          route: '/privacy_policy',
+          onPressed: () => Get.toNamed('/privacy_policy'),
           fontSize: 10,
         ),
-        Padding(
+        const Padding(
           padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Text(
             '에 동의한 것으로 간주됩니다',

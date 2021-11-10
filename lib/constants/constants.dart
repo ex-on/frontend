@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 
 // Colors
 const splashViewBackgroundColor = Color(0xffEEF4FF);
+const mainBackgroundColor = Color(0xffF4F3F8);
 const kakaoLoginColor = Color(0xffFAE100);
 const facebookLoginColor = Color(0xff4F66A5);
 
-const textFieldFillColor = Color(0xffEEF4FF);
-const elevatedActionButtonColor = Color(0xff1A49EE);
+const textFieldFillColor = Color(0xffF4F3F8);
+const elevatedActionButtonColor = Color(0xff00B9E4);
 const deepGrayColor = Color(0xff777777);
 
-const lightPrimaryColor = Color(0xffEEF4FF);
-const deepPrimaryColor = Color(0xff1A49EE);
+const lightBrightPrimaryColor = Color(0xff9AD9E8);
+const brightPrimaryColor = Color(0xff00B9E4);
+const darkPrimaryColor = Color(0xff1E294D);
 
 const incompleteIconColor = Color(0xff292E3C);
 const completeIconColor = Color(0xff31B06B);
@@ -18,6 +20,13 @@ const completeIconColor = Color(0xff31B06B);
 const lightBlackColor = Color(0xff272D47);
 const lightGrayColor = Color(0xffC4C4C4);
 
+const brightSecondaryColor = Color(0xffFCC000);
+const darkSecondaryColor = Color(0xffA38EFF);
+
+const softGrayColor = Color(0xff959595);
+const softBlackColor = Color(0xff6F6F6F);
+
+const clearBlackColor = Color(0xff292E3C);
 
 // Amplify
 const cognitoClientId = '6mf91uqnj2jj25et5hsrdbg8ur';

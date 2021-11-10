@@ -30,6 +30,7 @@ class RegisterEmailPage extends GetView<RegisterController> {
         Header(onPressed: _onBackPressed),
         Expanded(
           child: DisableGlowListView(
+            padding: const EdgeInsets.only(top: 20),
             children: [
               SizedBox(
                 height: 0.025 * _height,

@@ -1,3 +1,5 @@
+import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/ui/pages/profile_page.dart';
 import 'package:exon_app/ui/views/home_view.dart';
 import 'package:flutter/material.dart';
 
@@ -8,12 +10,12 @@ import 'package:get/get.dart';
 
 class HomeNavigationView extends StatelessWidget {
   HomeNavigationView({Key? key}) : super(key: key);
-  final List<Widget> _views = [
+  final List<Widget> _pages = [
     HomeView(),
     HomeView(),
     HomeView(),
     HomeView(),
-    HomeView(),
+    const ProfilePage(),
   ];
 
   @override
@@ -23,8 +25,8 @@ class HomeNavigationView extends StatelessWidget {
       init: HomeNavigationController(),
       builder: (_) {
         return Scaffold(
-          backgroundColor: Colors.white,
-          body: _views[_.currentIndex],
+          backgroundColor: mainBackgroundColor,
+          body: _pages[_.currentIndex],
           bottomNavigationBar: HomeNavigationBar(
             currentIndex: _.currentIndex,
             onIconTap: _.onIconTap,

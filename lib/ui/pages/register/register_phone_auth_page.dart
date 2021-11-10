@@ -18,7 +18,7 @@ class RegisterPhoneAuthPage extends GetView<RegisterController> {
     const String _checkAuthNumButtonText = '인증번호 확인';
     const String _nextButtonText = '다음';
     final double _height = Get.height;
-    
+
     void _onBackPressed() {
       controller.page++;
       controller.phoneAuthNumSent.value = false;
@@ -46,6 +46,7 @@ class RegisterPhoneAuthPage extends GetView<RegisterController> {
           Header(onPressed: _onBackPressed),
           Expanded(
             child: DisableGlowListView(
+              padding: const EdgeInsets.only(top: 20),
               children: [
                 SizedBox(
                   height: 0.025 * _height,

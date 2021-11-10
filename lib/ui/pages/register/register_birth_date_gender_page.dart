@@ -53,6 +53,7 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
         Header(onPressed: _onBackPressed),
         Expanded(
           child: DisableGlowListView(
+            padding: const EdgeInsets.only(top: 20),
             children: [
               SizedBox(
                 height: 0.025 * _height,
@@ -92,7 +93,8 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
                         labelText: _birthDateFieldLabelText,
                         inputText: dateTimeToDisplayString(_.birthDate),
                         onPressed: _onBirthDateFieldPressed,
-                        isOpen: _.isBirthDateFieldOpen,
+                        isToggled: _.isBirthDateFieldOpen,
+                        inputWidgetHeight: 300,
                         inputWidget:
                             DatePicker(onBirthDateChanged: _onBirthDateChanged),
                       );
@@ -105,7 +107,8 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
                         labelText: _genderFieldLabelText,
                         inputText: genderToString[_.gender] ?? '',
                         onPressed: _onGenderFieldPressed,
-                        isOpen: _.isGenderFieldOpen,
+                        isToggled: _.isGenderFieldOpen,
+                        inputWidgetHeight: 120,
                         inputWidget: GenderPicker(
                             onChanged: _onGenderChanged,
                             selectedValue: _.gender),

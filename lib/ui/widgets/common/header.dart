@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
-  dynamic Function()? onPressed;
+  final dynamic Function() onPressed;
+  final Color? color;
   final String? title;
 
-  Header({Key? key, required dynamic Function() this.onPressed, this.title})
-      : super(key: key);
+  const Header({
+    Key? key,
+    required this.onPressed,
+    this.color = Colors.transparent,
+    this.title,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,7 @@ class Header extends StatelessWidget {
               onPressed: onPressed,
             ),
             elevation: 0,
-            backgroundColor: Colors.transparent,
+            backgroundColor: color,
           )
         : AppBar(
             leading: IconButton(
@@ -33,7 +38,38 @@ class Header extends StatelessWidget {
             ),
             centerTitle: true,
             elevation: 0,
-            backgroundColor: Colors.transparent,
+            backgroundColor: color,
           );
+  }
+}
+
+class ProfileHeader extends StatelessWidget {
+  final dynamic Function() onPressed;
+  final String profileName;
+  const ProfileHeader(
+      {Key? key, required this.onPressed, required this.profileName})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Text(
+        profileName,
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.menu_rounded, color: Colors.black, size: 30),
+          onPressed: onPressed,
+        ),
+      ],
+      centerTitle: false,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+    );
   }
 }

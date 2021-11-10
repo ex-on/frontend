@@ -1,10 +1,10 @@
 import 'package:exon_app/constants/app_routes.dart';
 import 'package:exon_app/constants/constants.dart';
-import 'package:exon_app/core/controllers/add_excercise_controller.dart';
+import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/core/controllers/deep_link_controller.dart';
 import 'package:exon_app/core/controllers/excercise_info_controller.dart';
-import 'package:exon_app/core/controllers/home_navigation_controller.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
+import 'package:exon_app/dummy_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
@@ -13,9 +13,10 @@ import 'package:kakao_flutter_sdk/link.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
+  Get.put<DummyDataController>(DummyDataController());
   Get.put<RegisterController>(RegisterController());
   Get.put<RegisterOptionalInfoController>(RegisterOptionalInfoController());
-  Get.put<AddExcerciseController>(AddExcerciseController());
+  Get.put<AddExerciseController>(AddExerciseController());
   Get.put<ExcerciseInfoController>(ExcerciseInfoController());
   KakaoContext.clientId = kakaoClientId;
   runApp(const MyApp());

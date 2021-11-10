@@ -27,7 +27,7 @@ class DisableGlowListView extends StatelessWidget {
     this.primary,
     this.physics,
     this.shrinkWrap = false,
-    this.padding,
+    this.padding = EdgeInsets.zero,
     this.addAutomaticKeepAlives = true,
     this.addRepaintBoundaries = true,
     this.addSemanticIndexes = true,

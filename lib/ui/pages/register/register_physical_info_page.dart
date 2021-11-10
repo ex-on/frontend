@@ -72,6 +72,7 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
         Header(onPressed: _onBackPressed),
         Expanded(
           child: DisableGlowListView(
+            padding: const EdgeInsets.only(top: 20),
             children: [
               SizedBox(
                 height: 0.025 * _height,
@@ -112,7 +113,8 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
                         inputText:
                             _.height == null ? '' : _.height.toString() + 'cm',
                         onPressed: _onHeightFieldPressed,
-                        isOpen: _.isHeightFieldOpen,
+                        isToggled: _.isHeightFieldOpen,
+                        inputWidgetHeight: 100,
                         inputWidget: HorizontalPicker(
                           minValue: 130,
                           maxValue: 210,
@@ -130,11 +132,13 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
                         inputText:
                             _.weight == null ? '' : _.weight.toString() + 'kg',
                         onPressed: _onWeightFieldPressed,
-                        isOpen: _.isWeightFieldOpen,
+                        isToggled: _.isWeightFieldOpen,
+                        inputWidgetHeight: 100,
                         inputWidget: HorizontalPicker(
                           minValue: 30,
                           maxValue: 150,
                           divisions: 1200,
+                          unit: 'kg',
                           onChanged: _onWeightChanged,
                         ),
                       );
@@ -149,11 +153,13 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
                             ? ''
                             : _.bodyFatPercentage.toString() + '%',
                         onPressed: _onBodyFatPercentageFieldPressed,
-                        isOpen: _.isBodyFatPercentageFieldOpen,
+                        isToggled: _.isBodyFatPercentageFieldOpen,
+                        inputWidgetHeight: 100,
                         inputWidget: HorizontalPicker(
                           minValue: 0,
                           maxValue: 50,
                           divisions: 500,
+                          unit: '%',
                           onChanged: _onBodyFatPercentageChanged,
                         ),
                       );
@@ -168,11 +174,13 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
                             ? ''
                             : _.muscleMass.toString() + 'kg',
                         onPressed: _onMuscleMassFieldPressed,
-                        isOpen: _.isMuscleMassFieldOpen,
+                        isToggled: _.isMuscleMassFieldOpen,
+                        inputWidgetHeight: 100,
                         inputWidget: HorizontalPicker(
                           minValue: 10,
                           maxValue: 60,
                           divisions: 500,
+                          unit: 'kg',
                           onChanged: _onMuscleMassChanged,
                         ),
                       );

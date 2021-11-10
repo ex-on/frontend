@@ -1,5 +1,8 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/excercise_block_controller.dart';
+import 'package:exon_app/dummy_data.dart';
+import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -63,7 +66,7 @@ class ExcerciseBlock extends StatelessWidget {
             const EdgeInsets.only(top: 15, bottom: 15, left: 24, right: 24),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: lightPrimaryColor,
+          color: lightBrightPrimaryColor,
         ),
         child: Column(
           children: [
@@ -85,7 +88,7 @@ class ExcerciseBlock extends StatelessWidget {
                             icon: const Icon(
                               Icons.arrow_drop_up,
                               size: 25,
-                              color: deepPrimaryColor,
+                              color: brightPrimaryColor,
                             ),
                           )
                         : IconButton(
@@ -93,7 +96,7 @@ class ExcerciseBlock extends StatelessWidget {
                             icon: const Icon(
                               Icons.arrow_drop_down,
                               size: 25,
-                              color: deepPrimaryColor,
+                              color: brightPrimaryColor,
                             ),
                           );
                   },
@@ -129,18 +132,16 @@ class ExcerciseBlock extends StatelessWidget {
 }
 
 class ExcercisePlanBlock extends StatelessWidget {
-  final String exerciseName;
-  final String targetMuscle;
-  final String exerciseMethod;
+  final int exerciseId;
+  final int targetMuscle;
+  final int exerciseMethod;
   final int numSets;
-  final List<List<dynamic>> excercisePlanSetData;
   const ExcercisePlanBlock({
     Key? key,
-    required this.exerciseName,
+    required this.exerciseId,
     required this.targetMuscle,
     required this.exerciseMethod,
     required this.numSets,
-    required this.excercisePlanSetData,
   }) : super(key: key);
 
   @override
@@ -153,10 +154,11 @@ class ExcercisePlanBlock extends StatelessWidget {
     }
 
     return Container(
-      width: 330,
+      height: 95,
+      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: lightPrimaryColor,
+        color: Colors.white,
       ),
       child: Material(
         type: MaterialType.transparency,
@@ -165,37 +167,48 @@ class ExcercisePlanBlock extends StatelessWidget {
           onTap: _onPressed,
           child: Padding(
             padding:
-                const EdgeInsets.only(top: 15, bottom: 15, left: 24, right: 24),
+                const EdgeInsets.only(top: 15, bottom: 15, left: 24, right: 18),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      exerciseName,
+                      exerciseIdToName[exerciseId] ?? '',
                       style: const TextStyle(
+                        height: 1.0,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
+                        letterSpacing: -2,
+                        color: clearBlackColor,
                       ),
                     ),
-                    const Expanded(
-                      child: SizedBox(
-                        height: 0,
-                      ),
+                    Expanded(
+                      child: verticalSpacer(0),
                     ),
                     Text(
                       numSets.toString() + '세트',
                       style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        height: 1.0,
+                        fontSize: 16,
+                        color: clearBlackColor,
                       ),
                     ),
-                    IconButton(
-                      onPressed: _onPressed,
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 25,
-                        color: deepPrimaryColor,
+                    horizontalSpacer(5),
+                    SizedBox(
+                      height: 23,
+                      width: 23,
+                      child: IconButton(
+                        splashRadius: 20,
+                        padding: EdgeInsets.zero,
+                        onPressed: _onPressed,
+                        icon: const Icon(
+                          Icons.more_vert_rounded,
+                          size: 23,
+                          color: softGrayColor,
+                        ),
                       ),
                     ),
                   ],
@@ -209,27 +222,26 @@ class ExcercisePlanBlock extends StatelessWidget {
                         color: const Color(0xffFFC700),
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
                       alignment: Alignment.center,
                       child: Text(
-                        targetMuscle,
+                        targetMuscleIntToStr[targetMuscle] ?? '',
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,
                         ),
                       ),
                     ),
+                    horizontalSpacer(10),
                     Container(
                       width: 43,
                       height: 26,
                       decoration: BoxDecoration(
-                        color: deepPrimaryColor,
+                        color: brightPrimaryColor,
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
                       alignment: Alignment.center,
                       child: Text(
-                        exerciseMethod,
+                        excerciseMethodIntToStr[exerciseMethod] ?? '',
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,
@@ -237,13 +249,14 @@ class ExcercisePlanBlock extends StatelessWidget {
                       ),
                     ),
                     const Expanded(
-                        child: SizedBox(
-                      height: 0,
-                    )),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Icon(Icons.verified, color: incompleteIconColor),
+                      child: SizedBox(
+                        height: 0,
+                      ),
                     ),
+                    // const Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 10),
+                    //   child: Icon(Icons.verified, color: incompleteIconColor),
+                    // ),
                   ],
                 ),
               ],

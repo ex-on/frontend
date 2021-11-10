@@ -1,3 +1,4 @@
+import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/constants/constants.dart';
@@ -8,6 +9,8 @@ class InputTextField extends StatelessWidget {
   final TextEditingController controller;
   final double? height;
   final double? borderRadius;
+  final Color? backgroundColor;
+  final Widget? icon;
 
   const InputTextField({
     Key? key,
@@ -15,6 +18,8 @@ class InputTextField extends StatelessWidget {
     required this.controller,
     this.height,
     this.borderRadius,
+    this.backgroundColor = textFieldFillColor,
+    this.icon,
   }) : super(key: key);
 
   @override
@@ -24,19 +29,26 @@ class InputTextField extends StatelessWidget {
       height: height ?? 45,
       child: TextField(
         controller: controller,
+        cursorColor: brightPrimaryColor,
         decoration: InputDecoration(
+          suffixIcon: icon,
+          contentPadding: EdgeInsets.only(
+            left: 10,
+            bottom: (height ?? 45) / 2,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(borderRadius ?? 20)),
             borderSide: BorderSide.none,
           ),
           filled: true,
-          fillColor: textFieldFillColor,
+          fillColor: backgroundColor,
           label: Padding(
             padding: const EdgeInsets.only(left: 4.0),
             child: Text(
               label,
               style: const TextStyle(
                 fontSize: 14,
+                color: deepGrayColor,
               ),
             ),
           ),
@@ -60,8 +72,8 @@ class NumberInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 70,
-      height: 50,
+      width: 65,
+      height: 45,
       child: TextField(
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.bottom,
@@ -69,7 +81,7 @@ class NumberInputField extends StatelessWidget {
         keyboardType: TextInputType.number,
         controller: controller,
         style: const TextStyle(
-          fontSize: 22,
+          fontSize: 18,
         ),
         maxLength: maxLength,
         decoration: InputDecoration(
@@ -77,13 +89,13 @@ class NumberInputField extends StatelessWidget {
           contentPadding: const EdgeInsets.only(bottom: 12),
           hintText: hintText,
           hintStyle: const TextStyle(
-            fontSize: 22,
+            fontSize: 18,
           ),
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             borderSide: BorderSide(
-              color: Color(0xff777777),
-              width: 1.5,
+              color: deepGrayColor,
+              width: 1,
             ),
           ),
         ),
@@ -92,52 +104,70 @@ class NumberInputField extends StatelessWidget {
   }
 }
 
-class InputFieldDisplay extends StatelessWidget {
+class InputFieldDisplay extends StatefulWidget {
   final String labelText;
   final String inputText;
   final void Function() onPressed;
-  final bool isOpen;
+  final bool isToggled;
+  final double inputWidgetHeight;
   final Widget inputWidget;
   const InputFieldDisplay({
     Key? key,
     required this.labelText,
     required this.inputText,
     required this.onPressed,
-    required this.isOpen,
+    required this.isToggled,
+    required this.inputWidgetHeight,
     required this.inputWidget,
   }) : super(key: key);
 
   @override
+  State<InputFieldDisplay> createState() => _InputFieldDisplayState();
+}
+
+class _InputFieldDisplayState extends State<InputFieldDisplay> {
+  bool isOpen = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
+    void onEnd() {
+      setState(() {
+        isOpen = widget.isToggled;
+      });
+    }
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      onEnd: onEnd,
       width: 330,
-      height: isOpen ? null : 46,
+      height: widget.isToggled ? widget.inputWidgetHeight + 46 : 46,
       decoration: BoxDecoration(
         color: textFieldFillColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Material(
         type: MaterialType.transparency,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: DisableGlowListView(
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             InkWell(
               borderRadius: BorderRadius.circular(20),
-              onTap: onPressed,
+              onTap: widget.onPressed,
               child: Row(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 15, left: 15, right: 10, bottom: 15),
                     child: Text(
-                      labelText,
+                      widget.labelText,
                       style: const TextStyle(
+                        height: 1,
                         color: deepGrayColor,
                         fontSize: 15,
                       ),
                     ),
                   ),
-                  inputText == ''
+                  widget.inputText == ''
                       ? const SizedBox(
                           height: 0,
                           width: 0,
@@ -148,8 +178,9 @@ class InputFieldDisplay extends StatelessWidget {
                             bottom: 10,
                           ),
                           child: Text(
-                            inputText,
+                            widget.inputText,
                             style: const TextStyle(
+                              height: 1,
                               color: Colors.black,
                               fontSize: 15,
                             ),
@@ -158,8 +189,8 @@ class InputFieldDisplay extends StatelessWidget {
                 ],
               ),
             ),
-            isOpen
-                ? inputWidget
+            widget.isToggled || isOpen
+                ? widget.inputWidget
                 : const SizedBox(
                     height: 0,
                     width: 0,
@@ -234,6 +265,53 @@ class GenderPicker extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class NumberInputFieldDisplay extends StatelessWidget {
+  final String? hintText;
+  final String inputText;
+  final int? maxLength;
+  final void Function() onTap;
+  const NumberInputFieldDisplay({
+    Key? key,
+    required this.inputText,
+    required this.onTap,
+    this.hintText,
+    this.maxLength,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: SizedBox(
+          width: 70,
+          height: 45,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                width: 1,
+                color: deepGrayColor,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                inputText == '' ? hintText ?? '' : inputText,
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

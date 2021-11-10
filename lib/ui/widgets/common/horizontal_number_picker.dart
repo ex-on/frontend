@@ -17,6 +17,7 @@ class HorizontalPicker extends StatefulWidget {
   final Color? activeItemTextColor;
   final Color? passiveItemTextColor;
   final String? suffix;
+  final String? unit;
   const HorizontalPicker(
       {Key? key,
       required this.minValue,
@@ -26,10 +27,11 @@ class HorizontalPicker extends StatefulWidget {
       this.initialPosition = InitialPosition.center,
       this.backgroundColor = Colors.transparent,
       this.showCursor = true,
-      this.cursorColor = deepPrimaryColor,
+      this.cursorColor = brightPrimaryColor,
       this.activeItemTextColor = Colors.black,
       this.passiveItemTextColor = deepGrayColor,
-      this.suffix = ''})
+      this.suffix = '',
+      this.unit = 'cm'})
       : assert(minValue < maxValue),
         super(key: key);
 
@@ -126,7 +128,8 @@ class _HorizontalPickerState extends State<HorizontalPicker> {
                   children: valueMap.map((Map curValue) {
                     return ItemWidget(curValue,
                         backgroundColor: widget.backgroundColor!,
-                        suffix: widget.suffix!);
+                        suffix: widget.suffix!,
+                        unit: widget.unit ?? 'cm');
                   }).toList()),
             ),
             Visibility(
@@ -153,8 +156,9 @@ class ItemWidget extends StatefulWidget {
   final Map curItem;
   final Color backgroundColor;
   final String? suffix;
+  final String unit;
   const ItemWidget(this.curItem,
-      {Key? key, required this.backgroundColor, this.suffix})
+      {Key? key, required this.backgroundColor, this.suffix, required this.unit})
       : super(key: key);
 
   @override
@@ -196,7 +200,7 @@ class _ItemWidgetState extends State<ItemWidget> {
             ),
             widget.curItem["value"] % 1 == 0
                 ? Text(
-                    widget.curItem["value"].toInt().toString() + 'cm',
+                    widget.curItem["value"].toInt().toString() + widget.unit,
                     style: TextStyle(
                         fontSize: 8,
                         color: widget.curItem["color"],

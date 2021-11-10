@@ -1,9 +1,15 @@
-class DummyData {
-  static Map<String, Map<String, dynamic>> excerciseInfoList = {
+import 'package:exon_app/helpers/transformers.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
+
+class DummyDataController extends GetxController {
+  static DummyDataController to = Get.find();
+  Map<String, Map<String, dynamic>> exerciseInfoList = {
     '벤치프레스': {
+      'id': 1,
       'name': '벤치프레스',
       'target_muscle': 1,
-      'excercise_method': 3,
+      'exercise_method': 3,
       'difficulty': 1,
       'recommended_time_min': 23,
       'info_text':
@@ -11,41 +17,59 @@ class DummyData {
     },
   };
 
-  static List<Map<String, dynamic>> excerciseNameList = [
+  List<Map<String, dynamic>> excerciseNameList = [
     {
       'name': '벤치프레스',
-      'difficulty': 1,
+      'target_muscle': 1,
+      'exercise_method': 3,
     },
     {
       'name': '인클라인 벤치프레스',
-      'difficulty': 2,
+      'target_muscle': 1,
+      'exercise_method': 3,
     },
     {
       'name': '머신 체스트프레스',
-      'difficulty': 0,
+      'target_muscle': 1,
+      'exercise_method': 1,
     },
     {
       'name': '덤벨 체스트프레스',
-      'difficulty': 2,
+      'target_muscle': 1,
+      'exercise_method': 2,
     },
     {
       'name': '인클라인 덤벨프레스',
-      'difficulty': 2,
+      'target_muscle': 1,
+      'exercise_method': 2,
     },
     {
       'name': '머신 체스트플라이',
-      'difficulty': 0,
+      'target_muscle': 1,
+      'exercise_method': 1,
     }
   ];
 
-  static List<Map<String, dynamic>> dailyExercisePlanList = [
-    {
-      'exercise': {
-        'name': '벤치프레스',
-        'target_muscle': '가슴',
-        'exercise_method': '바벨',
-      },
-      'num_sets': 5,
-    }
+  List<Map<String, dynamic>> dailyExercisePlanList = [
   ];
+
+  List<Map<String, dynamic>> dailyExercisePlanDetailsList = [];
+
+  void addDailyExercisePlan(
+      String selectedExercise, List<List<dynamic>> setValues) {
+    dailyExercisePlanDetailsList.add({
+      'exercise_id': exerciseNameToId[selectedExercise],
+      'sets': List.generate(
+          setValues.length,
+          (index) => {
+                'target_weight': setValues[index][0],
+                'target_reps': setValues[index][1],
+              })
+    });
+    dailyExercisePlanList.add({
+      'exercise_id': exerciseNameToId[selectedExercise],
+      'num_sets': setValues.length,
+    });
+    update();
+  }
 }

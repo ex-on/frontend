@@ -79,6 +79,8 @@ flutter:
     - assets/icons/home.svg
     - assets/icons/star.svg
     - assets/icons/userCircle.svg
+    - assets/DaytimeIcon.svg
+    - assets/NighttimeIcon.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -1,4 +1,4 @@
-import 'package:exon_app/ui/views/add_excercise_view.dart';
+import 'package:exon_app/ui/views/add_exercise_view.dart';
 import 'package:exon_app/ui/views/auth_landing_view.dart';
 import 'package:exon_app/ui/views/excercise_info_view.dart';
 import 'package:exon_app/ui/views/home_navigation_view.dart';
@@ -17,7 +17,7 @@ class AppRoutes {
         name: '/register_optional_info',
         page: () => const RegisterOptionalInfoView()),
     GetPage(name: '/home', page: () => HomeNavigationView()),
-    GetPage(name: '/add_excercise', page: () => AddExcerciseView()),
-    GetPage(name: '/excercise_info', page: () => const ExcerciseInfoView()),
+    GetPage(name: '/add_excercise', page: () => AddExerciseView()),
+    GetPage(name: '/excercise_info', page: () => const ExerciseInfoView()),
   ];
 }

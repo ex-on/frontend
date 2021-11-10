@@ -1,5 +1,7 @@
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/core/controllers/home_navigation_controller.dart';
+import 'package:exon_app/helpers/transformers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -32,50 +34,57 @@ class HomeNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            _chartIcon,
-            color: currentIndex == 0 ? deepPrimaryColor : null,
+    Color primaryColor = HomeController.to.theme == ColorTheme.day
+        ? brightPrimaryColor
+        : darkSecondaryColor;
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+      child: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              _chartIcon,
+              color: currentIndex == 0 ? primaryColor : null,
+            ),
+            label: _statViewLabel,
           ),
-          label: _statViewLabel,
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            _deskIcon,
-            color: currentIndex == 1 ? deepPrimaryColor : null,
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              _deskIcon,
+              color: currentIndex == 1 ? primaryColor : null,
+            ),
+            label: _communityViewLabel,
           ),
-          label: _communityViewLabel,
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            _homeIcon,
-            color: currentIndex == 2 ? deepPrimaryColor : null,
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              _homeIcon,
+              color: currentIndex == 2 ? primaryColor : null,
+            ),
+            label: _homeViewLabel,
           ),
-          label: _homeViewLabel,
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            _starIcon,
-            color: currentIndex == 3 ? deepPrimaryColor : null,
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              _starIcon,
+              color: currentIndex == 3 ? primaryColor : null,
+            ),
+            label: _rankViewLabel,
           ),
-          label: _rankViewLabel,
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            _userIcon,
-            color: currentIndex == 4 ? deepPrimaryColor : null,
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              _userIcon,
+              color: currentIndex == 4 ? primaryColor : null,
+            ),
+            label: _profileViewLabel,
           ),
-          label: _profileViewLabel,
-        ),
-      ],
-      onTap: onIconTap,
-      currentIndex: currentIndex,
-      backgroundColor: _bottomNavigationBarColor,
-      type: BottomNavigationBarType.fixed,
-      // showSelectedLabels: false,
-      showUnselectedLabels: false,
+        ],
+        onTap: onIconTap,
+        currentIndex: currentIndex,
+        backgroundColor: _bottomNavigationBarColor,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+      ),
     );
   }
 }

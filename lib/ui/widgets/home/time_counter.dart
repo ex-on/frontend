@@ -1,34 +1,39 @@
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/helpers/transformers.dart';
 import 'package:flutter/material.dart';
 
 class TimeCounter extends StatelessWidget {
-  const TimeCounter({Key? key}) : super(key: key);
+  final ColorTheme theme;
+  const TimeCounter({Key? key, required this.theme}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const String _timerLabel = '오늘의 운동시간';
-    const String _timeCount = '01:30:52';
-    const String _completeIconText = '목표 달성';
+    const String _timeCount = '-- : -- : --';
+    // const String _completeIconText = '목표 달성';
+    Color primaryColor =
+        theme == ColorTheme.day ? brightPrimaryColor : darkPrimaryColor;
 
     return Container(
       width: 330,
       height: 90,
       padding: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
       decoration: const BoxDecoration(
-        color: deepPrimaryColor,
+        color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 _timerLabel,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: primaryColor,
                   fontSize: 12,
                   letterSpacing: 2,
                 ),
@@ -37,33 +42,22 @@ class TimeCounter extends StatelessWidget {
                 _timeCount,
                 style: TextStyle(
                   fontSize: 28,
-                  color: Colors.white,
+                  letterSpacing: -2,
+                  color: primaryColor,
                   fontWeight: FontWeight.bold,
                   // letterSpacing: -2,
                 ),
               )
             ],
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Padding(
-                padding: EdgeInsets.only(bottom: 8.0),
-                child: Icon(
-                  Icons.verified,
-                  color: Colors.white,
-                  size: 23,
-                ),
-              ),
-              Text(
-                _completeIconText,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-              )
-            ],
-          )
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Icon(
+              Icons.verified,
+              color: primaryColor,
+              size: 23,
+            ),
+          ),
         ],
       ),
     );

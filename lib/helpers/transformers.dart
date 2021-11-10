@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 
 const Map<String, int> targetMuscleStrToInt = {
   '전체': 0,
@@ -72,3 +73,50 @@ Map<Gender, String> genderToString = {
   Gender.male: '남성',
   Gender.female: '여성',
 };
+
+Map<String, Color> activityRankToColor = {
+  '초수': const Color(0xffD1DBFC),
+};
+
+Map<String, Color> physicalRankToColor = {
+  '헬스꼬마': const Color(0xff1A49EE),
+};
+
+String durationToString(Duration time) {
+  List<String> splitDuration = time.toString().split(':');
+  if (time.inHours == 0) {
+    return splitDuration[1] + '분';
+  } else {
+    return splitDuration[0] + '시간' + splitDuration[1] + '분';
+  }
+}
+
+enum ColorTheme { day, night }
+
+Map<String, int> weekDayStrToInt = {
+  '월': 1,
+  '화': 2,
+  '수': 3,
+  '목': 4,
+  '금': 5,
+  '토': 6,
+  '일': 7,
+};
+
+Map<int, String> weekDayIntToStr = {
+  1: '월',
+  2: '화',
+  3: '수',
+  4: '목',
+  5: '금',
+  6: '토',
+  7: '일',
+};
+
+Map<String, int> exerciseNameToId = {
+    '벤치프레스': 1,
+  };
+
+  Map<int, String> exerciseIdToName = {
+    1: '벤치프레스',
+  };
