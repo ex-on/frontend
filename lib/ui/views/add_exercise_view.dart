@@ -20,8 +20,9 @@ class AddExerciseView extends GetView<AddExerciseController> {
           _.jumpToPage(0);
         }
         return Scaffold(
-            backgroundColor: _.page == 1 ? Colors.white : mainBackgroundColor,
-            body: _pages[_.page]);
+          backgroundColor: _.page == 1 ? Colors.white : mainBackgroundColor,
+          body: _pages[_.page],
+        );
       },
     );
   }

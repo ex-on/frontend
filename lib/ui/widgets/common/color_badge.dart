@@ -4,42 +4,45 @@ import 'package:flutter/material.dart';
 
 class ColorBadge extends StatelessWidget {
   final String text;
-  final String type;
+  final String? type;
   final double? width;
   final double? height;
   final double? fontSize;
+  final Color? color;
   const ColorBadge({
     Key? key,
     required this.text,
-    required this.type,
+    this.type,
     this.width,
     this.height = 26,
     this.fontSize = 14,
+    this.color,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color? backgroundColor;
-
-    switch (type) {
-      case 'activityRank':
-        backgroundColor = activityRankToColor[text];
-        break;
-      case 'physicalRank':
-        backgroundColor = physicalRankToColor[text];
-        break;
-      case 'targetMuscle':
-        backgroundColor = brightSecondaryColor;
-        break;
-      case 'exerciseMethod':
-        backgroundColor = brightPrimaryColor;
-        break;
-      case 'recommendedExerciseTime':
-        backgroundColor = deepGrayColor;
-        break;
-      default:
-        backgroundColor = brightPrimaryColor;
-        break;
+    Color? backgroundColor = color;
+    if (type != null) {
+      switch (type) {
+        case 'activityRank':
+          backgroundColor = activityRankToColor[text];
+          break;
+        case 'physicalRank':
+          backgroundColor = physicalRankToColor[text];
+          break;
+        case 'targetMuscle':
+          backgroundColor = brightSecondaryColor;
+          break;
+        case 'exerciseMethod':
+          backgroundColor = brightPrimaryColor;
+          break;
+        case 'recommendedExerciseTime':
+          backgroundColor = deepGrayColor;
+          break;
+        default:
+          backgroundColor = brightPrimaryColor;
+          break;
+      }
     }
 
     return Container(

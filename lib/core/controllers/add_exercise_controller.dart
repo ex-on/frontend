@@ -12,8 +12,8 @@ class AddExerciseController extends GetxController {
   String selectedExercise = '';
   bool isAddingNewSet = false;
   bool addedNewSet = false;
-  List<dynamic> currentInputSetValues = [0.0, 0];
-  List<List<dynamic>> inputSetValues = [];
+  List<int> currentInputSetValues = [0, 0];
+  List<List<int>> inputSetValues = [];
 
   void jumpToPage(int pageNum) {
     page = pageNum;
@@ -39,7 +39,7 @@ class AddExerciseController extends GetxController {
     isAddingNewSet = true;
     numSets++;
     if (numSets == 1) {
-      inputSetValues.add([0.0, 0]);
+      inputSetValues.add([0, 0]);
     } else {
       inputSetValues.add(inputSetValues.last);
     }
@@ -69,7 +69,7 @@ class AddExerciseController extends GetxController {
     update();
   }
 
-  void updateCurrentInputSetWeight(double weight) {
+  void updateCurrentInputSetWeight(int weight) {
     currentInputSetValues[0] = weight;
     update();
   }
@@ -88,22 +88,20 @@ class AddExerciseController extends GetxController {
   }
 
   void reset() {
-    currentInputSetValues = [0.0, 0];
+    currentInputSetValues = [0, 0];
     inputSetValues = [
-      [0.0, 0]
+      [0, 0]
     ];
     numSets = 1;
     update();
   }
 
   FixedExtentScrollController getWeightController(int setNum) {
-    print(setNum.toString() + 'getWeightController called');
-    int item = inputSetValues[setNum - 1][0].toInt() - 1;
+    int item = inputSetValues[setNum - 1][0] - 1;
     return FixedExtentScrollController(initialItem: item);
   }
 
   FixedExtentScrollController getRepsController(int setNum) {
-    print(setNum.toString() + 'getRepsController called');
     var item = inputSetValues[setNum - 1][1] - 1;
     return FixedExtentScrollController(initialItem: item);
   }

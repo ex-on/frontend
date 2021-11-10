@@ -10,6 +10,7 @@ import 'package:exon_app/ui/widgets/common/color_badge.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:exon_app/ui/widgets/exercise/set_input_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,6 +39,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
 
     void _onBackPressed() {
       controller.jumpToPage(0);
+      controller.reset();
     }
 
     void _onLoadRecordPressed() {}
@@ -72,179 +74,177 @@ class AddExerciseDetailsPage extends StatelessWidget {
     }
 
     void _onInputSetWeightChanged(int index) {
-      controller.updateCurrentInputSetWeight(index.toDouble());
+      controller.updateCurrentInputSetWeight((index + 1));
     }
 
     void _onInputSetRepsChanged(int index) {
-      controller.updateCurrentInputSetReps(index);
+      controller.updateCurrentInputSetReps(index + 1);
     }
 
     Widget _bottomSheet(int setNum) {
-      return Container(
-        height: context.height * 0.5,
-        width: context.width,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-          color: Color(0xffF4F3F8),
-        ),
-        child: Column(
-          children: [
-            Container(
-              height: 4,
-              width: 50,
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: const Color(0xffD4D1E1),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: _onBottomSheetClosePressed,
-                    icon: const Icon(
-                      Icons.close_rounded,
-                      color: Color(0xff333333),
-                      size: 30,
-                    ),
-                  ),
-                  Text(
-                    setNum.toString() + '세트',
-                    style: const TextStyle(
-                      color: Color(0xff000300),
-                      fontSize: 22,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: _onBottomSheetCompletePressed,
-                    icon: const Icon(
-                      Icons.check_rounded,
-                      color: darkSecondaryColor,
-                      size: 30,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            verticalSpacer(20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 12),
-                      child: Text(
-                        _inputWeightLabelText,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xff333333),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 250,
-                      child:
-                          // GetBuilder<AddExerciseController>(builder: (_) {
-                          //   return
-                          DecoratedBox(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: darkSecondaryColor,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: CupertinoPicker(
-                          itemExtent: 60,
-                          scrollController:
-                              // _.getWeightController(setNum),
-                              controller.getWeightController(setNum),
-                          onSelectedItemChanged: (int index) =>
-                              _onInputSetWeightChanged(index + 1),
-                          children: List.generate(
-                            200,
-                            (index) => Center(
-                              child: Text(
-                                (index + 1).toString() + ' kg',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        //   );
-                        // },
-                      ),
-                    ),
-                  ],
-                ),
-                horizontalSpacer(40),
-                Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 12),
-                      child: Text(
-                        _inputRepsLabelText,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xff333333),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 100,
-                      height: 250,
-                      child:
-                          // GetBuilder<AddExerciseController>(builder: (_) {
-                          //   return
-                          DecoratedBox(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: darkSecondaryColor,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: CupertinoPicker(
-                          itemExtent: 60,
-                          scrollController:
-                              // _.getRepsController(setNum),
-                              controller.getRepsController(setNum),
-                          onSelectedItemChanged: (int index) =>
-                              _onInputSetRepsChanged(index + 1),
-                          children: List.generate(
-                            20,
-                            (index) => Center(
-                              child: Text(
-                                (index + 1).toString(),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        //   );
-                        // },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+      return SetInputBottomSheet(
+        setNum: setNum,
+        onClosePressed: _onBottomSheetClosePressed,
+        onCompletePressed: _onBottomSheetCompletePressed,
+        onWeightChanged: _onInputSetWeightChanged,
+        onRepsChanged: _onInputSetRepsChanged,
+        weightController: controller.getWeightController(setNum),
+        repsController: controller.getRepsController(setNum),
       );
+      // return Container(
+      //   height: context.height * 0.5,
+      //   width: context.width,
+      //   decoration: const BoxDecoration(
+      //     borderRadius: BorderRadius.only(
+      //         topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+      //     color: Color(0xffF4F3F8),
+      //   ),
+      //   child: Column(
+      //     children: [
+      //       Container(
+      //         height: 4,
+      //         width: 50,
+      //         margin: const EdgeInsets.symmetric(vertical: 10),
+      //         decoration: BoxDecoration(
+      //           borderRadius: BorderRadius.circular(20),
+      //           color: const Color(0xffD4D1E1),
+      //         ),
+      //       ),
+      //       Padding(
+      //         padding: const EdgeInsets.symmetric(horizontal: 20),
+      //         child: Row(
+      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //           children: [
+      //             IconButton(
+      //               onPressed: _onBottomSheetClosePressed,
+      //               icon: const Icon(
+      //                 Icons.close_rounded,
+      //                 color: Color(0xff333333),
+      //                 size: 30,
+      //               ),
+      //             ),
+      //             Text(
+      //               setNum.toString() + '세트',
+      //               style: const TextStyle(
+      //                 color: Color(0xff000300),
+      //                 fontSize: 22,
+      //               ),
+      //             ),
+      //             IconButton(
+      //               onPressed: _onBottomSheetCompletePressed,
+      //               icon: const Icon(
+      //                 Icons.check_rounded,
+      //                 color: darkSecondaryColor,
+      //                 size: 30,
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //       verticalSpacer(20),
+      //       Row(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         crossAxisAlignment: CrossAxisAlignment.end,
+      //         children: [
+      //           Column(
+      //             children: [
+      //               const Padding(
+      //                 padding: EdgeInsets.only(bottom: 12),
+      //                 child: Text(
+      //                   _inputWeightLabelText,
+      //                   style: TextStyle(
+      //                     fontSize: 18,
+      //                     color: Color(0xff333333),
+      //                   ),
+      //                 ),
+      //               ),
+      //               SizedBox(
+      //                 width: 100,
+      //                 height: 250,
+      //                 child: DecoratedBox(
+      //                   decoration: const BoxDecoration(
+      //                     border: Border(
+      //                       top: BorderSide(
+      //                         color: darkSecondaryColor,
+      //                         width: 2,
+      //                       ),
+      //                     ),
+      //                   ),
+      //                   child: CupertinoPicker(
+      //                     itemExtent: 60,
+      //                     scrollController:
+      //                         // _.getWeightController(setNum),
+      //                         controller.getWeightController(setNum),
+      //                     onSelectedItemChanged: (int index) =>
+      //                         _onInputSetWeightChanged(index + 1),
+      //                     children: List.generate(
+      //                       200,
+      //                       (index) => Center(
+      //                         child: Text(
+      //                           (index + 1).toString() + ' kg',
+      //                           style: const TextStyle(
+      //                             fontSize: 18,
+      //                           ),
+      //                         ),
+      //                       ),
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //           horizontalSpacer(40),
+      //           Column(
+      //             children: [
+      //               const Padding(
+      //                 padding: EdgeInsets.only(bottom: 12),
+      //                 child: Text(
+      //                   _inputRepsLabelText,
+      //                   style: TextStyle(
+      //                     fontSize: 18,
+      //                     color: Color(0xff333333),
+      //                   ),
+      //                 ),
+      //               ),
+      //               SizedBox(
+      //                 width: 100,
+      //                 height: 250,
+      //                 child: DecoratedBox(
+      //                   decoration: const BoxDecoration(
+      //                     border: Border(
+      //                       top: BorderSide(
+      //                         color: darkSecondaryColor,
+      //                         width: 2,
+      //                       ),
+      //                     ),
+      //                   ),
+      //                   child: CupertinoPicker(
+      //                     itemExtent: 60,
+      //                     scrollController:
+      //                         controller.getRepsController(setNum),
+      //                     onSelectedItemChanged: (int index) =>
+      //                         _onInputSetRepsChanged(index + 1),
+      //                     children: List.generate(
+      //                       20,
+      //                       (index) => Center(
+      //                         child: Text(
+      //                           (index + 1).toString(),
+      //                           style: const TextStyle(
+      //                             fontSize: 18,
+      //                           ),
+      //                         ),
+      //                       ),
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      // );
     }
 
     void _onNumRepsTap(int setNum) {

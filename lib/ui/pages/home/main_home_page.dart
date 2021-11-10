@@ -186,7 +186,7 @@ class MainHomePage extends GetView<HomeController> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     height: 95,
-                    margin: const EdgeInsets.only(left: 30, right: 30),
+                    margin: const EdgeInsets.only(left: 30, right: 30, top: 8),
                     alignment: Alignment.center,
                     child: const Text(
                       _exercisePlanEmptyPromptText,
@@ -202,6 +202,7 @@ class MainHomePage extends GetView<HomeController> {
                       DummyDataController.to.dailyExercisePlanList.length,
                       (index) {
                         return ExcercisePlanBlock(
+                          id: index,
                           exerciseId: DummyDataController
                               .to.dailyExercisePlanList[index]['exercise_id'],
                           targetMuscle: DummyDataController.to.exerciseInfoList[

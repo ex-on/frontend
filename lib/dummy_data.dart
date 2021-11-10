@@ -12,6 +12,7 @@ class DummyDataController extends GetxController {
       'exercise_method': 3,
       'difficulty': 1,
       'recommended_time_min': 23,
+      'recommended_rest_time': 90, // 추가됨
       'info_text':
           '벤치프레스는 뭐뭐뭐하는 운동입니다. 어깨를 가슴에 붙이고 서서 바벨을 들면 됩니다.. 벤치프레스는 어렵지 않습니다. 벤치프레스벤치프레스는 누구나 쉽게 할 수 있습니다. 벤치프레스는 뭐뭐뭐하는 운동입니다. 어깨를 가슴에 붙이고 서서 바벨을 들면 됩니다.. 벤치프레스는 어렵지 않습니다. 벤치프레스벤치프레스는 누구나 쉽게 할 수 있습니다.',
     },
@@ -50,26 +51,36 @@ class DummyDataController extends GetxController {
     }
   ];
 
-  List<Map<String, dynamic>> dailyExercisePlanList = [
-  ];
+  List<Map<String, dynamic>> dailyExercisePlanList = [];
 
   List<Map<String, dynamic>> dailyExercisePlanDetailsList = [];
 
   void addDailyExercisePlan(
-      String selectedExercise, List<List<dynamic>> setValues) {
-    dailyExercisePlanDetailsList.add({
-      'exercise_id': exerciseNameToId[selectedExercise],
-      'sets': List.generate(
+      String selectedExercise, List<List<int>> setValues) {
+    dailyExercisePlanDetailsList.add(
+      {
+        'exercise_id': exerciseNameToId[selectedExercise],
+        'sets': List.generate(
           setValues.length,
           (index) => {
-                'target_weight': setValues[index][0],
-                'target_reps': setValues[index][1],
-              })
-    });
-    dailyExercisePlanList.add({
-      'exercise_id': exerciseNameToId[selectedExercise],
-      'num_sets': setValues.length,
-    });
+            'target_weight': setValues[index][0],
+            'target_reps': setValues[index][1],
+          },
+        )
+      },
+    );
+    dailyExercisePlanList.add(
+      {
+        'exercise_id': exerciseNameToId[selectedExercise],
+        'num_sets': setValues.length,
+      },
+    );
     update();
+  }
+
+  List<Map<String, dynamic>> dailyExerciseRecordList = [];
+
+  void addDailyExerciseRecord(Map<String, dynamic> data) {
+    dailyExerciseRecordList.add(data);
   }
 }
