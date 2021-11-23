@@ -8,6 +8,7 @@ class InputTextField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final double? height;
+  final double? width;
   final double? borderRadius;
   final Color? backgroundColor;
   final Widget? icon;
@@ -16,7 +17,8 @@ class InputTextField extends StatelessWidget {
     Key? key,
     required this.label,
     required this.controller,
-    this.height,
+    this.width = 330,
+    this.height = 45,
     this.borderRadius,
     this.backgroundColor = textFieldFillColor,
     this.icon,
@@ -25,8 +27,8 @@ class InputTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 330,
-      height: height ?? 45,
+      width: width,
+      height: height,
       child: TextField(
         controller: controller,
         cursorColor: brightPrimaryColor,

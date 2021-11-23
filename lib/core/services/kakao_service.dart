@@ -26,6 +26,8 @@ class KakaoService {
   static loginWithKakaoTalk() async {
     try {
       String authCode = await AuthCodeClient.instance.requestWithTalk();
+      // String authCode = await AuthCodeClient.instance.requestWithTalk(
+      //     redirectUri: 'kakao9289c2192aae86a9837cf14e90664ffd://oauth/register_optional_info');
       var token = await _issueAccessToken(authCode);
       return token.map((key, value) => MapEntry(key, value?.toString()));
     } catch (e) {

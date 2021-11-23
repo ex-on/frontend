@@ -49,7 +49,7 @@ class ElevatedRouteButton extends StatelessWidget {
 class TextActionButton extends StatelessWidget {
   final String buttonText;
   final void Function() onPressed;
-  final double fontSize;
+  final double? fontSize;
   final Color? textColor;
   final bool? isUnderlined;
   final Widget? leading;
@@ -60,7 +60,7 @@ class TextActionButton extends StatelessWidget {
     Key? key,
     required this.buttonText,
     required this.onPressed,
-    required this.fontSize,
+    this.fontSize = 14,
     this.textColor = Colors.black,
     this.isUnderlined = true,
     this.leading,

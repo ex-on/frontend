@@ -114,12 +114,12 @@ Map<int, String> weekDayIntToStr = {
 };
 
 Map<String, int> exerciseNameToId = {
-    '벤치프레스': 1,
-  };
+  '벤치프레스': 1,
+};
 
-  Map<int, String> exerciseIdToName = {
-    1: '벤치프레스',
-  };
+Map<int, String> exerciseIdToName = {
+  1: '벤치프레스',
+};
 
 String formatHHMMSS(int seconds) {
   int hours = (seconds / 3600).truncate();
@@ -132,3 +132,11 @@ String formatHHMMSS(int seconds) {
 
   return "$hoursStr : $minutesStr : $secondsStr";
 }
+
+Map<int, String> postCategoryIntToStr = {
+  0: '전체',
+  1: 'HOT',
+  2: '자유',
+  3: '정보',
+  4: '운동인증'
+};

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -9,6 +10,8 @@ import 'package:exon_app/amplifyconfiguration.dart';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:dio/dio.dart';
 import 'package:exon_app/constants/constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AmplifyService {
   static String getSocialLoginUrl(String identityProvider) {
@@ -40,62 +43,34 @@ class AmplifyService {
     }
   }
 
-  static Future getUserAuthToken(String authCode) async {
+  static Future<bool> getAuthTokensWithAuthCode(String authCode) async {
     var dio = Dio();
-    String url = "https://$cognitoPoolUrl.amazoncognito.com/oauth2/token";
-
-    final response = await dio.post(
-      url,
-      data: {
-        "grant_type": "authorization_code",
-        "client_id": cognitoClientId,
-        "code": authCode,
-        "redirect_uri": redirectUri,
-      },
-      options: Options(
-        contentType: Headers.formUrlEncodedContentType,
-      ),
-    );
-    if (response.statusCode != 200) {
-      throw Exception("Received bad status code from Cognito for auth code:" +
-          response.statusCode.toString() +
-          "; body: " +
-          response.data);
+    const String url = 'https://$cognitoPoolUrl.amazoncognito.com/oauth2/token';
+    try {
+      var response = await dio.post(
+        url,
+        data: {
+          'grant_type': 'authorization_code',
+          'client_id': cognitoClientId,
+          'redirect_uri': redirectUri,
+          'code': authCode,
+        },
+        options: Options(headers: {
+          "Content-Type": 'application/x-www-form-urlencoded',
+        }),
+      );
+      storeAuthTokens(response.data, 'Cognito_Social');
+      return true;
+    } catch (e) {
+      print('POST call for get auth tokens failed: $e');
+      return false;
     }
-    print(response);
-    return response.data;
   }
 
-  static Future signUserInWithAuthToken(Map<String, String> tokenData) async {
-    final idToken = CognitoIdToken(tokenData['id_token']);
-    final accessToken = CognitoAccessToken(tokenData['access_token']);
-    final refreshToken = CognitoRefreshToken(tokenData['refresh_token']);
-    final session =
-        CognitoUserSession(idToken, accessToken, refreshToken: refreshToken);
-
-    final userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
-    final user = CognitoUser(null, userPool, signInUserSession: session);
-    print(session);
-    // NOTE: in order to get the email from the list of user attributes, make sure you select email in the list of
-    // attributes in Cognito and map it to the email field in the identity provider.
-    final attributes = await user.getUserAttributes();
-    for (CognitoUserAttribute attribute in attributes!) {
-      if (attribute.getName() == "email") {
-        user.username = attribute.getValue();
-        break;
-      }
-    }
-
-    print("login successfully.");
-    print(user.username);
-    return user;
-  }
-
-  static Future signUserInWithKakaoLogin(String accessToken) async {
+  static Future<bool> signUserInWithKakaoLogin(String accessToken) async {
     const apiName = 'kakaoLogin';
     const path = '/user/login';
-    var body =
-        Uint8List.fromList('{"access_token": "$accessToken"}'.codeUnits);
+    var body = Uint8List.fromList('{"access_token": "$accessToken"}'.codeUnits);
     try {
       RestOptions options = RestOptions(
         apiName: apiName,
@@ -105,9 +80,64 @@ class AmplifyService {
       RestOperation restOperation = Amplify.API.post(restOptions: options);
       RestResponse response = await restOperation.response;
       print('POST call succeeded');
-      print(String.fromCharCodes(response.data));
+      debugPrint(String.fromCharCodes(response.data), wrapWidth: 5000);
+      storeAuthTokens(
+          jsonDecode(
+              String.fromCharCodes(response.data))["AuthenticationResult"],
+          'Kakao');
+      return true;
     } on RestException catch (e) {
       print('POST call failed: $e');
+      return false;
+    }
+  }
+
+  static getTokensWithRefreshToken(String refreshToken) async {
+    var dio = Dio();
+    const String url = 'https://$cognitoPoolUrl.amazoncognito.com/oauth2/token';
+    try {
+      var response = await dio.post(
+        url,
+        data: {
+          'grant_type': 'refresh_token',
+          'client_id': cognitoClientId,
+          'refresh_token': refreshToken,
+        },
+        options: Options(headers: {
+          "Content-Type": 'application/x-www-form-urlencoded',
+        }),
+      );
+      storeRefreshedTokens(
+          response.data['access_token'], response.data['id_token']);
+    } catch (e) {
+      print('POST call for refreshing tokens failed: $e');
+    }
+  }
+
+  // static void storeAuthTokens(Map<String, dynamic> tokens) async {}
+
+  static void storeRefreshedTokens(String accessToken, String idToken) async {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    storage.write(key: 'access_token', value: accessToken);
+    storage.write(key: 'id_token', value: idToken);
+  }
+
+  static void storeAuthTokens(
+      Map<String, dynamic> tokens, String authProvider) async {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    switch (authProvider) {
+      case 'Kakao':
+        storage.write(key: "auth_provider", value: authProvider);
+        storage.write(key: "access_token", value: tokens["AccessToken"]);
+        storage.write(key: "id_token", value: tokens["IdToken"]);
+        storage.write(key: "refresh_token", value: tokens["RefreshToken"]);
+        break;
+      default:
+        storage.write(key: "auth_provider", value: authProvider);
+        storage.write(key: "access_token", value: tokens["access_token"]);
+        storage.write(key: "id_token", value: tokens["id_token"]);
+        storage.write(key: "refresh_token", value: tokens["refresh_token"]);
+        break;
     }
   }
 }

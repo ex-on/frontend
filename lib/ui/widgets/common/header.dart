@@ -1,3 +1,4 @@
+import 'package:exon_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
@@ -70,6 +71,35 @@ class ProfileHeader extends StatelessWidget {
       centerTitle: false,
       elevation: 0,
       backgroundColor: Colors.transparent,
+    );
+  }
+}
+
+class SearchHeader extends StatelessWidget {
+  final Function() onPressed;
+  final Color? backgroundColor;
+  final PreferredSizeWidget? bottom;
+  const SearchHeader({
+    Key? key,
+    required this.onPressed,
+    this.backgroundColor = Colors.transparent,
+    this.bottom,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search_rounded,
+              color: darkPrimaryColor, size: 30),
+          onPressed: onPressed,
+        ),
+      ],
+      centerTitle: false,
+      elevation: 0,
+      backgroundColor: backgroundColor,
+      bottom: bottom,
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:exon_app/core/controllers/kakao_login_controller.dart';
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/core/services/kakao_service.dart';
 import 'package:exon_app/helpers/url_launcher.dart';
@@ -22,15 +22,17 @@ class AuthLandingView extends StatelessWidget {
   final controller = Get.put<KakaoLoginController>(KakaoLoginController());
 
   Future<void> _onKakaoLoginPressed() async {
+    dynamic accessToken;
     if (controller.isKakaoInstalled) {
       var token = await KakaoService.loginWithKakaoTalk();
-      print(token.runtimeType);
-      var accessToken = token['access_token']!.toString();
-      AmplifyService.signUserInWithKakaoLogin(accessToken);
+      accessToken = token['access_token']!.toString();
     } else {
       var token = await KakaoService.loginWithKakao();
-      var accessToken = token['access_token'];
-      AmplifyService.signUserInWithKakaoLogin(accessToken);
+      accessToken = token['access_token'];
+    }
+    bool success = await AmplifyService.signUserInWithKakaoLogin(accessToken);
+    if (success) {
+      Get.offNamed('/register_optional_info');
     }
   }
 
@@ -155,15 +157,19 @@ class AuthLandingView extends StatelessWidget {
       ],
     );
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _titleSection,
-          _registerButtonSection,
-          _loginButtonSection,
-          _spacer,
-          _termsOfUseText,
-        ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _titleSection,
+              _registerButtonSection,
+              _loginButtonSection,
+              _spacer,
+              _termsOfUseText,
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:get/get.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart';
@@ -49,13 +50,18 @@ class DeepLinkController extends GetxController {
     // It will handle app links while the app is already started - be it in
     // the foreground or in the background.
     _sub = linkStream.listen(
-      (String? link) {
+      (String? link) async {
         int index = link!.indexOf('?');
+        int codeIndex = link.indexOf('code=') + 'code='.length;
         String parsedLink = '/' + link.substring("exon://".length, index);
+        String authCode = link.substring(codeIndex);
+        bool success = await AmplifyService.getAuthTokensWithAuthCode(authCode);
         print('got link: $parsedLink');
         _updateLatestLink(parsedLink);
         _updateErr(null);
-        Get.offAllNamed(parsedLink);
+        if (success) {
+          Get.offAllNamed(parsedLink);
+        }
       },
       onError: (Object err) {
         print('got err: $err');

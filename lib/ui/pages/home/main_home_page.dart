@@ -122,7 +122,6 @@ class MainHomePage extends GetView<HomeController> {
 
     return DisableGlowListView(
       shrinkWrap: true,
-      padding: const EdgeInsets.only(top: 20),
       children: [
         Column(
           children: [

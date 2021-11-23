@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Colors
-const splashViewBackgroundColor = Color(0xffEEF4FF);
+const splashViewBackgroundColor = Colors.white;
 const mainBackgroundColor = Color(0xffF4F3F8);
 const kakaoLoginColor = Color(0xffFAE100);
 const facebookLoginColor = Color(0xff4F66A5);
