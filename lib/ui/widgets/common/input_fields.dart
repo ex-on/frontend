@@ -1,8 +1,11 @@
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
+import 'package:exon_app/helpers/phone_num_formatter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class InputTextField extends StatelessWidget {
   final String label;
@@ -12,6 +15,13 @@ class InputTextField extends StatelessWidget {
   final double? borderRadius;
   final Color? backgroundColor;
   final Widget? icon;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
+  final Function(String)? onChanged;
+  final bool? obscureText;
+  final bool? isPassword;
+  final bool? isPhone;
+  final bool? autofocus;
 
   const InputTextField({
     Key? key,
@@ -22,15 +32,36 @@ class InputTextField extends StatelessWidget {
     this.borderRadius,
     this.backgroundColor = textFieldFillColor,
     this.icon,
+    this.validator,
+    this.keyboardType,
+    this.onChanged,
+    this.obscureText,
+    this.isPassword,
+    this.isPhone,
+    this.autofocus,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var phoneNumFormatter = PhoneNumFormatter(
+        masks: ['xxx-xxxx-xxxx', 'xxx-xxx-xxxx'], separator: '-');
     return SizedBox(
       width: width,
-      height: height,
-      child: TextField(
+      // height: height,
+      child: TextFormField(
+        obscureText: obscureText ?? false,
+        inputFormatters: isPhone != null && (isPhone ?? false)
+            ? [
+                phoneNumFormatter,
+              ]
+            : null,
+        autofocus: autofocus ?? true,
+        toolbarOptions: const ToolbarOptions(),
+        enableSuggestions: !(isPassword ?? false),
         controller: controller,
+        validator: validator,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
         cursorColor: brightPrimaryColor,
         decoration: InputDecoration(
           suffixIcon: icon,
@@ -59,6 +90,43 @@ class InputTextField extends StatelessWidget {
     );
   }
 }
+
+class NumericTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    } else if (newValue.text.compareTo(oldValue.text) != 0) {
+      final int selectionIndexFromTheRight =
+          newValue.text.length - newValue.selection.end;
+      final f = NumberFormat("###-#");
+      final number =
+          int.parse(newValue.text.replaceAll(f.symbols.GROUP_SEP, ''));
+      final newString = f.format(number);
+      return TextEditingValue(
+        text: newString,
+        selection: TextSelection.collapsed(
+            offset: newString.length - selectionIndexFromTheRight),
+      );
+    } else {
+      return newValue;
+    }
+  }
+}
+
+// class NumericTextFormatter extends TextInputFormatter {
+//   TextEditingValue formatEditUpdate(
+//       TextEditingValue oldValue, TextEditingValue newValue) {
+//     if (newValue.text.length > 0) {
+//       int num = int.parse(newValue.text.replaceAll(',', ''));
+//       final f = new NumberFormat("#,###");
+//       return newValue.copyWith(text: f.format(num));
+//     } else {
+//       return newValue.copyWith(text: '');
+//     }
+//   }
+// }
 
 class NumberInputField extends StatelessWidget {
   final TextEditingController controller;

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:exon_app/dummy_data.dart';
+import 'package:exon_app/dummy_data_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';

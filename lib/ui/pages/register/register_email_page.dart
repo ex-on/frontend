@@ -1,12 +1,14 @@
 import 'package:exon_app/core/controllers/register_controller.dart';
+import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class RegisterEmailPage extends GetView<RegisterController> {
+class RegisterEmailPage extends StatelessWidget {
   const RegisterEmailPage({Key? key}) : super(key: key);
 
   @override
@@ -16,13 +18,38 @@ class RegisterEmailPage extends GetView<RegisterController> {
     const String _textFieldLabelText = '이메일';
     const String _nextButtonText = '다음';
     final double _height = Get.height;
+    final controller = Get.put<RegisterController>(RegisterController());
 
     void _onBackPressed() {
       Get.back();
     }
 
     void _onNextPressed() {
-      controller.page++;
+      controller.toNextPage();
+    }
+
+    String? _emailValidator(String? text) {
+      const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+      final regExp = RegExp(pattern);
+      if (text == null || text.isEmpty) {
+        return '이메일을 입력해주세요';
+      }
+      if (!regExp.hasMatch(text)) {
+        return '올바른 이메일 주소를 입력해주세요';
+      } else if (!controller.isEmailAvailable) {
+        return '이미 존재하는 이메일입니다';
+      } else {
+        return null;
+      }
+    }
+
+    void _onInputChanged(String text) {
+      bool isValid = controller.formKey.currentState!.validate();
+      controller.setEmailValid(isValid);
+      if (controller.isEmailValid) {
+        print('checking');
+        // controller.checkAvailableEmail();
+      }
     }
 
     return Column(
@@ -64,9 +91,16 @@ class RegisterEmailPage extends GetView<RegisterController> {
                   const SizedBox(
                     height: 20,
                   ),
-                  InputTextField(
-                    label: _textFieldLabelText,
-                    controller: controller.emailController,
+                  Form(
+                    key: controller.formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: InputTextField(
+                      label: _textFieldLabelText,
+                      controller: controller.emailController,
+                      validator: _emailValidator,
+                      onChanged: _onInputChanged,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
                   ),
                 ],
               ),
@@ -77,10 +111,13 @@ class RegisterEmailPage extends GetView<RegisterController> {
           direction: Axis.horizontal,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedActionButton(
-              buttonText: _nextButtonText,
-              onPressed: _onNextPressed,
-            ),
+            GetBuilder<RegisterController>(builder: (_) {
+              return ElevatedActionButton(
+                buttonText: _nextButtonText,
+                onPressed: _onNextPressed,
+                activated: _.isEmailValid,
+              );
+            }),
           ],
         ),
         const SizedBox(

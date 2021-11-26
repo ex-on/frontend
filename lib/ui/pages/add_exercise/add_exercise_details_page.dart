@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
-import 'package:exon_app/dummy_data.dart';
+import 'package:exon_app/dummy_data_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';

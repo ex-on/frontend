@@ -11,7 +11,7 @@
     </intent>
   </queries>
    <application
-        android:label="exon_app"
+        android:label="Exon"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

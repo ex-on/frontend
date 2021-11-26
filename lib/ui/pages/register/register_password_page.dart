@@ -18,13 +18,51 @@ class RegisterPasswordPage extends GetView<RegisterController> {
     const String _passwordCheckFieldLabelText = '비밀번호 확인';
     const String _nextButtonText = '다음';
     final double _height = Get.height;
+    bool _passwordCheckInput = false;
 
     void _onBackPressed() {
-      controller.page--;
+      controller.toPreviousPage();
     }
 
     void _onNextPressed() {
-      controller.page++;
+      controller.toNextPage();
+    }
+
+    void _togglePasswordInputVisibility() {
+      controller.togglePasswordInputVisibility();
+    }
+
+    void _togglePasswordCheckVisibility() {
+      controller.togglePasswordCheckVisibility();
+    }
+
+    String? _passwordInputValidator(String? text) {
+      const pattern = r'^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+      final regExp = RegExp(pattern);
+      if (text == null || text.isEmpty) {
+        return '비밀번호를 입력해주세요';
+      } else if (text.length < 8) {
+        return '8자 이상의 비밀번호를 입력해주세요';
+      }
+      if (!regExp.hasMatch(text)) {
+        return '비밀번호 형식이 올바르지 않아요';
+      } else {
+        return null;
+      }
+    }
+
+    String? _passwordCheckValidator(String? text) {
+      if (text != controller.passwordInputController.text &&
+          _passwordCheckInput) {
+        return '비밀번호가 일치하지 않아요';
+      } else {
+        return null;
+      }
+    }
+
+    void _onPasswordFormChanged(String text) {
+      bool isValid = controller.formKey.currentState!.validate();
+      controller.setPasswordFormValid(isValid);
     }
 
     return Column(
@@ -37,47 +75,79 @@ class RegisterPasswordPage extends GetView<RegisterController> {
               SizedBox(
                 height: 0.025 * _height,
               ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: 330,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            _titleText,
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+              Form(
+                key: controller.formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 330,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              _titleText,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        Text(
-                          _titleLabelText,
-                          style: TextStyle(
-                            fontSize: 16,
+                          Text(
+                            _titleLabelText,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  InputTextField(
-                    label: _passwordInputFieldLabelText,
-                    controller: controller.passwordInputController,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  InputTextField(
-                    label: _passwordCheckFieldLabelText,
-                    controller: controller.passwordCheckController,
-                  ),
-                ],
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    GetBuilder<RegisterController>(builder: (_) {
+                      return InputTextField(
+                        icon: IconButton(
+                          icon: _.passwordInputVisible
+                              ? const Icon(Icons.visibility_off_rounded)
+                              : const Icon(Icons.visibility_rounded),
+                          onPressed: _togglePasswordInputVisibility,
+                        ),
+                        obscureText: !_.passwordInputVisible,
+                        label: _passwordInputFieldLabelText,
+                        controller: controller.passwordInputController,
+                        validator: _passwordInputValidator,
+                        onChanged: _onPasswordFormChanged,
+                        isPassword: true,
+                      );
+                    }),
+                    verticalSpacer(30),
+                    GetBuilder<RegisterController>(builder: (_) {
+                      return InputTextField(
+                        icon: IconButton(
+                          icon: _.passwordCheckVisible
+                              ? const Icon(Icons.visibility_off_rounded)
+                              : const Icon(Icons.visibility_rounded),
+                          onPressed: _togglePasswordCheckVisibility,
+                        ),
+                        obscureText: !_.passwordCheckVisible,
+                        label: _passwordCheckFieldLabelText,
+                        controller: controller.passwordCheckController,
+                        validator: _passwordCheckValidator,
+                        onChanged: (String text) {
+                          _onPasswordFormChanged(text);
+                          if (!_passwordCheckInput) {
+                            _passwordCheckInput = true;
+                          }
+                        },
+                        isPassword: true,
+                      );
+                    }),
+                    verticalSpacer(50),
+                  ],
+                ),
               ),
             ],
           ),
@@ -86,9 +156,13 @@ class RegisterPasswordPage extends GetView<RegisterController> {
           direction: Axis.horizontal,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedActionButton(
-              buttonText: _nextButtonText,
-              onPressed: _onNextPressed,
+            GetBuilder<RegisterController>(
+              builder: (_) {
+                return ElevatedActionButton(
+                    buttonText: _nextButtonText,
+                    onPressed: _onNextPressed,
+                    activated: _.isPasswordFormValid);
+              },
             ),
           ],
         ),

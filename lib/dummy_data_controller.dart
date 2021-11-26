@@ -83,4 +83,12 @@ class DummyDataController extends GetxController {
   void addDailyExerciseRecord(Map<String, dynamic> data) {
     dailyExerciseRecordList.add(data);
   }
+
+  List<String> usernameList = [
+    'exon_official',
+    'exon',
+    
+  ];
+
+  
 }

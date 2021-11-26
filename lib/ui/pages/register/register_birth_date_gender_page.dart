@@ -20,16 +20,17 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double _height = Get.height;
-    final controller = Get.put<RegisterOptionalInfoController>(
-        RegisterOptionalInfoController());
+    final controller =
+        Get.put<RegisterInfoController>(RegisterInfoController());
 
     void _onBackPressed() {
-      RegisterController.to.page.value = 4;
-      Get.back();
+      controller.jumpToPage(0);
+      // RegisterController.to.jumpToPage(3);
+      // Get.back();
     }
 
     void _onNextPressed() {
-      controller.jumpToPage(1);
+      controller.jumpToPage(2);
     }
 
     void _onBirthDateFieldPressed() {
@@ -87,7 +88,7 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  GetBuilder<RegisterOptionalInfoController>(
+                  GetBuilder<RegisterInfoController>(
                     builder: (_) {
                       return InputFieldDisplay(
                         labelText: _birthDateFieldLabelText,
@@ -101,7 +102,7 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
                     },
                   ),
                   verticalSpacer(30),
-                  GetBuilder<RegisterOptionalInfoController>(
+                  GetBuilder<RegisterInfoController>(
                     builder: (_) {
                       return InputFieldDisplay(
                         labelText: _genderFieldLabelText,
@@ -115,6 +116,7 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
                       );
                     },
                   ),
+                  verticalSpacer(50),
                 ],
               ),
             ],

@@ -13,10 +13,8 @@ class AppRoutes {
     GetPage(name: '/', page: () => const SplashView(loading: false)),
     GetPage(name: '/loading', page: () => const SplashView(loading: true)),
     GetPage(name: '/auth', page: () => AuthLandingView()),
-    GetPage(name: '/register', page: () => RegistrationView()),
-    GetPage(
-        name: '/register_optional_info',
-        page: () => const RegisterOptionalInfoView()),
+    GetPage(name: '/register', page: () => const RegistrationView()),
+    GetPage(name: '/register_info', page: () => const RegisterInfoView()),
     GetPage(name: '/home', page: () => HomeNavigationView()),
     GetPage(name: '/add_excercise', page: () => AddExerciseView()),
     GetPage(name: '/exercise_block', page: () => const ExerciseBlockView()),

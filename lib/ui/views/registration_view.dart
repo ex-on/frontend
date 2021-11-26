@@ -12,31 +12,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RegistrationView extends GetView<RegisterController> {
-  RegistrationView({Key? key}) : super(key: key);
-  final List<Widget> _pages = [
-    const RegisterEmailPage(),
-    const RegisterPasswordPage(),
-    const RegisterUsernamePage(),
-    const RegisterPhoneAuthPage(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      if (controller.page.value < 0 || controller.page.value >= _pages.length) {
-        controller.page.value = 0;
-      }
-      return Scaffold(body: _pages[controller.page.value]);
-    });
-  }
-}
-
-class RegisterOptionalInfoView extends GetView<RegisterOptionalInfoController> {
-  const RegisterOptionalInfoView({Key? key}) : super(key: key);
+  const RegistrationView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     List<Widget> _pages = [
+      const RegisterEmailPage(),
+      const RegisterPasswordPage(),
+      // const RegisterUsernamePage(),
+      const RegisterPhoneAuthPage(),
+    ];
+    if (controller.page < 0 || controller.page >= _pages.length) {
+      controller.jumpToPage(0);
+    }
+    return GetBuilder<RegisterController>(
+      builder: (_) {
+        return Scaffold(body: _pages[_.page]);
+      },
+    );
+  }
+}
+
+class RegisterInfoView extends GetView<RegisterInfoController> {
+  const RegisterInfoView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> _pages = [
+      const RegisterUsernamePage(),
       const RegisterBirthDateGenderPage(),
       const RegisterPhysicalInfoPage(),
     ];
@@ -44,7 +47,7 @@ class RegisterOptionalInfoView extends GetView<RegisterOptionalInfoController> {
       controller.jumpToPage(0);
     }
 
-    return GetBuilder<RegisterOptionalInfoController>(
+    return GetBuilder<RegisterInfoController>(
       builder: (_) {
         return Scaffold(
           body: _pages[_.page],

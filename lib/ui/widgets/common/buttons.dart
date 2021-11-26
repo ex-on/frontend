@@ -4,30 +4,38 @@ import 'package:get/get.dart';
 
 class ElevatedRouteButton extends StatelessWidget {
   final String buttonText;
-  dynamic Function()? onPressed;
+  final dynamic Function()? onPressed;
   final Color backgroundColor;
 
-  ElevatedRouteButton({
+  const ElevatedRouteButton({
     Key? key,
     required this.buttonText,
-    required dynamic Function() this.onPressed,
+    required this.onPressed,
     required this.backgroundColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle style = ElevatedButton.styleFrom(
-      primary: backgroundColor,
-      minimumSize: const Size(250, 50),
-      textStyle: const TextStyle(
+    final ButtonStyle style = ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(backgroundColor),
+      overlayColor: backgroundColor == Colors.white
+          ? MaterialStateProperty.all(Colors.grey[200])
+          : null,
+      minimumSize: MaterialStateProperty.all(const Size(250, 50)),
+      textStyle: MaterialStateProperty.all(const TextStyle(
         fontSize: 16,
+      )),
+      side: MaterialStateProperty.all(
+        backgroundColor == Colors.white
+            ? const BorderSide(color: Color(0xff999999), width: 1.0)
+            : BorderSide.none,
       ),
-      side: backgroundColor == Colors.white
-          ? const BorderSide(color: Color(0xff999999), width: 1.0)
-          : BorderSide.none,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+      shape: MaterialStateProperty.all(
+        const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
       ),
+      elevation: MaterialStateProperty.all(0),
     );
     return ElevatedButton(
       child: Text(
@@ -117,10 +125,12 @@ class TextActionButton extends StatelessWidget {
 class ElevatedActionButton extends StatelessWidget {
   final String buttonText;
   final dynamic Function()? onPressed;
+  final bool? activated;
   const ElevatedActionButton({
     Key? key,
     required this.buttonText,
     required dynamic Function() this.onPressed,
+    this.activated,
   }) : super(key: key);
 
   @override
@@ -141,6 +151,7 @@ class ElevatedActionButton extends StatelessWidget {
       shape: MaterialStateProperty.all(const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(30)),
       )),
+      elevation: MaterialStateProperty.all(0),
     );
 
     return ElevatedButton(
@@ -150,7 +161,7 @@ class ElevatedActionButton extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      onPressed: onPressed,
+      onPressed: activated == null || activated! ? onPressed : null,
       style: style,
     );
   }

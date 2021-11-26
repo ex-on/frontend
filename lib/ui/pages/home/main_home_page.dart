@@ -9,7 +9,7 @@ import 'package:exon_app/ui/widgets/home/time_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:exon_app/dummy_data.dart';
+import 'package:exon_app/dummy_data_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 
 class MainHomePage extends GetView<HomeController> {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -92,6 +93,92 @@ class AmplifyService {
     }
   }
 
+  static Future<bool> signInWithUsernameAndPassword(
+      String email, String password) async {
+    var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
+    var cognitoUser = CognitoUser(email, userPool);
+    var authDetails =
+        AuthenticationDetails(username: email, password: password);
+    try {
+      var session = await cognitoUser.authenticateUser(authDetails);
+      Map<String, dynamic> tokens = {
+        'access_token': session!.getAccessToken().jwtToken,
+        'id_token': session.getIdToken().jwtToken,
+        'refresh_token': session.getRefreshToken()!.getToken()
+      };
+      storeAuthTokens(tokens, 'Cognito');
+      var storage = const FlutterSecureStorage();
+      var read = await storage.readAll();
+      read.forEach((key, value) {
+        log(key);
+        log(value);
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> signUpWithPhoneNum(Map<String, String> userInfo) async {
+    var signUpOptions = CognitoSignUpOptions(userAttributes: {
+      'phone_number': userInfo['phone_number']!,
+    });
+    try {
+      var response = await Amplify.Auth.signUp(
+        username: userInfo['username']!,
+        password: userInfo['password']!,
+        options: signUpOptions,
+      );
+      print(response.nextStep);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<dynamic> confirmVerificationCode(
+      String email, String verificationCode) async {
+    var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
+    var cognitoUser = CognitoUser(email, userPool);
+    try {
+      var response = await cognitoUser.confirmRegistration(verificationCode);
+      return response;
+    } catch (e) {
+      var startIndex = e.toString().indexOf('code: ') + 6;
+      var endIndex = e.toString().indexOf(', name:');
+      var exceptionName = e.toString().substring(startIndex, endIndex);
+      print(exceptionName);
+      return exceptionName;
+    }
+  }
+
+  static Future<bool> resendVerificationCode(String email) async {
+    var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
+    var cognitoUser = CognitoUser(email, userPool);
+    try {
+      var response = await cognitoUser.resendConfirmationCode();
+      print(response);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> deleteUser(String email) async {
+    var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
+    var cognitoUser = CognitoUser(email, userPool);
+    try {
+      var response = await cognitoUser.deleteUser();
+      return response;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   static getTokensWithRefreshToken(String refreshToken) async {
     var dio = Dio();
     const String url = 'https://$cognitoPoolUrl.amazoncognito.com/oauth2/token';
@@ -113,8 +200,6 @@ class AmplifyService {
       print('POST call for refreshing tokens failed: $e');
     }
   }
-
-  // static void storeAuthTokens(Map<String, dynamic> tokens) async {}
 
   static void storeRefreshedTokens(String accessToken, String idToken) async {
     FlutterSecureStorage storage = const FlutterSecureStorage();

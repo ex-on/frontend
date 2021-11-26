@@ -23,8 +23,8 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double _height = Get.height;
-    final controller = Get.put<RegisterOptionalInfoController>(
-        RegisterOptionalInfoController());
+    final controller = Get.put<RegisterInfoController>(
+        RegisterInfoController());
 
     void _onBackPressed() {
       controller.jumpToPage(0);
@@ -106,7 +106,7 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  GetBuilder<RegisterOptionalInfoController>(
+                  GetBuilder<RegisterInfoController>(
                     builder: (_) {
                       return InputFieldDisplay(
                         labelText: _heightFieldLabelText,
@@ -125,7 +125,7 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
                     },
                   ),
                   verticalSpacer(30),
-                  GetBuilder<RegisterOptionalInfoController>(
+                  GetBuilder<RegisterInfoController>(
                     builder: (_) {
                       return InputFieldDisplay(
                         labelText: _weightFieldLabelText,
@@ -145,7 +145,7 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
                     },
                   ),
                   verticalSpacer(30),
-                  GetBuilder<RegisterOptionalInfoController>(
+                  GetBuilder<RegisterInfoController>(
                     builder: (_) {
                       return InputFieldDisplay(
                         labelText: _bodyFatPercentageFieldLabelText,
@@ -166,7 +166,7 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
                     },
                   ),
                   verticalSpacer(30),
-                  GetBuilder<RegisterOptionalInfoController>(
+                  GetBuilder<RegisterInfoController>(
                     builder: (_) {
                       return InputFieldDisplay(
                         labelText: _muscleMassFieldLabelText,

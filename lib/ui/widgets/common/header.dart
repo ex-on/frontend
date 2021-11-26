@@ -20,12 +20,14 @@ class Header extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded, color: Colors.black),
               onPressed: onPressed,
+              splashRadius: 20,
             ),
             elevation: 0,
             backgroundColor: color,
           )
         : AppBar(
             leading: IconButton(
+              splashRadius: 20,
               icon: const Icon(Icons.arrow_back_rounded, color: Colors.black),
               onPressed: onPressed,
             ),

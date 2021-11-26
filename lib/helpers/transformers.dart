@@ -133,6 +133,13 @@ String formatHHMMSS(int seconds) {
   return "$hoursStr : $minutesStr : $secondsStr";
 }
 
+String formatMSS(int seconds) {
+  int minutes = (seconds / 60).truncate();
+  String minutesStr = (minutes).toString();
+  String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+  return "$minutesStr:$secondsStr";
+}
+
 Map<int, String> postCategoryIntToStr = {
   0: '전체',
   1: 'HOT',
