@@ -41,6 +41,7 @@ class CommunityMainView extends GetView<CommunityController> {
       onPressed: _onSearchPressed,
       backgroundColor: Colors.white,
       bottom: _tabBar,
+      searchController: TextEditingController(),
     );
 
     Widget _postView = Column(
@@ -85,17 +86,20 @@ class CommunityMainView extends GetView<CommunityController> {
                                   const EdgeInsets.symmetric(vertical: 8.0),
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
-                                  // shape: CircleBorder(),
+                                  shape: BoxShape.circle,
                                   border: Border.all(
-                                  width: 2,
-                                  color: _.postCategory == index
-                                      ? lightBrightPrimaryColor
-                                      : Colors.transparent,
+                                    width: 3,
+                                    color: _.postCategory == index
+                                        ? lightBrightPrimaryColor
+                                        : Colors.transparent,
+                                  ),
                                 ),
-                                ),
-                                child: const CircleAvatar(
-                                  backgroundColor: Color(0xffF3F4F6),
-                                  radius: 28.5,
+                                child: const Padding(
+                                  padding: EdgeInsets.all(3),
+                                  child: CircleAvatar(
+                                    backgroundColor: Color(0xffF3F4F6),
+                                    radius: 28.5,
+                                  ),
                                 ),
                               ),
                             ),

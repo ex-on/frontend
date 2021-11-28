@@ -1,4 +1,5 @@
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:flutter/material.dart';
 
 class Header extends StatelessWidget {
@@ -66,6 +67,7 @@ class ProfileHeader extends StatelessWidget {
       ),
       actions: [
         IconButton(
+          splashRadius: 20,
           icon: const Icon(Icons.menu_rounded, color: Colors.black, size: 30),
           onPressed: onPressed,
         ),
@@ -81,9 +83,11 @@ class SearchHeader extends StatelessWidget {
   final Function() onPressed;
   final Color? backgroundColor;
   final PreferredSizeWidget? bottom;
+  final TextEditingController searchController;
   const SearchHeader({
     Key? key,
     required this.onPressed,
+    required this.searchController,
     this.backgroundColor = Colors.transparent,
     this.bottom,
   }) : super(key: key);
@@ -93,11 +97,18 @@ class SearchHeader extends StatelessWidget {
     return AppBar(
       actions: [
         IconButton(
+          splashRadius: 20,
           icon: const Icon(Icons.search_rounded,
               color: darkPrimaryColor, size: 30),
           onPressed: onPressed,
         ),
       ],
+      title: InputTextField(
+        label: '',
+        controller: searchController,
+        autofocus: false,
+        backgroundColor: Colors.transparent,
+      ),
       centerTitle: false,
       elevation: 0,
       backgroundColor: backgroundColor,

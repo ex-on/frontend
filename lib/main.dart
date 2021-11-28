@@ -49,20 +49,29 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     Get.put(DeepLinkController());
-    return GetMaterialApp(
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('ko', 'KR'),
-      ],
-      key: _scaffoldKey,
-      initialRoute: '/',
-      locale: const Locale('ko', 'KO'),
-      getPages: AppRoutes.routes,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus!.unfocus();
+        }
+      },
+      child: GetMaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('ko', 'KR'),
+        ],
+        key: _scaffoldKey,
+        initialRoute: '/',
+        locale: const Locale('ko', 'KO'),
+        getPages: AppRoutes.routes,
+      ),
     );
   }
 }

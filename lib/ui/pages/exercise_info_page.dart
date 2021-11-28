@@ -8,8 +8,8 @@ import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ExerciseInfoView extends StatelessWidget {
-  const ExerciseInfoView({Key? key}) : super(key: key);
+class ExerciseInfoPage extends StatelessWidget {
+  const ExerciseInfoPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +30,10 @@ class ExerciseInfoView extends StatelessWidget {
       Get.back();
     }
 
-    Widget _header = Header(onPressed: _onBackPressed, color: Colors.white);
-
-    Widget _headerText = const Center(
-      child: Text(
-        _headerTitle,
-        style: TextStyle(
-          color: clearBlackColor,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          letterSpacing: -2,
-        ),
-      ),
+    Widget _header = Header(
+      onPressed: _onBackPressed,
+      color: Colors.white,
+      title: _headerTitle,
     );
 
     return Scaffold(
@@ -65,7 +57,6 @@ class ExerciseInfoView extends StatelessWidget {
                             margin: const EdgeInsets.only(bottom: 10),
                             child: Column(
                               children: [
-                                _headerText,
                                 verticalSpacer(30),
                                 SizedBox(
                                   child: Image.asset(

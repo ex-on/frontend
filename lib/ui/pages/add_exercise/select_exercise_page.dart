@@ -64,18 +64,9 @@ class SelectExercisePage extends StatelessWidget {
       controller.jumpToPage(1);
     }
 
-    Widget _header = Header(onPressed: _onBackPressed);
-
-    Widget _headerText = const Center(
-      child: Text(
-        _headerTitle,
-        style: TextStyle(
-          color: clearBlackColor,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          letterSpacing: -2,
-        ),
-      ),
+    Widget _header = Header(
+      onPressed: _onBackPressed,
+      title: _headerTitle,
     );
 
     Widget _excerciseSearchBar = InputTextField(
@@ -263,7 +254,6 @@ class SelectExercisePage extends StatelessWidget {
     return Column(
       children: [
         _header,
-        _headerText,
         verticalSpacer(20),
         _excerciseSearchBar,
         _targetMuscleSelect,
