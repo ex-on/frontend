@@ -85,9 +85,7 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  verticalSpacer(30),
                   GetBuilder<RegisterInfoController>(
                     builder: (_) {
                       return InputFieldDisplay(

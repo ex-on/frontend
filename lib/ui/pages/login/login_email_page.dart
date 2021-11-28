@@ -1,54 +1,54 @@
-import 'package:exon_app/core/controllers/register_controller.dart';
+import 'package:exon_app/core/controllers/login_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
-import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RegisterUsernamePage extends GetView<RegisterInfoController> {
-  const RegisterUsernamePage({Key? key}) : super(key: key);
+class LoginEmailPage extends StatelessWidget {
+  const LoginEmailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const String _titleText = '닉네임을 입력해 주세요';
-    const String _textFieldLabelText = '닉네임';
+    const String _titleText = '반갑습니다!';
+    const String _titleLabelText = '로그인을 위한 이메일을 입력해주세요';
+    const String _textFieldLabelText = '이메일';
     const String _nextButtonText = '다음';
     final double _height = Get.height;
+    final controller = Get.put<LoginController>(LoginController());
 
     void _onBackPressed() {
-      // RegisterController.to.jumpToPage(2);
-      // Get.back();
+      Get.back();
+      controller.reset();
     }
 
     void _onNextPressed() {
       controller.jumpToPage(1);
     }
 
-    String? _usernameValidator(String? text) {
-      const pattern =
-          r'^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣._]+(?<![_.])$';
+    String? _emailValidator(String? text) {
+      const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
       final regExp = RegExp(pattern);
       if (text == null || text.isEmpty) {
-        return '닉네임을 입력해주세요';
-      } else if (text.length < 3) {
-        return '3글자 이상 입력해주세요';
-      } else if (text.length > 20) {
-        return '20자 이내로 입력해주세요';
-      } else if (!regExp.hasMatch(text)) {
-        return '닉네임 형식이 올바르지 않습니다';
-      } else if (!controller.isUsernameAvailable) {
-        return '이미 존재하는 닉네임이에요';
+        return '이메일을 입력해주세요';
+      }
+      if (!regExp.hasMatch(text)) {
+        return '올바른 이메일 주소를 입력해주세요';
+      } else if (false) {
+        return '존재하지 않는 이메일입니다';
       } else {
         return null;
       }
     }
 
-    void _onUsernameChanged(String text) {
-      controller.checkAvailableUsername();
+    void _onInputChanged(String text) {
       bool isValid = controller.formKey.currentState!.validate();
-      controller.setUsernameValid(isValid);
+      controller.setEmailValid(isValid);
+      if (controller.isEmailValid) {
+        print('checking');
+        // controller.checkAvailableEmail();
+      }
     }
 
     return Column(
@@ -78,18 +78,27 @@ class RegisterUsernamePage extends GetView<RegisterInfoController> {
                             ),
                           ),
                         ),
+                        Text(
+                          _titleLabelText,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  verticalSpacer(45),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Form(
                     key: controller.formKey,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: InputTextField(
                       label: _textFieldLabelText,
-                      controller: controller.usernameController,
-                      validator: _usernameValidator,
-                      onChanged: _onUsernameChanged,
+                      controller: controller.emailController,
+                      validator: _emailValidator,
+                      onChanged: _onInputChanged,
+                      keyboardType: TextInputType.emailAddress,
                     ),
                   ),
                 ],
@@ -98,17 +107,18 @@ class RegisterUsernamePage extends GetView<RegisterInfoController> {
           ),
         ),
         Flex(
-            direction: Axis.horizontal,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GetBuilder<RegisterInfoController>(builder: (_) {
-                return ElevatedActionButton(
-                  buttonText: _nextButtonText,
-                  onPressed: _onNextPressed,
-                  activated: _.isUsernameValid && _.isUsernameAvailable,
-                );
-              }),
-            ]),
+          direction: Axis.horizontal,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GetBuilder<LoginController>(builder: (_) {
+              return ElevatedActionButton(
+                buttonText: _nextButtonText,
+                onPressed: _onNextPressed,
+                activated: _.isEmailValid,
+              );
+            }),
+          ],
+        ),
         const SizedBox(
           height: 50,
         ),

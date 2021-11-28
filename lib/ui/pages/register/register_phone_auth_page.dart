@@ -144,7 +144,7 @@ class RegisterPhoneAuthPage extends GetView<RegisterController> {
                             ],
                           ),
                         ),
-                        verticalSpacer(20),
+                        verticalSpacer(45),
                         InputTextField(
                           label: _textFieldLabelText,
                           controller: _.phoneNumController,

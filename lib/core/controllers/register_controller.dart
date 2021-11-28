@@ -71,8 +71,8 @@ class RegisterController extends GetxController {
   }
 
   // void checkAvailableEmail() async {
-    // todo
-    // update();
+  // todo
+  // update();
   // }
 
 // Password control
@@ -190,6 +190,10 @@ class RegisterController extends GetxController {
     }
     toggleCheckingVerificationCode();
     update();
+  }
+
+  void reset() {
+    
   }
 }
 

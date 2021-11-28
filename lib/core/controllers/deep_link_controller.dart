@@ -57,6 +57,7 @@ class DeepLinkController extends GetxController {
         String authCode = link.substring(codeIndex);
         bool success = await AmplifyService.getAuthTokensWithAuthCode(authCode);
         print('got link: $parsedLink');
+        print(success);
         _updateLatestLink(parsedLink);
         _updateErr(null);
         if (success) {

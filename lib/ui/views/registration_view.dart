@@ -1,10 +1,10 @@
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
-import 'package:exon_app/ui/pages/register/register_birth_date_gender_page.dart';
+import 'package:exon_app/ui/pages/register_info/register_birth_date_gender_page.dart';
 import 'package:exon_app/ui/pages/register/register_email_page.dart';
 import 'package:exon_app/ui/pages/register/register_password_page.dart';
 import 'package:exon_app/ui/pages/register/register_phone_auth_page.dart';
-import 'package:exon_app/ui/pages/register/register_physical_info_page.dart';
+import 'package:exon_app/ui/pages/register_info/register_physical_info_page.dart';
 import 'package:exon_app/ui/pages/register/register_username_page.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';

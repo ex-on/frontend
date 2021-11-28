@@ -31,8 +31,9 @@ class AuthLandingView extends StatelessWidget {
       accessToken = token['access_token'];
     }
     bool success = await AmplifyService.signUserInWithKakaoLogin(accessToken);
+    print(success);
     if (success) {
-      Get.offNamed('/register_optional_info');
+      Get.offNamed('/register_info');
     }
   }
 

@@ -1,4 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/core/controllers/register_controller.dart';
+import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
@@ -64,6 +66,17 @@ class ProfilePage extends StatelessWidget {
               ),
               Center(
                 child: _ProfileEditButton(onPressed: _onProfileEditPressed),
+              ),
+              Center(
+                child: TextActionButton(
+                    buttonText: '로그아웃',
+                    onPressed: () async {
+                      var signOutRes = await AmplifyService.signOut(
+                          RegisterController.to.emailController.text);
+                          if (signOutRes) {
+                            Get.offAllNamed('/');
+                          }
+                    }),
               ),
               const _UserMainActivityBlock(
                 numSelectedAnswers: 1294,

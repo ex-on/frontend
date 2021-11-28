@@ -89,6 +89,7 @@ class SelectExercisePage extends StatelessWidget {
         size: 24,
         color: _searchIconColor,
       ),
+      autofocus: false,
     );
 
     Widget _targetMuscleSelect = SizedBox(
@@ -240,12 +241,14 @@ class SelectExercisePage extends StatelessWidget {
                   return verticalSpacer(15);
                 } else {
                   return _ExerciseBlock(
-                    name: DummyDataController.to.excerciseNameList[index ~/ 2]['name'] ?? '',
-                    targetMuscle: DummyDataController.to.excerciseNameList[index ~/ 2]
-                            ['target_muscle'] ??
+                    name: DummyDataController.to.excerciseNameList[index ~/ 2]
+                            ['name'] ??
                         '',
-                    exerciseMethod: DummyDataController.to.excerciseNameList[index ~/ 2]
-                            ['exercise_method'] ??
+                    targetMuscle: DummyDataController.to
+                            .excerciseNameList[index ~/ 2]['target_muscle'] ??
+                        '',
+                    exerciseMethod: DummyDataController.to
+                            .excerciseNameList[index ~/ 2]['exercise_method'] ??
                         '',
                     onTap: _onExerciseBlockPressed,
                   );

@@ -11,7 +11,6 @@ import 'package:exon_app/amplifyconfiguration.dart';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:dio/dio.dart';
 import 'package:exon_app/constants/constants.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AmplifyService {
@@ -20,7 +19,7 @@ class AmplifyService {
         'oauth2/authorize?identity_provider=$identityProvider'
         '&redirect_uri=$redirectUri'
         '&response_type=CODE&client_id=$cognitoClientId'
-        '&scope=email openid phone aws.cognito.signin.user.admin';
+        '&scope=email+openid+phone+aws.cognito.signin.user.admin';
   }
 
   static configureAmplify() async {
@@ -61,6 +60,7 @@ class AmplifyService {
         }),
       );
       storeAuthTokens(response.data, 'Cognito_Social');
+
       return true;
     } catch (e) {
       print('POST call for get auth tokens failed: $e');
@@ -81,7 +81,7 @@ class AmplifyService {
       RestOperation restOperation = Amplify.API.post(restOptions: options);
       RestResponse response = await restOperation.response;
       print('POST call succeeded');
-      debugPrint(String.fromCharCodes(response.data), wrapWidth: 5000);
+      log(String.fromCharCodes(response.data));
       storeAuthTokens(
           jsonDecode(
               String.fromCharCodes(response.data))["AuthenticationResult"],
@@ -173,6 +173,20 @@ class AmplifyService {
     try {
       var response = await cognitoUser.deleteUser();
       return response;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> signOut(String email) async {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    try {
+      storage.delete(key: 'auth_provider');
+      storage.delete(key: 'access_token');
+      storage.delete(key: 'id_token');
+      storage.delete(key: 'refresh_token');
+      return true;
     } catch (e) {
       print(e);
       return false;

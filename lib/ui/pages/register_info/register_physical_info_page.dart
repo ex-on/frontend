@@ -23,15 +23,15 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double _height = Get.height;
-    final controller = Get.put<RegisterInfoController>(
-        RegisterInfoController());
+    final controller =
+        Get.put<RegisterInfoController>(RegisterInfoController());
 
     void _onBackPressed() {
       controller.jumpToPage(0);
     }
 
     void _onStartPressed() {
-      Get.offNamed('/home');
+      Get.offAllNamed('/home');
       controller.jumpToPage(0);
     }
 

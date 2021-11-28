@@ -3,7 +3,7 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/core/controllers/deep_link_controller.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
-import 'package:exon_app/core/controllers/exercise_info_controller.dart';
+import 'package:exon_app/core/controllers/login_controller.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/dummy_data_controller.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,7 @@ void main() {
   Get.put<DummyDataController>(DummyDataController());
   Get.put<RegisterController>(RegisterController());
   Get.put<RegisterInfoController>(RegisterInfoController());
+  Get.put<LoginController>(LoginController());
   Get.put<AddExerciseController>(AddExerciseController());
   Get.put<ExerciseBlockController>(ExerciseBlockController());
   KakaoContext.clientId = kakaoClientId;
