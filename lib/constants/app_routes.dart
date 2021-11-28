@@ -4,6 +4,7 @@ import 'package:exon_app/ui/views/exercise_block_view.dart';
 import 'package:exon_app/ui/views/exercise_info_view.dart';
 import 'package:exon_app/ui/views/home_navigation_view.dart';
 import 'package:exon_app/ui/views/registration_view.dart';
+import 'package:exon_app/ui/views/settings_view.dart';
 import 'package:exon_app/ui/views/splash_view.dart';
 import 'package:get/get.dart';
 
@@ -21,5 +22,6 @@ class AppRoutes {
     GetPage(name: '/add_excercise', page: () => AddExerciseView()),
     GetPage(name: '/exercise_block', page: () => const ExerciseBlockView()),
     GetPage(name: '/excercise_info', page: () => const ExerciseInfoView()),
+    GetPage(name: '/settings', page: () => const SettingsView(), transition: Transition.rightToLeft),
   ];
 }
