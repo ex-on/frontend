@@ -19,9 +19,7 @@ class ProfilePage extends StatelessWidget {
     const String profileName = 'aschung01';
     const String nickName = '정순호영상이나올려라';
     const String profileIntroText = '헬스가 제일 쉬웠어요\n벤치, 데드, 스쾃으로만 운동했어요';
-    void _onMenuPressed() {
-      Get.toNamed('/settings');
-    }
+    void _onMenuPressed() {}
 
     void _onProfileEditPressed() {}
 
