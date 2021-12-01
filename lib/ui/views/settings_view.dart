@@ -1,377 +1,143 @@
+import 'package:exon_app/core/controllers/register_controller.dart';
+import 'package:exon_app/core/controllers/settings_controller.dart';
+import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+const String _headerText = '설정';
+const String _accountSettingsLabelText = '계정';
+const String _changePasswordLabelText = '비밀번호 변경';
+const String _phoneNumberLabelText = '전화번호';
+const String _emailLabelText = '이메일';
+const String _privateAccountLabelText = '비공개 계정';
+const String _pushAlarmLabelText = '푸시 알림';
+const String _signOutLabelText = '로그아웃';
+const String _support = '지원';
+const String _noticeLabelText = '공지사항';
+const String _faqLabelText = 'FAQ';
+const String _emailInquiryLabelText = '이메일 문의';
+const String _informationSettingsLabelText = '정보';
+const String _aboutExonLabelText = 'About EXON';
+const String _exonUserGuideLabelText = 'EXON 이용 가이드';
+const String _exonUserAgreementLabelText = 'Exon 이용약관';
+const String _personalInformationHandlingPolicy = '개인정보처리방침';
+const String _appVersion = '앱 버전';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const String _headerText = '설정';
-    const String _account = '계정';
-    const String _changePassword = '비밀번호 변경';
-    const String _phoneNumber = '전화번호';
-    const String _email = '이메일';
-    const String _privateAccount = '비공개 계정';
-    const String _pushAlarm = '푸시 알람';
-    const String _logout = '로그아웃';
-    const String _support = '지원';
-    const String _notice = '공지사항';
-    const String _frequentlyAskedQuestions = 'FAQ';
-    const String _emailInquiry = '이메일 문의';
-    const String _information = '정보';
-    const String _aboutExon = 'About EXON';
-    const String _exonUsingGuide = 'EXON 이용 가이드';
-    const String _exonUserAgreement = 'Exon 이용약관';
-    const String _personalInformationHandlingPolicy = '개인정보처리방침';
-    const String _appVersion = '앱 버전';
+    void _onBackPressed() {
+      Get.back();
+    }
 
-    return Scaffold(
-      body: Column(
-        children: [
-          Header(
-            onPressed: () {
-              Get.back();
-            },
-            title: _headerText,
-          ),
-          Divider(color: Colors.grey[300], thickness: 2),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              children: [
-                const Text(
-                  _account,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                Divider(color: Colors.grey[200], thickness: 2),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: context.width,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(_changePassword,
-                                style: TextStyle(fontSize: 18))
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _phoneNumber,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _email,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _privateAccount,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _pushAlarm,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _logout,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(color: Colors.grey[200], thickness: 2),
-                verticalSpacer(8),
-                const Text(
-                  _support,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                verticalSpacer(8),
-                Divider(color: Colors.grey[200], thickness: 2),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _notice,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _frequentlyAskedQuestions,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _emailInquiry,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(color: Colors.grey[200], thickness: 2),
-                verticalSpacer(8),
-                const Text(
-                  _information,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                verticalSpacer(8),
-                Divider(color: Colors.grey[200], thickness: 2),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _aboutExon,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _exonUsingGuide,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _exonUserAgreement,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _personalInformationHandlingPolicy,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            horizontalSpacer(25),
-                            const Text(
-                              _appVersion,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+    void _onTap() {}
+
+    void _onSignOutPressed() async {
+      var signOutRes = await SettingsController.to.signOut();
+      if (signOutRes) {
+        Get.offAllNamed('/');
+      }
+    }
+
+    Widget _getSettingsLabelItem(String labelText) {
+      return SizedBox(
+        height: 50,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24),
+            child: Text(
+              labelText,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
             ),
           ),
-        ],
-      ),
+        ),
+      );
+    }
+
+    Widget _getSettingsMenuItem(Function() onTap, String labelText) {
+      return SizedBox(
+        height: 50,
+        width: context.width,
+        child: InkWell(
+          onTap: onTap,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 44),
+                child: Text(
+                  labelText,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: Stack(children: [
+        Column(
+          children: [
+            Header(
+              onPressed: _onBackPressed,
+              title: _headerText,
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: 40),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                children: [
+                  _getSettingsLabelItem(_accountSettingsLabelText),
+                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
+                  _getSettingsMenuItem(() => null, _changePasswordLabelText),
+                  _getSettingsMenuItem(() => null, _phoneNumberLabelText),
+                  _getSettingsMenuItem(() => null, _emailLabelText),
+                  _getSettingsMenuItem(() => null, _privateAccountLabelText),
+                  _getSettingsMenuItem(() => null, _pushAlarmLabelText),
+                  _getSettingsMenuItem(
+                      () => _onSignOutPressed(), _signOutLabelText),
+                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
+                  _getSettingsLabelItem(_support),
+                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
+                  _getSettingsMenuItem(() => null, _noticeLabelText),
+                  _getSettingsMenuItem(() => null, _faqLabelText),
+                  _getSettingsMenuItem(() => null, _emailInquiryLabelText),
+                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
+                  _getSettingsLabelItem(_informationSettingsLabelText),
+                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
+                  _getSettingsMenuItem(() => null, _aboutExonLabelText),
+                  _getSettingsMenuItem(() => null, _exonUserGuideLabelText),
+                  _getSettingsMenuItem(() => null, _exonUserAgreementLabelText),
+                  _getSettingsMenuItem(
+                      () => null, _personalInformationHandlingPolicy),
+                  _getSettingsMenuItem(() => null, _appVersion),
+                ],
+              ),
+            ),
+          ],
+        ),
+        GetBuilder<SettingsController>(builder: (_) {
+          if (_.loading) {
+            return LoadingIndicator();
+          } else {
+            return horizontalSpacer(0);
+          }
+        })
+      ]),
     );
   }
 }

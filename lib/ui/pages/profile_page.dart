@@ -69,17 +69,6 @@ class ProfilePage extends StatelessWidget {
               Center(
                 child: _ProfileEditButton(onPressed: _onProfileEditPressed),
               ),
-              Center(
-                child: TextActionButton(
-                    buttonText: '로그아웃',
-                    onPressed: () async {
-                      var signOutRes = await AmplifyService.signOut(
-                          RegisterController.to.emailController.text);
-                          if (signOutRes) {
-                            Get.offAllNamed('/');
-                          }
-                    }),
-              ),
               const _UserMainActivityBlock(
                 numSelectedAnswers: 1294,
                 selectedAnswersRatio: 97.3,
