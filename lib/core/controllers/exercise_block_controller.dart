@@ -23,11 +23,6 @@ class ExerciseBlockController extends GetxController {
   int? recommendedRestTime;
   Map<String, dynamic>? exerciseRecord;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
   Timer _createCounter(RxInt time) {
     return Timer.periodic(
       const Duration(seconds: 1),

@@ -5,6 +5,7 @@ import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,76 +61,90 @@ class LoginPasswordPage extends StatelessWidget {
       controller.setPasswordRegexValid(isValid);
     }
 
-    return Column(
+    return Stack(
       children: [
-        Header(onPressed: _onBackPressed),
-        Expanded(
-          child: DisableGlowListView(
-            padding: const EdgeInsets.only(top: 20),
-            children: [
-              SizedBox(
-                height: 0.025 * _height,
-              ),
-              Column(
+        Column(
+          children: [
+            Header(onPressed: _onBackPressed),
+            Expanded(
+              child: DisableGlowListView(
+                padding: const EdgeInsets.only(top: 20),
                 children: [
                   SizedBox(
-                    width: 330,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            _titleText,
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    height: 0.025 * _height,
                   ),
-                  verticalSpacer(45),
-                  Form(
-                    key: controller.formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    child: GetBuilder<LoginController>(builder: (_) {
-                      return InputTextField(
-                        label: _textFieldLabelText,
-                        controller: controller.passwordController,
-                        validator: _passwordValidator,
-                        obscureText: !_.isPasswordVisible,
-                        isPassword: true,
-                        onChanged: _onPasswordChanged,
-                        icon: IconButton(
-                          icon: _.isPasswordVisible
-                              ? const Icon(Icons.visibility_off_rounded)
-                              : const Icon(Icons.visibility_rounded),
-                          onPressed: _togglePasswordVisibility,
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: 330,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                _titleText,
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      );
-                    }),
+                      ),
+                      verticalSpacer(45),
+                      Form(
+                        key: controller.formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: GetBuilder<LoginController>(builder: (_) {
+                          return InputTextField(
+                            label: _textFieldLabelText,
+                            controller: controller.passwordController,
+                            validator: _passwordValidator,
+                            obscureText: !_.isPasswordVisible,
+                            isPassword: true,
+                            onChanged: _onPasswordChanged,
+                            icon: IconButton(
+                              icon: _.isPasswordVisible
+                                  ? const Icon(Icons.visibility_off_rounded)
+                                  : const Icon(Icons.visibility_rounded),
+                              onPressed: _togglePasswordVisibility,
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Flex(
+                direction: Axis.horizontal,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GetBuilder<LoginController>(builder: (_) {
+                    return ElevatedActionButton(
+                      buttonText: _loginButtonText,
+                      onPressed: _onLoginPressed,
+                      activated:
+                          _.isPasswordRegexValid && !_.passwordInvalidError,
+                    );
+                  }),
+                ]),
+            const SizedBox(
+              height: 50,
+            ),
+          ],
         ),
-        Flex(
-            direction: Axis.horizontal,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GetBuilder<LoginController>(builder: (_) {
-                return ElevatedActionButton(
-                  buttonText: _loginButtonText,
-                  onPressed: _onLoginPressed,
-                  activated: _.isPasswordRegexValid && !_.passwordInvalidError,
-                );
-              }),
-            ]),
-        const SizedBox(
-          height: 50,
+        GetBuilder<LoginController>(
+          builder: (_) {
+            if (_.loading) {
+              return const LoadingIndicator();
+            } else {
+              return horizontalSpacer(0);
+            }
+          },
         ),
       ],
     );

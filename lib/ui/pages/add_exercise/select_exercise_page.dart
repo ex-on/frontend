@@ -392,6 +392,7 @@ class _ExerciseBlock extends StatelessWidget {
                       height: 90,
                       alignment: Alignment.bottomRight,
                       child: IconButton(
+                        splashRadius: 20,
                         icon: const Icon(Icons.help, color: Colors.white),
                         onPressed: () => _onInfoButtonPressed(name),
                       ),

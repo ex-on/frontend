@@ -19,7 +19,6 @@ class RegistrationView extends GetView<RegisterController> {
     List<Widget> _pages = [
       const RegisterEmailPage(),
       const RegisterPasswordPage(),
-      // const RegisterUsernamePage(),
       const RegisterPhoneAuthPage(),
     ];
     if (controller.page < 0 || controller.page >= _pages.length) {

@@ -88,6 +88,10 @@ class AmplifyService {
           'Kakao');
       return true;
     } on RestException catch (e) {
+      print('no');
+      print('POST call failed: $e');
+      return false;
+    } catch (e) {
       print('POST call failed: $e');
       return false;
     }

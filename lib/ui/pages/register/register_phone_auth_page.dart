@@ -59,10 +59,7 @@ class RegisterPhoneAuthPage extends GetView<RegisterController> {
       AmplifyService.signInWithUsernameAndPassword(
           controller.emailController.text,
           controller.passwordCheckController.text);
-      controller.setPhoneVerificationCodeSent(false);
-      controller.setPhoneVerified(false);
-      controller.resetPhoneVerificationException();
-      controller.jumpToPage(0);
+      controller.reset();
     }
 
     String? _phoneNumValidator(String? text) {

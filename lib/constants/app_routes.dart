@@ -21,10 +21,7 @@ class AppRoutes {
     GetPage(name: '/home', page: () => HomeNavigationView()),
     GetPage(name: '/add_excercise', page: () => AddExerciseView()),
     GetPage(name: '/exercise_block', page: () => const ExerciseBlockView()),
-
     GetPage(name: '/excercise_info', page: () => const ExerciseInfoPage()),
-
-//     GetPage(name: '/excercise_info', page: () => const ExerciseInfoView()),
     GetPage(name: '/settings', page: () => const SettingsView(), transition: Transition.rightToLeft),
   ];
 }
