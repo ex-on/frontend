@@ -8,7 +8,6 @@ import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:get/get.dart';
 
-const String _titleText = '신체를 업그레이드할 준비가 되셨나요?';
 const String _titleLabelText = '입력하신 정보를 토대로\n맞춤형 서비스를 제공해드려요';
 const String _birthDateFieldLabelText = '생년월일';
 const String _genderFieldLabelText = '성별';
@@ -22,6 +21,7 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
     final double _height = Get.height;
     final controller =
         Get.put<RegisterInfoController>(RegisterInfoController());
+    String _titleText = controller.usernameController.text + '님에 대해 알려주세요😀';
 
     void _onBackPressed() {
       controller.jumpToPage(0);
@@ -65,18 +65,18 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
                     width: 330,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Padding(
-                          padding: EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: Text(
                             _titleText,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        Text(
+                        const Text(
                           _titleLabelText,
                           style: TextStyle(
                             fontSize: 16,
@@ -124,10 +124,13 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
           direction: Axis.horizontal,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedActionButton(
-              buttonText: _nextButtonText,
-              onPressed: _onNextPressed,
-            ),
+            GetBuilder<RegisterInfoController>(builder: (_) {
+              return ElevatedActionButton(
+                buttonText: _nextButtonText,
+                onPressed: _onNextPressed,
+                activated: _.birthDate != null && _.gender != null,
+              );
+            }),
           ],
         ),
         const SizedBox(

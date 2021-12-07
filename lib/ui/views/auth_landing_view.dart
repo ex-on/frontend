@@ -1,7 +1,10 @@
 import 'package:exon_app/core/controllers/auth_controllers.dart';
+import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/core/services/kakao_service.dart';
 import 'package:exon_app/helpers/url_launcher.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
+import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/constants/constants.dart';
@@ -17,13 +20,14 @@ const String _loginLabelText = '이미 계정이 있으신가요?';
 const String _loginButtonText = '로그인';
 const Color _registerButtonColor = Color(0xffEEEEEE);
 
-class AuthLandingView extends StatelessWidget {
+class AuthLandingView extends GetView<AuthController> {
   AuthLandingView({Key? key}) : super(key: key);
-  final controller = Get.put<KakaoLoginController>(KakaoLoginController());
+  final kakaoController = Get.put<KakaoLoginController>(KakaoLoginController());
 
   Future<void> _onKakaoLoginPressed() async {
     dynamic accessToken;
-    if (controller.isKakaoInstalled) {
+    Get.toNamed('/loading');
+    if (kakaoController.isKakaoInstalled) {
       var token = await KakaoService.loginWithKakaoTalk();
       accessToken = token['access_token']!.toString();
     } else {
@@ -31,9 +35,16 @@ class AuthLandingView extends StatelessWidget {
       accessToken = token['access_token'];
     }
     bool success = await AmplifyService.signUserInWithKakaoLogin(accessToken);
-    print(success);
+    AuthController.to.setLoading(false);
     if (success) {
-      Get.offNamed('/register_info');
+      await RegisterInfoController.to.checkUserInfo();
+      print('userInfoExists');
+      print(RegisterInfoController.to.userInfoExists);
+      if (RegisterInfoController.to.userInfoExists) {
+        Get.offNamed('/home');
+      } else {
+        Get.offNamed('/register_info', arguments: 'Kakao');
+      }
     }
   }
 

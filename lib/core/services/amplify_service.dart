@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:amplify_api/amplify_api.dart';
@@ -88,6 +87,10 @@ class AmplifyService {
           'Kakao');
       return true;
     } on RestException catch (e) {
+      print('no');
+      print('POST call failed: $e');
+      return false;
+    } catch (e) {
       print('POST call failed: $e');
       return false;
     }
@@ -217,6 +220,8 @@ class AmplifyService {
 
   static void storeRefreshedTokens(String accessToken, String idToken) async {
     FlutterSecureStorage storage = const FlutterSecureStorage();
+    storage.delete(key: 'access_token');
+    storage.delete(key: 'id_token');
     storage.write(key: 'access_token', value: accessToken);
     storage.write(key: 'id_token', value: idToken);
   }
@@ -224,6 +229,10 @@ class AmplifyService {
   static void storeAuthTokens(
       Map<String, dynamic> tokens, String authProvider) async {
     FlutterSecureStorage storage = const FlutterSecureStorage();
+    storage.delete(key: 'auth_provider');
+    storage.delete(key: 'access_token');
+    storage.delete(key: 'id_token');
+    storage.delete(key: 'refresh_token');
     switch (authProvider) {
       case 'Kakao':
         storage.write(key: "auth_provider", value: authProvider);

@@ -3,6 +3,7 @@ import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/ui/views/community_main_view.dart';
 import 'package:exon_app/ui/pages/profile_page.dart';
 import 'package:exon_app/ui/views/home_view.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 import 'package:exon_app/core/controllers/home_navigation_controller.dart';
@@ -13,7 +14,7 @@ import 'package:get/get.dart';
 class HomeNavigationView extends StatelessWidget {
   HomeNavigationView({Key? key}) : super(key: key);
   final List<Widget> _pages = [
-    HomeView(),
+    LoadingIndicator(),
     CommunityMainView(),
     HomeView(),
     HomeView(),
@@ -28,6 +29,7 @@ class HomeNavigationView extends StatelessWidget {
       init: HomeNavigationController(),
       builder: (_) {
         return Scaffold(
+          extendBody: true,
           backgroundColor: mainBackgroundColor,
           body: SafeArea(
             maintainBottomViewPadding: true,

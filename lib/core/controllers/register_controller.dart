@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:dio/dio.dart';
+import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
+import 'package:exon_app/core/services/api_service.dart';
 import 'package:exon_app/dummy_data_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:intl/intl.dart';
 
 class RegisterController extends GetxController {
   static RegisterController to = Get.find();
@@ -12,16 +17,14 @@ class RegisterController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordInputController = TextEditingController();
   TextEditingController passwordCheckController = TextEditingController();
-  // TextEditingController usernameController = TextEditingController();
   TextEditingController phoneNumController = TextEditingController();
   TextEditingController verificationCodeController = TextEditingController();
   Timer? verificationCodeTimeLimitCounter;
   int page = 0;
-  bool isEmailValid = false;
+  bool loading = false;
+  bool isEmailValid = true;
   bool isEmailAvailable = true;
   bool isPasswordFormValid = false;
-  // bool isUsernameValid = false;
-  // bool isUsernameAvailable = false;
   bool isPhoneNumValid = false;
   bool phoneNumChanged = false;
   bool isVerificationCodeValid = false;
@@ -48,6 +51,12 @@ class RegisterController extends GetxController {
     );
   }
 
+  // Loading control
+  void setLoading(bool val) {
+    loading = val;
+    update();
+  }
+
   // Page navigation
   void toNextPage() {
     page++;
@@ -70,10 +79,24 @@ class RegisterController extends GetxController {
     update();
   }
 
-  // void checkAvailableEmail() async {
-  // todo
-  // update();
-  // }
+  void setEmailAvailable() {
+    isEmailAvailable = true;
+    update();
+  }
+
+  Future<void> checkAvailableEmail() async {
+    setLoading(true);
+    var dio = Dio();
+    try {
+      isEmailAvailable =
+          await ApiService.checkUserEmailAvailable(emailController.text);
+      print(isEmailAvailable);
+    } catch (e) {
+      print(e);
+    }
+    update();
+    setLoading(false);
+  }
 
 // Password control
   void setPasswordFormValid(bool val) {
@@ -90,18 +113,6 @@ class RegisterController extends GetxController {
     passwordCheckVisible = !passwordCheckVisible;
     update();
   }
-
-// // Username control
-//   void setUsernameValid(bool val) {
-//     isUsernameValid = val;
-//     update();
-//   }
-
-//   void checkAvailableUsername() {
-//     isUsernameAvailable =
-//         !DummyDataController.to.usernameList.contains(usernameController.text);
-//     update();
-//   }
 
 // Phone verification control
   void setPhoneNumValid(bool val) {
@@ -193,7 +204,33 @@ class RegisterController extends GetxController {
   }
 
   void reset() {
-    
+    emailController.clear();
+    passwordInputController.clear();
+    passwordCheckController.clear();
+    phoneNumController.clear();
+    verificationCodeController.clear();
+    if (verificationCodeTimeLimitCounter != null) {
+      verificationCodeTimeLimitCounter!.cancel();
+    }
+    ;
+    page = 0;
+    loading = false;
+    isEmailValid = true;
+    isEmailAvailable = true;
+    isPasswordFormValid = false;
+    isPhoneNumValid = false;
+    phoneNumChanged = false;
+    isVerificationCodeValid = false;
+    verificationCodeSent = false;
+    checkingVerificationCode = false;
+    phoneVerified = false;
+    phoneVerificationException = null;
+
+    passwordInputVisible = false;
+    passwordCheckVisible = false;
+
+    verificationCodeTimeLimit = RxInt(180);
+    update();
   }
 }
 
@@ -202,13 +239,17 @@ class RegisterInfoController extends GetxController {
   final formKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   int page = 0;
+  String authProvider = 'Social';
   DateTime? birthDate;
   Gender? gender;
   double? height;
   double? weight;
   double? bodyFatPercentage;
   double? muscleMass;
+  bool loading = false;
+  bool userInfoExists = false;
   bool isUsernameValid = false;
+  bool isUsernameRegexValid = false;
   bool isUsernameAvailable = false;
   bool isBirthDateFieldOpen = false;
   bool isGenderFieldOpen = false;
@@ -217,8 +258,30 @@ class RegisterInfoController extends GetxController {
   bool isBodyFatPercentageFieldOpen = false;
   bool isMuscleMassFieldOpen = false;
 
+  @override
+  void onInit() async {
+    // todo: implement onInit
+    reset();
+    super.onInit();
+    log('register info controller init');
+  }
+
+  @override
+  void onClose() {
+    reset();
+    super.onClose();
+  }
+
+  // Page navigation control
+
   void jumpToPage(int pageNum) {
     page = pageNum;
+    update();
+  }
+
+  // Auth provider control
+  void setAuthProvider(String val) {
+    authProvider = val;
     update();
   }
 
@@ -228,12 +291,23 @@ class RegisterInfoController extends GetxController {
     update();
   }
 
-  void checkAvailableUsername() {
-    isUsernameAvailable =
-        !DummyDataController.to.usernameList.contains(usernameController.text);
+  void setLoading(bool val) {
+    loading = val;
     update();
   }
 
+  void setUsernameRegexValid(bool val) {
+    isUsernameRegexValid = val;
+    update();
+  }
+
+  Future<void> checkAvailableUsername() async {
+    isUsernameAvailable =
+        await ApiService.checkUsernameAvailable(usernameController.text);
+    update();
+  }
+
+  // Birth date, gender control
   void toggleBirthDateField() {
     isBirthDateFieldOpen = !isBirthDateFieldOpen;
     update();
@@ -244,6 +318,17 @@ class RegisterInfoController extends GetxController {
     update();
   }
 
+  void updateBirthDate(DateTime date) {
+    birthDate = date;
+    update();
+  }
+
+  void updateGender(Gender? val) {
+    gender = val;
+    update();
+  }
+
+  // Physical info control
   void toggleHeightField() {
     isHeightFieldOpen = !isHeightFieldOpen;
     update();
@@ -264,16 +349,6 @@ class RegisterInfoController extends GetxController {
     update();
   }
 
-  void updateBirthDate(DateTime date) {
-    birthDate = date;
-    update();
-  }
-
-  void updateGender(Gender? val) {
-    gender = val;
-    update();
-  }
-
   void updateHeight(double val) {
     height = val;
     update();
@@ -291,6 +366,59 @@ class RegisterInfoController extends GetxController {
 
   void updateMuscleMass(double val) {
     muscleMass = val;
+    update();
+  }
+
+  // Api control
+  Future<void> checkUserInfo() async {
+    setLoading(true);
+    userInfoExists = await ApiService.checkUserInfo();
+    update();
+    setLoading(false);
+  }
+
+  void postUserInfo() async {
+    String? phoneNumber;
+    String? email;
+    print('Auth provider:');
+    print(authProvider);
+    if (authProvider == 'Manual') {
+      phoneNumber = RegisterController.to.phoneNumController.text;
+      email = RegisterController.to.emailController.text;
+    }
+    var res = await ApiService.registerUserInfo(
+      authProvider,
+      genderToInt[gender]!,
+      DateFormat('yyyy-MM-dd').format(birthDate!),
+      usernameController.text,
+      phoneNumber,
+      email,
+    );
+  }
+
+  void postUserPhysicalInfo() async {
+    ApiService.postUserPhysicalInfo(
+        height, weight, muscleMass, bodyFatPercentage);
+  }
+
+  // reset
+  void reset() {
+    page = 0;
+    usernameController.clear();
+    birthDate = null;
+    gender = null;
+    height = null;
+    weight = null;
+    bodyFatPercentage = null;
+    muscleMass = null;
+    isUsernameValid = false;
+    isUsernameAvailable = false;
+    isBirthDateFieldOpen = false;
+    isGenderFieldOpen = false;
+    isHeightFieldOpen = false;
+    isWeightFieldOpen = false;
+    isBodyFatPercentageFieldOpen = false;
+    isMuscleMassFieldOpen = false;
     update();
   }
 }

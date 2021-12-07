@@ -19,7 +19,9 @@ class ProfilePage extends StatelessWidget {
     const String profileName = 'aschung01';
     const String nickName = '정순호영상이나올려라';
     const String profileIntroText = '헬스가 제일 쉬웠어요\n벤치, 데드, 스쾃으로만 운동했어요';
-    void _onMenuPressed() {}
+    void _onMenuPressed() {
+      Get.toNamed('/settings');
+    }
 
     void _onProfileEditPressed() {}
 
@@ -66,17 +68,6 @@ class ProfilePage extends StatelessWidget {
               ),
               Center(
                 child: _ProfileEditButton(onPressed: _onProfileEditPressed),
-              ),
-              Center(
-                child: TextActionButton(
-                    buttonText: '로그아웃',
-                    onPressed: () async {
-                      var signOutRes = await AmplifyService.signOut(
-                          RegisterController.to.emailController.text);
-                          if (signOutRes) {
-                            Get.offAllNamed('/');
-                          }
-                    }),
               ),
               const _UserMainActivityBlock(
                 numSelectedAnswers: 1294,

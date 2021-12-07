@@ -1,3 +1,4 @@
+import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
@@ -38,17 +39,26 @@ class RegisterUsernamePage extends GetView<RegisterInfoController> {
         return '20자 이내로 입력해주세요';
       } else if (!regExp.hasMatch(text)) {
         return '닉네임 형식이 올바르지 않습니다';
-      } else if (!controller.isUsernameAvailable) {
-        return '이미 존재하는 닉네임이에요';
       } else {
-        return null;
+        if (!controller.isUsernameAvailable) {
+          return '이미 존재하는 닉네임이에요';
+        } else {
+          return null;
+        }
       }
     }
 
-    void _onUsernameChanged(String text) {
-      controller.checkAvailableUsername();
-      bool isValid = controller.formKey.currentState!.validate();
-      controller.setUsernameValid(isValid);
+    void _onUsernameChanged(String text) async {
+      if (controller.usernameController.text.length >= 3 &&
+          controller.usernameController.text.length <= 20) {
+        controller.setLoading(true);
+        await controller.checkAvailableUsername();
+        controller.setLoading(false);
+      }
+      if (controller.formKey.currentState != null) {
+        bool isValid = controller.formKey.currentState!.validate();
+        controller.setUsernameValid(isValid);
+      }
     }
 
     return Column(
@@ -102,11 +112,16 @@ class RegisterUsernamePage extends GetView<RegisterInfoController> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GetBuilder<RegisterInfoController>(builder: (_) {
-                return ElevatedActionButton(
-                  buttonText: _nextButtonText,
-                  onPressed: _onNextPressed,
-                  activated: _.isUsernameValid && _.isUsernameAvailable,
-                );
+                if (_.loading) {
+                  return const CircularProgressIndicator(
+                      color: brightPrimaryColor);
+                } else {
+                  return ElevatedActionButton(
+                    buttonText: _nextButtonText,
+                    onPressed: _onNextPressed,
+                    activated: _.isUsernameValid && _.isUsernameAvailable,
+                  );
+                }
               }),
             ]),
         const SizedBox(

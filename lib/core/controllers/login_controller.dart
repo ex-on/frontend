@@ -9,11 +9,19 @@ class LoginController extends GetxController {
   TextEditingController passwordController = TextEditingController();
 
   int page = 0;
+  bool loading = false;
   bool isEmailValid = false;
   bool isPasswordRegexValid = false;
   bool isPasswordVisible = false;
   bool passwordInvalidError = false;
 
+  // Loading control
+  void setLoading(bool val) {
+    loading = val;
+    update();
+  }
+
+  // Page control
   void jumpToPage(int pageNum) {
     page = pageNum;
     update();
@@ -50,11 +58,13 @@ class LoginController extends GetxController {
   }
 
   Future<bool> login() async {
+    setLoading(true);
     var loginRes = await AmplifyService.signInWithUsernameAndPassword(
         emailController.text, passwordController.text);
     setPasswordInvalidError(!loginRes);
     update();
     print(loginRes);
+    setLoading(false);
     return loginRes;
   }
 }
