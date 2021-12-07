@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
@@ -31,6 +32,7 @@ class KakaoLoginController extends GetxController {
 class AuthController extends GetxController {
   FlutterSecureStorage storage = const FlutterSecureStorage();
   static AuthController to = AuthController();
+  bool loading = false;
 
   @override
   void onInit() {
@@ -40,12 +42,17 @@ class AuthController extends GetxController {
     });
   }
 
+  void setLoading(bool val) {
+    loading = val;
+    update();
+  }
+
   void _asyncMethod() async {
     var refreshToken = await storage.read(key: 'refresh_token');
     var allTokens = await storage.readAll();
     allTokens.forEach((key, value) {
-      print(key);
-      print(value);
+      log(key);
+      log(value);
     });
     Timer(const Duration(seconds: 1), () async {
       if (refreshToken != null) {

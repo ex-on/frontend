@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
@@ -55,7 +54,7 @@ class RegisterPhoneAuthPage extends GetView<RegisterController> {
 
     void _onNextPressed() {
       FocusScope.of(context).unfocus();
-      Get.toNamed('/register_info');
+      Get.toNamed('/register_info', arguments: 'Manual');
       AmplifyService.signInWithUsernameAndPassword(
           controller.emailController.text,
           controller.passwordCheckController.text);

@@ -5,7 +5,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class LoadingIndicator extends StatefulWidget {
-  const LoadingIndicator({Key? key}) : super(key: key);
+  final bool route;
+  const LoadingIndicator({
+    Key? key,
+    this.route = false,
+  }) : super(key: key);
 
   @override
   State<LoadingIndicator> createState() => _LoadingIndicatorState();
@@ -79,7 +83,7 @@ class _LoadingIndicatorState extends State<LoadingIndicator> {
     return Container(
       width: context.width,
       height: context.height,
-      color: Colors.white.withOpacity(0.7),
+      color: widget.route ? Colors.white : Colors.white.withOpacity(0.7),
       child: Center(
         child: Stack(
           alignment: Alignment.center,

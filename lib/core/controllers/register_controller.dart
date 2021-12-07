@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
+import 'package:exon_app/core/services/api_service.dart';
 import 'package:exon_app/dummy_data_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:intl/intl.dart';
 
 class RegisterController extends GetxController {
   static RegisterController to = Get.find();
@@ -76,8 +79,8 @@ class RegisterController extends GetxController {
     update();
   }
 
-  void setEmailInavailable() {
-    isEmailAvailable = false;
+  void setEmailAvailable() {
+    isEmailAvailable = true;
     update();
   }
 
@@ -85,12 +88,8 @@ class RegisterController extends GetxController {
     setLoading(true);
     var dio = Dio();
     try {
-      print('start');
-      var res = await dio.get(
-        endPointUrl + '/auth/check_email',
-        queryParameters: {'email': emailController.text},
-      );
-      isEmailAvailable = res.data;
+      isEmailAvailable =
+          await ApiService.checkUserEmailAvailable(emailController.text);
       print(isEmailAvailable);
     } catch (e) {
       print(e);
@@ -240,13 +239,17 @@ class RegisterInfoController extends GetxController {
   final formKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
   int page = 0;
+  String authProvider = 'Social';
   DateTime? birthDate;
   Gender? gender;
   double? height;
   double? weight;
   double? bodyFatPercentage;
   double? muscleMass;
+  bool loading = false;
+  bool userInfoExists = false;
   bool isUsernameValid = false;
+  bool isUsernameRegexValid = false;
   bool isUsernameAvailable = false;
   bool isBirthDateFieldOpen = false;
   bool isGenderFieldOpen = false;
@@ -256,10 +259,11 @@ class RegisterInfoController extends GetxController {
   bool isMuscleMassFieldOpen = false;
 
   @override
-  void onInit() {
-    // TODO: implement onInit
+  void onInit() async {
+    // todo: implement onInit
     reset();
     super.onInit();
+    log('register info controller init');
   }
 
   @override
@@ -268,8 +272,16 @@ class RegisterInfoController extends GetxController {
     super.onClose();
   }
 
+  // Page navigation control
+
   void jumpToPage(int pageNum) {
     page = pageNum;
+    update();
+  }
+
+  // Auth provider control
+  void setAuthProvider(String val) {
+    authProvider = val;
     update();
   }
 
@@ -279,12 +291,23 @@ class RegisterInfoController extends GetxController {
     update();
   }
 
-  void checkAvailableUsername() {
-    isUsernameAvailable =
-        !DummyDataController.to.usernameList.contains(usernameController.text);
+  void setLoading(bool val) {
+    loading = val;
     update();
   }
 
+  void setUsernameRegexValid(bool val) {
+    isUsernameRegexValid = val;
+    update();
+  }
+
+  Future<void> checkAvailableUsername() async {
+    isUsernameAvailable =
+        await ApiService.checkUsernameAvailable(usernameController.text);
+    update();
+  }
+
+  // Birth date, gender control
   void toggleBirthDateField() {
     isBirthDateFieldOpen = !isBirthDateFieldOpen;
     update();
@@ -295,6 +318,17 @@ class RegisterInfoController extends GetxController {
     update();
   }
 
+  void updateBirthDate(DateTime date) {
+    birthDate = date;
+    update();
+  }
+
+  void updateGender(Gender? val) {
+    gender = val;
+    update();
+  }
+
+  // Physical info control
   void toggleHeightField() {
     isHeightFieldOpen = !isHeightFieldOpen;
     update();
@@ -312,16 +346,6 @@ class RegisterInfoController extends GetxController {
 
   void toggleMuscleMassField() {
     isMuscleMassFieldOpen = !isMuscleMassFieldOpen;
-    update();
-  }
-
-  void updateBirthDate(DateTime date) {
-    birthDate = date;
-    update();
-  }
-
-  void updateGender(Gender? val) {
-    gender = val;
     update();
   }
 
@@ -345,6 +369,39 @@ class RegisterInfoController extends GetxController {
     update();
   }
 
+  // Api control
+  Future<void> checkUserInfo() async {
+    setLoading(true);
+    userInfoExists = await ApiService.checkUserInfo();
+    update();
+    setLoading(false);
+  }
+
+  void postUserInfo() async {
+    String? phoneNumber;
+    String? email;
+    print('Auth provider:');
+    print(authProvider);
+    if (authProvider == 'Manual') {
+      phoneNumber = RegisterController.to.phoneNumController.text;
+      email = RegisterController.to.emailController.text;
+    }
+    var res = await ApiService.registerUserInfo(
+      authProvider,
+      genderToInt[gender]!,
+      DateFormat('yyyy-MM-dd').format(birthDate!),
+      usernameController.text,
+      phoneNumber,
+      email,
+    );
+  }
+
+  void postUserPhysicalInfo() async {
+    ApiService.postUserPhysicalInfo(
+        height, weight, muscleMass, bodyFatPercentage);
+  }
+
+  // reset
   void reset() {
     page = 0;
     usernameController.clear();

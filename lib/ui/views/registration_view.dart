@@ -1,13 +1,13 @@
 import 'package:exon_app/core/controllers/register_controller.dart';
-import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/pages/register_info/register_birth_date_gender_page.dart';
 import 'package:exon_app/ui/pages/register/register_email_page.dart';
 import 'package:exon_app/ui/pages/register/register_password_page.dart';
 import 'package:exon_app/ui/pages/register/register_phone_auth_page.dart';
 import 'package:exon_app/ui/pages/register_info/register_physical_info_page.dart';
 import 'package:exon_app/ui/pages/register/register_username_page.dart';
-import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/header.dart';
+import 'package:exon_app/ui/views/home_navigation_view.dart';
+import 'package:exon_app/ui/views/home_view.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,6 +37,13 @@ class RegisterInfoView extends GetView<RegisterInfoController> {
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Get.arguments;
+    if (authProvider != null) {
+      controller.setAuthProvider(authProvider);
+    }
+
+    controller.checkUserInfo();
+
     List<Widget> _pages = [
       const RegisterUsernamePage(),
       const RegisterBirthDateGenderPage(),
@@ -48,9 +55,19 @@ class RegisterInfoView extends GetView<RegisterInfoController> {
 
     return GetBuilder<RegisterInfoController>(
       builder: (_) {
-        return Scaffold(
-          body: _pages[_.page],
-        );
+        if (_.loading) {
+          return const LoadingIndicator(
+            route: true,
+          );
+        } else {
+          if (_.userInfoExists) {
+            return HomeNavigationView();
+          } else {
+            return Scaffold(
+              body: _pages[_.page],
+            );
+          }
+        }
       },
     );
   }

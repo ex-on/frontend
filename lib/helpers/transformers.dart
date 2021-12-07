@@ -74,6 +74,11 @@ Map<Gender, String> genderToString = {
   Gender.female: '여성',
 };
 
+Map<Gender, int> genderToInt = {
+  Gender.male: 0,
+  Gender.female: 1,
+};
+
 Map<String, Color> activityRankToColor = {
   '초수': const Color(0xffD1DBFC),
 };

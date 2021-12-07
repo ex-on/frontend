@@ -33,11 +33,15 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
     }
 
     void _onStartPressed() {
+      controller.postUserInfo();
+      controller.postUserPhysicalInfo();
       Get.offAllNamed('/home');
       controller.reset();
     }
 
     void _onNextTimePressed() {
+      controller.postUserInfo();
+      controller.postUserPhysicalInfo();
       Get.offAllNamed('/home');
       controller.reset();
     }

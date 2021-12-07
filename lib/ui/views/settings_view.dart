@@ -1,7 +1,5 @@
-import 'package:exon_app/core/controllers/register_controller.dart';
+import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/settings_controller.dart';
-import 'package:exon_app/core/services/amplify_service.dart';
-import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
@@ -88,6 +86,7 @@ class SettingsView extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(children: [
         Column(
           children: [
@@ -97,6 +96,7 @@ class SettingsView extends StatelessWidget {
             ),
             Expanded(
               child: ListView(
+                physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.only(bottom: 40),
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,

@@ -7,13 +7,14 @@ import 'package:exon_app/ui/views/login_view.dart';
 import 'package:exon_app/ui/views/registration_view.dart';
 import 'package:exon_app/ui/views/settings_view.dart';
 import 'package:exon_app/ui/views/splash_view.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:get/get.dart';
 
 class AppRoutes {
   AppRoutes._();
   static final routes = [
-    GetPage(name: '/', page: () => const SplashView(loading: false)),
-    GetPage(name: '/loading', page: () => const SplashView(loading: true)),
+    GetPage(name: '/', page: () => const SplashView()),
+    GetPage(name: '/loading', page: () => const LoadingIndicator(route: true)),
     GetPage(name: '/auth', page: () => AuthLandingView()),
     GetPage(name: '/register', page: () => const RegistrationView()),
     GetPage(name: '/register_info', page: () => const RegisterInfoView()),

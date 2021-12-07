@@ -27,7 +27,9 @@ class RegisterEmailPage extends StatelessWidget {
     }
 
     void _onNextPressed() async {
+      FocusScope.of(context).unfocus();
       await controller.checkAvailableEmail();
+      controller.formKey.currentState!.validate();
       if (controller.isEmailAvailable) {
         controller.toNextPage();
       }
@@ -49,6 +51,7 @@ class RegisterEmailPage extends StatelessWidget {
     }
 
     void _onInputChanged(String text) {
+      controller.setEmailAvailable();
       bool isValid = controller.formKey.currentState!.validate();
       controller.setEmailValid(isValid);
     }
