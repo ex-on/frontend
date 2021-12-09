@@ -84,6 +84,9 @@ flutter:
     - assets/DaytimeIcon.svg
     - assets/NighttimeIcon.svg
     - assets/loadingLogo.svg
+    - assets/icons/commentIcon.svg
+    - assets/icons/lightningIcon.svg
+    - assets/icons/bookmarkIcon.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

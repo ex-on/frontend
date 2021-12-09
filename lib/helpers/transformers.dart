@@ -67,6 +67,11 @@ String dateTimeToDisplayString(DateTime? dateTime) {
   }
 }
 
+String formatDateTimeRawString(String rawString) {
+  DateTime dt = DateTime.parse(rawString);
+  return DateFormat('MM/dd kk:mm').format(dt);
+}
+
 enum Gender { male, female }
 
 Map<Gender, String> genderToString = {

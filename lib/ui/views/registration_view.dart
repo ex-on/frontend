@@ -55,7 +55,7 @@ class RegisterInfoView extends GetView<RegisterInfoController> {
 
     return GetBuilder<RegisterInfoController>(
       builder: (_) {
-        if (_.loading) {
+        if (_.userInfoLoading) {
           return const LoadingIndicator(
             route: true,
           );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const endPointUrl = 'http://87ad-123-214-62-216.ngrok.io';
+const endPointUrl = 'http://6f74-123-214-62-216.ngrok.io';
 // Colors
 const splashViewBackgroundColor = Colors.white;
 const mainBackgroundColor = Color(0xffF4F3F8);
@@ -29,6 +29,9 @@ const softGrayColor = Color(0xff959595);
 const softBlackColor = Color(0xff6F6F6F);
 
 const clearBlackColor = Color(0xff292E3C);
+
+const communityTitleTextColor = Color(0xff263238);
+const unselectedIconColor = Color(0xffD9D9D9);
 
 // Amplify
 const cognitoClientId = '6mf91uqnj2jj25et5hsrdbg8ur';
