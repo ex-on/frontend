@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
+import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
@@ -602,8 +603,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                       ' 게시판',
             ),
             Expanded(
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
+              child: DisableGlowListView(
                 padding: EdgeInsets.zero,
                 children: [
                   _postContent,

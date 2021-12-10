@@ -137,7 +137,7 @@ class CommunityController extends GetxController
       setLoading(false);
     } else {
       setListPageLoading(true);
-      var res = await ApiService.getPostPreview(10, listPage.value, type);
+      var res = await ApiService.getPostPreview(20, listPage.value, type);
       if (listPage.value == 1) {
         contentList.clear();
       }
@@ -157,7 +157,7 @@ class CommunityController extends GetxController
       setLoading(false);
     } else {
       setListPageLoading(true);
-      var res = await ApiService.getHotBoardPreview(10, listPage.value);
+      var res = await ApiService.getHotBoardPreview(20, listPage.value);
       if (listPage.value == 1) {
         contentList.clear();
       }
