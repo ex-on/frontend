@@ -16,9 +16,9 @@ class HomeNavigationView extends StatelessWidget {
   HomeNavigationView({Key? key}) : super(key: key);
   final List<Widget> _pages = [
     LoadingIndicator(),
-    CommunityMainView(),
+    const CommunityMainView(),
     HomeView(),
-    HomeView(),
+    LoadingIndicator(),
     const ProfileView(),
   ];
 

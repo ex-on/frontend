@@ -259,4 +259,16 @@ class ApiService {
       return false;
     }
   }
+
+  static Future<dynamic> getUserRecentCommunityData() async {
+    String path = '/community/user_recent_community';
+
+    try {
+      var res = await get(path, null);
+      return res.data;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }
