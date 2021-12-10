@@ -1,3 +1,5 @@
+import 'package:exon_app/ui/pages/community/community_post_list_page.dart';
+import 'package:exon_app/ui/pages/community/community_post_page.dart';
 import 'package:exon_app/ui/views/add_exercise_view.dart';
 import 'package:exon_app/ui/views/auth_landing_view.dart';
 import 'package:exon_app/ui/views/exercise_block_view.dart';
@@ -23,6 +25,10 @@ class AppRoutes {
     GetPage(name: '/add_excercise', page: () => AddExerciseView()),
     GetPage(name: '/exercise_block', page: () => const ExerciseBlockView()),
     GetPage(name: '/excercise_info', page: () => const ExerciseInfoPage()),
+    GetPage(
+        name: '/community/post_list',
+        page: () => const CommunityPostListPage()),
+    GetPage(name: '/community/post', page: () => const CommunityPostPage()),
     GetPage(
         name: '/settings',
         page: () => const SettingsView(),

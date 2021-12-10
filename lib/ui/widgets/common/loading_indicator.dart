@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:exon_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class LoadingIndicator extends StatefulWidget {
   final bool route;
+  final bool icon;
   const LoadingIndicator({
     Key? key,
     this.route = false,
+    this.icon = false,
   }) : super(key: key);
 
   @override
@@ -80,11 +83,8 @@ class _LoadingIndicatorState extends State<LoadingIndicator> {
     const double _logoWidth = 100;
     const double _logoHeight = 60;
 
-    return Container(
-      width: context.width,
-      height: context.height,
-      color: widget.route ? Colors.white : Colors.white.withOpacity(0.7),
-      child: Center(
+    if (widget.icon) {
+      return Center(
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -102,6 +102,44 @@ class _LoadingIndicatorState extends State<LoadingIndicator> {
             ),
           ],
         ),
+      );
+    } else {
+      return Container(
+        width: context.width,
+        height: context.height,
+        color: widget.route ? Colors.white : Colors.white.withOpacity(0.7),
+        child: Center(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SvgPicture.asset(
+                _loadingLogo,
+                height: _logoHeight,
+                fit: BoxFit.contain,
+              ),
+              Positioned(
+                top: _logoHeight / 3 - 7,
+                child: SizedBox(
+                  width: _logoWidth - 50,
+                  child: _getLoadingCircle(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+}
+
+class CircularLoadingIndicator extends StatelessWidget {
+  const CircularLoadingIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: brightPrimaryColor,
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
+import 'package:exon_app/core/services/api_service.dart';
 import 'package:exon_app/helpers/parse_jwt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -31,14 +32,17 @@ class KakaoLoginController extends GetxController {
 
 class AuthController extends GetxController {
   FlutterSecureStorage storage = const FlutterSecureStorage();
-  static AuthController to = AuthController();
+  static AuthController to = Get.find();
+  Map<String, dynamic> userInfo = {};
   bool loading = false;
 
   @override
   void onInit() {
     super.onInit();
+    WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       _asyncMethod();
+      getUserInfo();
     });
   }
 
@@ -66,5 +70,35 @@ class AuthController extends GetxController {
         Get.offNamed('/auth');
       }
     });
+  }
+
+  Future<void> getUserInfo() async {
+    bool userInfoStored = await storage.containsKey(key: 'username') &&
+        await storage.containsKey(key: 'profile_icon') &&
+        await storage.containsKey(key: 'created_at');
+    print(userInfo);
+    if (userInfoStored) {
+      Map<String, dynamic> storedUserInfo = {
+        'username': await storage.read(key: 'username'),
+        'profile_icon': await storage.read(key: 'profile_icon'),
+        'created_at': await storage.read(key: 'created_at'),
+      };
+      if (storedUserInfo['username'] != null &&
+          storedUserInfo['profile_icon'] != null &&
+          storedUserInfo['created_at'] != null) {
+        userInfo = storedUserInfo;
+        update();
+        return;
+      } else {
+        storage.delete(key: 'username');
+        storage.delete(key: 'profile_icon');
+        storage.delete(key: 'created_at');
+      }
+    }
+    userInfo = await ApiService.getUserInfo();
+    update();
+    storage.write(key: 'username', value: userInfo['username']);
+    storage.write(key: 'profile_icon', value: userInfo['profile_icon'].toString());
+    storage.write(key: 'created_at', value: userInfo['created_at']);
   }
 }

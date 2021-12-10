@@ -49,22 +49,14 @@ class Header extends StatelessWidget {
 
 class ProfileHeader extends StatelessWidget {
   final dynamic Function() onPressed;
-  final String profileName;
+  final Color? color;
   const ProfileHeader(
-      {Key? key, required this.onPressed, required this.profileName})
+      {Key? key, required this.onPressed, this.color = Colors.transparent})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
-        profileName,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
       actions: [
         IconButton(
           splashRadius: 20,
@@ -72,9 +64,8 @@ class ProfileHeader extends StatelessWidget {
           onPressed: onPressed,
         ),
       ],
-      centerTitle: false,
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: color,
     );
   }
 }

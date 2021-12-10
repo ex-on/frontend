@@ -1,6 +1,7 @@
 import 'package:exon_app/constants/app_routes.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/deep_link_controller.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
 import 'package:exon_app/core/controllers/login_controller.dart';
@@ -19,6 +20,7 @@ void main() {
   Get.put<RegisterController>(RegisterController());
   Get.put<RegisterInfoController>(RegisterInfoController());
   Get.put<LoginController>(LoginController());
+  Get.put<AuthController>(AuthController());
   Get.put<SettingsController>(SettingsController());
   Get.put<AddExerciseController>(AddExerciseController());
   Get.put<ExerciseBlockController>(ExerciseBlockController());

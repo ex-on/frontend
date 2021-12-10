@@ -246,6 +246,7 @@ class RegisterInfoController extends GetxController {
   double? weight;
   double? bodyFatPercentage;
   double? muscleMass;
+  bool userInfoLoading = false;
   bool loading = false;
   bool userInfoExists = false;
   bool isUsernameValid = false;
@@ -293,6 +294,11 @@ class RegisterInfoController extends GetxController {
 
   void setLoading(bool val) {
     loading = val;
+    update();
+  }
+
+  void setUserInfoLoading(bool val) {
+    userInfoLoading = val;
     update();
   }
 
@@ -371,10 +377,10 @@ class RegisterInfoController extends GetxController {
 
   // Api control
   Future<void> checkUserInfo() async {
-    setLoading(true);
+    setUserInfoLoading(true);
     userInfoExists = await ApiService.checkUserInfo();
     update();
-    setLoading(false);
+    setUserInfoLoading(false);
   }
 
   void postUserInfo() async {

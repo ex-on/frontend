@@ -1,5 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
@@ -57,8 +58,8 @@ class MainHomePage extends GetView<HomeController> {
               color: Colors.white,
             ),
           ),
-          const Text(
-            _userName,
+          Text(
+            AuthController.to.userInfo['username'] + '님,',
             style: TextStyle(
               fontWeight: FontWeight.w300,
               color: Colors.white,
