@@ -28,14 +28,23 @@ class LikeIcon extends StatelessWidget {
 }
 
 class CommentIcon extends StatelessWidget {
-  const CommentIcon({Key? key}) : super(key: key);
+  final double width;
+  final double height;
+  final Color? color;
+  const CommentIcon({
+    Key? key,
+    this.width = 13,
+    this.height = 13,
+    this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _commentIcon,
-      width: 13,
-      height: 13,
+      width: width,
+      height: height,
+      color: color,
     );
   }
 }

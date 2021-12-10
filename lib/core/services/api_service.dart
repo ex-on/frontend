@@ -86,6 +86,17 @@ class ApiService {
     }
   }
 
+  static Future<dynamic> getUserInfo() async {
+    String path = '/user/get_user_info';
+    try {
+      var res = await get(path, null);
+      return res.data;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   static Future<bool> registerUserInfo(
     String authProvider,
     int gender,
@@ -197,7 +208,55 @@ class ApiService {
     }
   }
 
-  // static Future<dynamic> getPostComments(int postId) async {
-  //   String path = '/community/getpostcomment'
-  // }
+  static Future<dynamic> getPostComments(int postId) async {
+    String path = '/community/getpostcomments';
+
+    Map<String, dynamic> parameters = {
+      'post_id': postId,
+    };
+
+    try {
+      var res = await get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<dynamic> postPostComment(int postId, String content) async {
+    String path = '/community/postcomment';
+
+    Map<String, dynamic> data = {
+      'post_id': postId,
+      'content': content,
+    };
+
+    try {
+      var res = await post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<dynamic> postPostCommentReply(
+      int postId, int postCommentId, String content) async {
+    String path = '/community/postcommentreply';
+
+    Map<String, dynamic> data = {
+      'post_id': postId,
+      'post_comment_id': postCommentId,
+      'content': content,
+    };
+
+    try {
+      var res = await post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

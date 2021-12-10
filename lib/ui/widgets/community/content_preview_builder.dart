@@ -21,6 +21,7 @@ class ContentPreviewBuilder extends StatelessWidget {
           child: InkWell(
             onTap: () {
               _.getPost(_.contentList[index]['post_data']['id']);
+              _.getPostComments(_.contentList[index]['post_data']['id']);
               Get.toNamed('/community/post',
                   arguments: _.contentList[index]['post_data']['id']);
             },

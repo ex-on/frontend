@@ -8,18 +8,24 @@ class CommunityController extends GetxController
     with SingleGetTickerProviderMixin {
   static CommunityController to = Get.find();
   TextEditingController searchPostController = TextEditingController();
+  TextEditingController commentTextController = TextEditingController();
+  FocusNode? commentTextFieldFocus;
   TabController? communityMainTabController;
   ScrollController scrollController = ScrollController();
   int page = 0;
+  int? commentId;
   RxInt postCategory = 0.obs; //0: 전체, 1: HOT, 2: 자유, 3: 정보, 4: 운동인증
   RxInt listPage = 1.obs;
   bool loading = false;
   bool listPageLoading = false;
   bool postContentLoading = false;
+  bool postCommentsLoading = false;
+  bool apiPostLoading = false;
   bool postLiked = false;
   bool postSaved = false;
   List<dynamic> contentList = [];
   Map<String, dynamic> postContent = {};
+  List<dynamic> postCommentList = [];
 
   dynamic callback(int postCategory) {
     if (postCategory == 0) {
@@ -50,6 +56,7 @@ class CommunityController extends GetxController
     communityMainTabController = TabController(length: 3, vsync: this);
     callback(postCategory.value);
     scrollController.addListener(onScroll);
+    commentTextFieldFocus = FocusNode();
   }
 
   @override
@@ -59,7 +66,9 @@ class CommunityController extends GetxController
     }
     scrollController.removeListener(onScroll);
     scrollController.dispose();
-
+    if (commentTextFieldFocus != null) {
+      commentTextFieldFocus!.dispose();
+    }
     super.onClose();
   }
 
@@ -90,6 +99,21 @@ class CommunityController extends GetxController
 
   void setPostContentLoading(bool val) {
     postContentLoading = val;
+    update();
+  }
+
+  void setPostCommentsLoading(bool val) {
+    postCommentsLoading = val;
+    update();
+  }
+
+  void setApiPostLoading(bool val) {
+    apiPostLoading = val;
+    update();
+  }
+
+  void updateReplyCommentId(int? val) {
+    commentId = val;
     update();
   }
 
@@ -152,7 +176,41 @@ class CommunityController extends GetxController
     setPostContentLoading(false);
   }
 
-  Future<void> updatePostCount() async {
-    
+  Future<void> getPostComments(int postId) async {
+    setPostCommentsLoading(true);
+    var res = await ApiService.getPostComments(postId);
+    postCommentList = res;
+    update();
+    setPostCommentsLoading(false);
+  }
+
+  Future<void> updatePostCount() async {}
+
+  Future<void> postPostComment(int postId, String content) async {
+    if (content != '') {
+      setApiPostLoading(true);
+      var res = await ApiService.postPostComment(postId, content);
+      if (res == 200) {
+        var res = await ApiService.getPostComments(postId);
+        postCommentList = res;
+        update();
+      }
+      setApiPostLoading(false);
+    }
+  }
+
+  Future<void> postPostCommentReply(
+      int postId, int postCommentId, String content) async {
+    if (content != '') {
+      setApiPostLoading(true);
+      var res =
+          await ApiService.postPostCommentReply(postId, postCommentId, content);
+      if (res == 200) {
+        var res = await ApiService.getPostComments(postId);
+        postCommentList = res;
+        update();
+      }
+      setApiPostLoading(false);
+    }
   }
 }

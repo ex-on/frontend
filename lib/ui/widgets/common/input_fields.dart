@@ -1,11 +1,13 @@
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/phone_num_formatter.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'dart:math' as math;
 
 class InputTextField extends StatelessWidget {
   final String label;
@@ -91,6 +93,77 @@ class InputTextField extends StatelessWidget {
   }
 }
 
+class CommentInputTextField extends StatelessWidget {
+  final Function() onSendPressed;
+  final TextEditingController controller;
+  final double width;
+  final FocusNode? focusNode;
+  const CommentInputTextField({
+    Key? key,
+    required this.onSendPressed,
+    required this.controller,
+    required this.width,
+    this.focusNode,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      child: TextField(
+        maxLines: null,
+        maxLength: 100,
+        focusNode: focusNode,
+        style: const TextStyle(
+          fontSize: 14,
+          color: darkPrimaryColor,
+        ),
+        controller: controller,
+        decoration: InputDecoration(
+          counterText: '',
+          prefixIcon: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CommentIcon(width: 20, height: 20),
+            ],
+          ),
+          suffixIcon: Transform.rotate(
+            angle: -45 * math.pi / 180,
+            child: Material(
+              type: MaterialType.circle,
+              color: Colors.transparent,
+              child: IconButton(
+                onPressed: onSendPressed,
+                splashRadius: 20,
+                icon: const Icon(
+                  Icons.send_rounded,
+                  color: brightPrimaryColor,
+                ),
+              ),
+            ),
+          ),
+          contentPadding: const EdgeInsets.only(
+            left: 10,
+            bottom: 10,
+          ),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderSide: BorderSide.none,
+          ),
+          filled: true,
+          fillColor: textFieldFillColor,
+          hintText: '댓글을 입력하세요',
+          hintStyle: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w300,
+            color: darkPrimaryColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class NumericTextFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -114,19 +187,6 @@ class NumericTextFormatter extends TextInputFormatter {
     }
   }
 }
-
-// class NumericTextFormatter extends TextInputFormatter {
-//   TextEditingValue formatEditUpdate(
-//       TextEditingValue oldValue, TextEditingValue newValue) {
-//     if (newValue.text.length > 0) {
-//       int num = int.parse(newValue.text.replaceAll(',', ''));
-//       final f = new NumberFormat("#,###");
-//       return newValue.copyWith(text: f.format(num));
-//     } else {
-//       return newValue.copyWith(text: '');
-//     }
-//   }
-// }
 
 class NumberInputField extends StatelessWidget {
   final TextEditingController controller;

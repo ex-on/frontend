@@ -68,7 +68,9 @@ String dateTimeToDisplayString(DateTime? dateTime) {
 }
 
 String formatDateTimeRawString(String rawString) {
+  print(rawString);
   DateTime dt = DateTime.parse(rawString);
+  print(dt);
   return DateFormat('MM/dd kk:mm').format(dt);
 }
 
