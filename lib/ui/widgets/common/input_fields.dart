@@ -192,19 +192,22 @@ class NumberInputField extends StatelessWidget {
   final TextEditingController controller;
   final String? hintText;
   final int? maxLength;
+  final Function(String)? onChanged;
   const NumberInputField({
     Key? key,
     required this.controller,
     this.hintText,
     this.maxLength,
+    this.onChanged,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 65,
+      width: 70,
       height: 45,
       child: TextField(
+        onChanged: onChanged,
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.bottom,
         scrollPadding: EdgeInsets.zero,

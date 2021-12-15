@@ -1,9 +1,9 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
-import 'package:exon_app/dummy_data_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,6 +20,7 @@ class SelectExercisePage extends StatelessWidget {
     const List<String> _targetMuscleList = [
       '전체',
       '가슴',
+      '등',
       '어깨',
       '팔',
       '복근',
@@ -30,12 +31,17 @@ class SelectExercisePage extends StatelessWidget {
 
     const List<String> _exerciseMethodList = [
       '전체',
+      '맨몸',
       '머신',
+      '스미스머신',
       '덤벨',
       '바벨',
+      '트랩바',
       '케틀벨',
+      '플레이트',
       '케이블',
       '밴드',
+      '기타',
     ];
 
     const double _targetSelectWidth = 340;
@@ -46,8 +52,14 @@ class SelectExercisePage extends StatelessWidget {
 
     const Color _searchIconColor = Color(0xffC6C6C6);
 
+    Future.delayed(Duration.zero, () async {
+      await controller.getExerciseList();
+      controller.updateCurrentExerciseDataList();
+    });
+
     void _onBackPressed() {
       Get.back();
+      controller.resetExerciseSelect();
     }
 
     void _onTargetMusclePressed(String target) {
@@ -59,8 +71,8 @@ class SelectExercisePage extends StatelessWidget {
           .excerciseMethodSelectUpdate(excerciseMethodStrToInt[method] ?? 0);
     }
 
-    void _onExerciseBlockPressed(String name) {
-      controller.excerciseSelectUpdate(name);
+    void _onExerciseBlockPressed(int index) {
+      controller.updateSelectedExercise(index);
       controller.jumpToPage(1);
     }
 
@@ -220,35 +232,36 @@ class SelectExercisePage extends StatelessWidget {
     );
 
     Widget _excerciseBlockList = Expanded(
-      child: DisableGlowListView(
-        padding: const EdgeInsets.only(top: 10, bottom: 30),
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: List.generate(
-              DummyDataController.to.excerciseNameList.length * 2 - 1,
-              (index) {
-                if (index % 2 != 0) {
-                  return verticalSpacer(15);
-                } else {
-                  return _ExerciseBlock(
-                    name: DummyDataController.to.excerciseNameList[index ~/ 2]
-                            ['name'] ??
+      child: GetBuilder<AddExerciseController>(builder: (_) {
+        if (_.loading) {
+          return const CircularLoadingIndicator();
+        } else {
+          return ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.only(top: 10, bottom: 30),
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  _ExerciseBlock(
+                    name: _.selectedExerciseDataList[index]['name'] ?? '',
+                    exerciseId: _.selectedExerciseDataList[index]['id'],
+                    targetMuscle: _.selectedExerciseDataList[index]
+                            ['target_muscle'] ??
                         '',
-                    targetMuscle: DummyDataController.to
-                            .excerciseNameList[index ~/ 2]['target_muscle'] ??
+                    exerciseMethod: _.selectedExerciseDataList[index]
+                            ['exercise_method'] ??
                         '',
-                    exerciseMethod: DummyDataController.to
-                            .excerciseNameList[index ~/ 2]['exercise_method'] ??
-                        '',
-                    onTap: _onExerciseBlockPressed,
-                  );
-                }
-              },
-            ),
-          ),
-        ],
-      ),
+                    onTap: () =>
+                        _onExerciseBlockPressed(index),
+                  ),
+                ],
+              );
+            },
+            separatorBuilder: (context, index) => verticalSpacer(15),
+            itemCount: _.selectedExerciseDataList.length,
+          );
+        }
+      }),
     );
 
     return Column(
@@ -266,12 +279,14 @@ class SelectExercisePage extends StatelessWidget {
 
 class _ExerciseBlock extends StatelessWidget {
   final String name;
+  final int exerciseId;
   final int targetMuscle;
   final int exerciseMethod;
-  final void Function(String) onTap;
+  final void Function() onTap;
   const _ExerciseBlock({
     Key? key,
     required this.name,
+    required this.exerciseId,
     required this.targetMuscle,
     required this.exerciseMethod,
     required this.onTap,
@@ -321,7 +336,7 @@ class _ExerciseBlock extends StatelessWidget {
               type: MaterialType.transparency,
               child: InkWell(
                 borderRadius: BorderRadius.circular(20),
-                onTap: () => onTap(name),
+                onTap: onTap,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -334,19 +349,26 @@ class _ExerciseBlock extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: -2,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 24),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                name,
+                                style: const TextStyle(
+                                  overflow: TextOverflow.clip,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: -2,
+                                ),
+                              ),
                             ),
                           ),
                           Row(
                             children: [
                               Container(
-                                width: 43,
-                                height: 26,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
                                   color: const Color(0xffFFC700),
                                   borderRadius: BorderRadius.circular(30),
@@ -362,8 +384,8 @@ class _ExerciseBlock extends StatelessWidget {
                               ),
                               horizontalSpacer(10),
                               Container(
-                                width: 43,
-                                height: 26,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
                                   color: brightPrimaryColor,
                                   borderRadius: BorderRadius.circular(30),
@@ -390,7 +412,7 @@ class _ExerciseBlock extends StatelessWidget {
                     Container(
                       width: 115,
                       height: 90,
-                      alignment: Alignment.bottomRight,
+                      alignment: Alignment.topRight,
                       child: IconButton(
                         splashRadius: 20,
                         icon: const Icon(Icons.help, color: Colors.white),

@@ -72,6 +72,25 @@ class AuthController extends GetxController {
     });
   }
 
+  Future<dynamic> getAccessToken() async {
+    var refreshToken = await storage.read(key: 'refresh_token');
+    if (refreshToken != null) {
+      var accessToken = await storage.read(key: 'access_token');
+      if (parseJwt(accessToken!)["exp"] * 1000 <
+          DateTime.now().millisecondsSinceEpoch) {
+        print('Access token expired');
+        await AmplifyService.getTokensWithRefreshToken(refreshToken);
+        var updatedAccessToken = await storage.read(key: 'access_token');
+        print('Access token updated');
+        return updatedAccessToken;
+      } else {
+        return accessToken;
+      }
+    } else {
+      Get.offNamed('/auth');
+    }
+  }
+
   Future<void> getUserInfo() async {
     bool userInfoStored = await storage.containsKey(key: 'username') &&
         await storage.containsKey(key: 'profile_icon') &&
@@ -98,7 +117,8 @@ class AuthController extends GetxController {
     userInfo = await ApiService.getUserInfo();
     update();
     storage.write(key: 'username', value: userInfo['username']);
-    storage.write(key: 'profile_icon', value: userInfo['profile_icon'].toString());
+    storage.write(
+        key: 'profile_icon', value: userInfo['profile_icon'].toString());
     storage.write(key: 'created_at', value: userInfo['created_at']);
   }
 }

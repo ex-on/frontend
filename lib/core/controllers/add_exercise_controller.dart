@@ -1,66 +1,82 @@
+import 'package:exon_app/core/controllers/home_controller.dart';
+import 'package:exon_app/core/services/api_service.dart';
+import 'package:exon_app/core/services/exercise_api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class AddExerciseController extends GetxController {
   static AddExerciseController to = Get.find();
   TextEditingController searchExerciseController = TextEditingController();
+  List<List<TextEditingController>> inputSetControllerList = [
+    [TextEditingController(), TextEditingController()]
+  ];
   int page = 0;
   int targetMuscle = 0;
   int exerciseMethod = 0;
-  int numSets = 0;
+  int numSets = 1;
   int inputSetNum = 0;
-  String selectedExercise = '';
-  bool isAddingNewSet = false;
-  bool addedNewSet = false;
-  List<int> currentInputSetValues = [0, 0];
-  List<List<int>> inputSetValues = [];
+  bool loading = false;
+  bool inputSetDataNotNull = false;
+  Map<String, dynamic> selectedExerciseInfo = {};
+  List<dynamic> exerciseDataList = [];
+  List<dynamic> selectedExerciseDataList = [];
 
   void jumpToPage(int pageNum) {
     page = pageNum;
     update();
   }
 
+  void setLoading(bool val) {
+    loading = val;
+    update();
+  }
+
   void targetMuscleSelectUpdate(int target) {
     targetMuscle = target;
     update();
+    updateCurrentExerciseDataList();
   }
 
   void excerciseMethodSelectUpdate(int method) {
     exerciseMethod = method;
     update();
+    updateCurrentExerciseDataList();
   }
 
-  void excerciseSelectUpdate(String name) {
-    selectedExercise = name;
+  void updateSelectedExercise(int index) {
+    selectedExerciseInfo = {
+      'id': selectedExerciseDataList[index]['id'],
+      'name': selectedExerciseDataList[index]['name'],
+      'exercise_method': selectedExerciseDataList[index]['exercise_method'],
+      'target_muscle': selectedExerciseDataList[index]['target_muscle'],
+    };
+    update();
+  }
+
+  void updateInputSetDataNotNull() {
+    bool val = inputSetControllerList.every(
+        (element) => element[0].text.isNotEmpty && element[1].text.isNotEmpty);
+    inputSetDataNotNull = val;
     update();
   }
 
   void addSet() {
-    isAddingNewSet = true;
     numSets++;
-    if (numSets == 1) {
-      inputSetValues.add([0, 0]);
-    } else {
-      inputSetValues.add(inputSetValues.last);
-    }
+    inputSetControllerList.add([
+      TextEditingController(
+        text: inputSetControllerList.last[0].text,
+      ),
+      TextEditingController(
+        text: inputSetControllerList.last[1].text,
+      ),
+    ]);
+    print(inputSetControllerList.length);
     update();
   }
 
   void deleteSet(int setNum) {
-    isAddingNewSet = false;
     numSets--;
-    inputSetValues.removeAt(setNum - 1);
-    update();
-  }
-
-  void confirmNewSet() {
-    isAddingNewSet = false;
-    addedNewSet = true;
-    update();
-  }
-
-  void resetAddedNewSet() {
-    addedNewSet = false;
+    inputSetControllerList.removeAt(setNum - 1);
     update();
   }
 
@@ -69,40 +85,48 @@ class AddExerciseController extends GetxController {
     update();
   }
 
-  void updateCurrentInputSetWeight(int weight) {
-    currentInputSetValues[0] = weight;
-    update();
-  }
-
-  void updateCurrentInputSetReps(int reps) {
-    currentInputSetValues[1] = reps;
-    update();
-  }
-
-  void updateInputSetValues() {
-    inputSetValues[inputSetNum - 1] = [
-      currentInputSetValues[0],
-      currentInputSetValues[1]
+  void resetExerciseDetails() {
+    inputSetControllerList = [
+      [TextEditingController(), TextEditingController()],
     ];
-    update();
-  }
 
-  void reset() {
-    currentInputSetValues = [0, 0];
-    inputSetValues = [
-      [0, 0]
-    ];
     numSets = 1;
     update();
   }
 
-  FixedExtentScrollController getWeightController(int setNum) {
-    int item = inputSetValues[setNum - 1][0] - 1;
-    return FixedExtentScrollController(initialItem: item);
+  void resetExerciseSelect() {
+    targetMuscle = 0;
+    exerciseMethod = 0;
+    selectedExerciseDataList = [];
+    // update();
   }
 
-  FixedExtentScrollController getRepsController(int setNum) {
-    var item = inputSetValues[setNum - 1][1] - 1;
-    return FixedExtentScrollController(initialItem: item);
+  Future<void> getExerciseList() async {
+    print(exerciseDataList.length);
+    if (exerciseDataList.isEmpty) {
+      setLoading(true);
+      var res = await ExerciseApiService.getExerciseList();
+      exerciseDataList = res;
+      update();
+      setLoading(false);
+    }
+  }
+
+  void updateCurrentExerciseDataList() {
+    List<dynamic> dataList = exerciseDataList.toList();
+    dataList.retainWhere((element) {
+      var data = element as Map;
+      return ((data['exercise_method'] == exerciseMethod) ||
+              exerciseMethod == 0) &&
+          ((data['target_muscle'] == targetMuscle) || targetMuscle == 0);
+    });
+    selectedExerciseDataList = dataList;
+    update();
+  }
+
+  void postExerciseWeightPlan() async {
+    await ExerciseApiService.postExercisePlanWeight(
+        selectedExerciseInfo['id'], inputSetControllerList);
+    HomeController.to.getTodayExercisePlans();
   }
 }

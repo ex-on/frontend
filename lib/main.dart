@@ -2,9 +2,13 @@ import 'package:exon_app/constants/app_routes.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
+import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/core/controllers/deep_link_controller.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
+import 'package:exon_app/core/controllers/home_controller.dart';
+import 'package:exon_app/core/controllers/home_navigation_controller.dart';
 import 'package:exon_app/core/controllers/login_controller.dart';
+import 'package:exon_app/core/controllers/profile_controller.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/controllers/settings_controller.dart';
 import 'package:exon_app/dummy_data_controller.dart';
@@ -24,6 +28,7 @@ void main() {
   Get.put<SettingsController>(SettingsController());
   Get.put<AddExerciseController>(AddExerciseController());
   Get.put<ExerciseBlockController>(ExerciseBlockController());
+  Get.put<HomeNavigationController>(HomeNavigationController());
   KakaoContext.clientId = kakaoClientId;
   runApp(const MyApp());
 }

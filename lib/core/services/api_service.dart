@@ -2,25 +2,28 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/core/controllers/auth_controllers.dart';
+import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/helpers/parse_jwt.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
 
 class ApiService {
   static var dio = Dio();
   static const storage = FlutterSecureStorage();
-  static Future<String> getAccessToken() async {
+  static Future<String> _getAccessToken() async {
     String? accessToken = await storage.read(key: 'access_token');
     return accessToken ?? '';
   }
 
-  static Future<String> getIdToken() async {
+  static Future<String> _getIdToken() async {
     String? idToken = await storage.read(key: 'id_token');
     return idToken ?? '';
   }
 
-  static Future<Response<dynamic>> get(
+  static Future<dynamic> get(
       String path, Map<String, dynamic>? parameters) async {
-    String accessToken = await getAccessToken();
+    var accessToken = await AuthController.to.getAccessToken();
     var response = await dio.get(endPointUrl + path,
         queryParameters: parameters,
         options: Options(
@@ -33,7 +36,7 @@ class ApiService {
   }
 
   static Future<Response<dynamic>> post(String path, dynamic data) async {
-    String accessToken = await getAccessToken();
+    var accessToken = await AuthController.to.getAccessToken();
     var response = await dio.post(endPointUrl + path,
         data: data,
         options: Options(
@@ -117,7 +120,7 @@ class ApiService {
       data['phone_number'] = phoneNumber;
       data['email'] = email;
     } else if (authProvider == 'Kakao') {
-      String idToken = await getIdToken();
+      String idToken = await _getIdToken();
       var idTokenData = parseJwt(idToken);
       data['email'] = idTokenData['email'];
     }
@@ -156,119 +159,6 @@ class ApiService {
     }
   }
 
-  static Future<dynamic> getPostPreview(
-      int indexNum, int pageNum, int type) async {
-    String path = '/community/postmain';
-
-    Map<String, dynamic> parameters = {
-      'index_num': indexNum,
-      'page_num': pageNum,
-      'type': type,
-    };
-
-    try {
-      var res = await get(path, parameters);
-      return res.data;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  static Future<dynamic> getHotBoardPreview(int indexNum, int pageNum) async {
-    String path = '/community/hotboardmain';
-
-    Map<String, dynamic> parameters = {
-      'index_num': indexNum,
-      'page_num': pageNum,
-    };
-
-    try {
-      var res = await get(path, parameters);
-      return res.data;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  static Future<dynamic> getPost(int postId) async {
-    String path = '/community/getpost';
-
-    Map<String, dynamic> parameters = {
-      'post_id': postId,
-    };
-
-    try {
-      var res = await get(path, parameters);
-      return res.data;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  static Future<dynamic> getPostComments(int postId) async {
-    String path = '/community/getpostcomments';
-
-    Map<String, dynamic> parameters = {
-      'post_id': postId,
-    };
-
-    try {
-      var res = await get(path, parameters);
-      return res.data;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  static Future<dynamic> postPostComment(int postId, String content) async {
-    String path = '/community/postcomment';
-
-    Map<String, dynamic> data = {
-      'post_id': postId,
-      'content': content,
-    };
-
-    try {
-      var res = await post(path, data);
-      return res.statusCode;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  static Future<dynamic> postPostCommentReply(
-      int postId, int postCommentId, String content) async {
-    String path = '/community/postcommentreply';
-
-    Map<String, dynamic> data = {
-      'post_id': postId,
-      'post_comment_id': postCommentId,
-      'content': content,
-    };
-
-    try {
-      var res = await post(path, data);
-      return res.statusCode;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  static Future<dynamic> getUserRecentCommunityData() async {
-    String path = '/community/user_recent_community';
-
-    try {
-      var res = await get(path, null);
-      return res.data;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
+// Community API
 }
+

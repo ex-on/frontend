@@ -1,4 +1,4 @@
-import 'package:exon_app/core/services/api_service.dart';
+import 'package:exon_app/core/services/community_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,7 +45,7 @@ class ProfileController extends GetxController
 
   Future<void> getUserRecentCommunityData() async {
     setLoading(true);
-    var data = await ApiService.getUserRecentCommunityData();
+    var data = await CommunityApiService.getUserRecentCommunityData();
     totalQnaAnswerNum = data['answer_num'];
     totalPostNum = data['post_num'];
     recentQnaList = data['qna_data'];

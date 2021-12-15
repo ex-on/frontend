@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:exon_app/core/services/exercise_api_service.dart';
 import 'package:exon_app/dummy_data_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,14 +15,19 @@ class ExerciseBlockController extends GetxController {
   RxInt currentExerciseTime = RxInt(0);
   RxInt totalRestTime = RxInt(0);
   bool exercisePaused = false;
-  Map<String, dynamic>? exercisePlan;
+  List<dynamic>? exercisePlan;
   int currentSet = 1;
   int numSets = 1;
-  List<int> currentInputSetValues = [0, 0];
-  List<int>? inputSetValues;
+  List<dynamic> currentInputSetValues = [0, 0];
+  List<dynamic>? inputSetValues;
   String? exerciseName;
   int? recommendedRestTime;
   Map<String, dynamic>? exerciseRecord;
+
+  @override
+  void onInit() async {
+    super.onInit();
+  }
 
   Timer _createCounter(RxInt time) {
     return Timer.periodic(
@@ -36,24 +42,24 @@ class ExerciseBlockController extends GetxController {
     );
   }
 
-  void startExercise(int id) {
+  void startExercise(int id, String exerciseName) {
     Get.toNamed('/exercise_block');
-    exercisePlan = DummyDataController.to.dailyExercisePlanDetailsList[id];
-    exerciseName = exerciseIdToName[exercisePlan!['exercise_id']];
-    recommendedRestTime = DummyDataController
-            .to.exerciseInfoList[exerciseName]!['recommended_rest_time'] ??
-        0;
-    numSets = exercisePlan!['sets'].length;
-    totalExerciseTimeCounter = _createCounter(totalExerciseTime);
-    currentExerciseTimeCounter = _createCounter(currentExerciseTime);
-    currentInputSetValues = [
-      exercisePlan!['sets'][currentSet - 1]['target_weight']!,
-      exercisePlan!['sets'][currentSet - 1]['target_reps']!
-    ];
-    inputSetValues = [
-      exercisePlan!['sets'][currentSet - 1]['target_weight']!,
-      exercisePlan!['sets'][currentSet - 1]['target_reps']!
-    ];
+    exerciseName = exerciseName;
+    recommendedRestTime = 30;
+    if (exercisePlan != null && exercisePlan != {}) {
+      numSets = exercisePlan!.length;
+      totalExerciseTimeCounter = _createCounter(totalExerciseTime);
+      currentExerciseTimeCounter = _createCounter(currentExerciseTime);
+      currentInputSetValues = [
+        exercisePlan![currentSet - 1]['target_weight']!,
+        exercisePlan![currentSet - 1]['target_reps']!
+      ];
+      inputSetValues = [
+        exercisePlan![currentSet - 1]['target_weight']!,
+        exercisePlan![currentSet - 1]['target_reps']!
+      ];
+    }
+
     exerciseRecord = {
       'exercise_plan_id': id,
       'sets': [],
@@ -88,12 +94,12 @@ class ExerciseBlockController extends GetxController {
     currentExerciseTimeCounter = _createCounter(currentExerciseTime);
     totalRestTimeCounter!.cancel();
     currentInputSetValues = [
-      exercisePlan!['sets'][currentSet - 1]['target_weight']!,
-      exercisePlan!['sets'][currentSet - 1]['target_reps']!
+      exercisePlan![currentSet - 1]['target_weight']!,
+      exercisePlan![currentSet - 1]['target_reps']!
     ];
     inputSetValues = [
-      exercisePlan!['sets'][currentSet - 1]['target_weight']!,
-      exercisePlan!['sets'][currentSet - 1]['target_reps']!
+      exercisePlan![currentSet - 1]['target_weight']!,
+      exercisePlan![currentSet - 1]['target_reps']!
     ];
     update();
   }
@@ -138,13 +144,19 @@ class ExerciseBlockController extends GetxController {
     update();
   }
 
+  Future<void> getExercisePlanWeightSets(int id) async {
+    var res = await ExerciseApiService.getExercisePlanWeightSets(id);
+    exercisePlan = res;
+    update();
+  }
+
   FixedExtentScrollController getWeightController(int setNum) {
-    var item = exercisePlan!['sets'][setNum - 1]['target_weight']!.toInt() - 1;
+    var item = exercisePlan![setNum - 1]['target_weight']!.toInt() - 1;
     return FixedExtentScrollController(initialItem: item);
   }
 
   FixedExtentScrollController getRepsController(int setNum) {
-    var item = exercisePlan!['sets'][setNum - 1]['target_reps']! - 1;
+    var item = exercisePlan![setNum - 1]['target_reps']! - 1;
     return FixedExtentScrollController(initialItem: item);
   }
 }

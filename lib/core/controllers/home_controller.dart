@@ -1,3 +1,4 @@
+import 'package:exon_app/core/services/exercise_api_service.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,8 +10,10 @@ class HomeController extends GetxController {
   final now = DateTime.now();
   int page = 0;
   int currentTime = 0;
+  bool loading = false;
   String weekDay = '';
   String currentMD = '';
+  List<dynamic> todayExercisePlanList = [];
   ColorTheme theme = ColorTheme.day;
 
   @override
@@ -25,10 +28,26 @@ class HomeController extends GetxController {
     weekDay = DateFormat.E('ko_KR').format(now);
     update();
     super.onInit();
+    Future.delayed(Duration.zero, () => getTodayExercisePlans());
   }
 
   void jumpToPage(int pageNum) {
     page = pageNum;
     update();
+  }
+
+  void setLoading(bool val) {
+    loading = val;
+    update();
+  }
+
+  Future<void> getTodayExercisePlans() async {
+    setLoading(true);
+    DateTime now = DateTime.now();
+
+    var res = await ExerciseApiService.getExercisePlanDate(now);
+    todayExercisePlanList = res;
+    update();
+    setLoading(false);
   }
 }

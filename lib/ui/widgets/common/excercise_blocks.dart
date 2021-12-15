@@ -134,6 +134,7 @@ import 'package:get/get.dart';
 class ExcercisePlanBlock extends StatelessWidget {
   final int id;
   final int exerciseId;
+  final String exerciseName;
   final int targetMuscle;
   final int exerciseMethod;
   final int numSets;
@@ -141,6 +142,7 @@ class ExcercisePlanBlock extends StatelessWidget {
     Key? key,
     required this.id,
     required this.exerciseId,
+    required this.exerciseName,
     required this.targetMuscle,
     required this.exerciseMethod,
     required this.numSets,
@@ -150,8 +152,9 @@ class ExcercisePlanBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     const double _excerciseTextWidth = 130;
 
-    void _onPressed() {
-      ExerciseBlockController.to.startExercise(id);
+    void _onPressed() async {
+      await ExerciseBlockController.to.getExercisePlanWeightSets(id);
+      ExerciseBlockController.to.startExercise(id, exerciseName);
     }
 
     return Container(
@@ -177,7 +180,7 @@ class ExcercisePlanBlock extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      exerciseIdToName[exerciseId] ?? '',
+                      exerciseName,
                       style: const TextStyle(
                         height: 1.0,
                         fontSize: 20,
@@ -199,14 +202,14 @@ class ExcercisePlanBlock extends StatelessWidget {
                     ),
                     horizontalSpacer(5),
                     SizedBox(
-                      height: 23,
-                      width: 23,
+                      height: 25,
+                      width: 25,
                       child: IconButton(
-                        splashRadius: 20,
+                        splashRadius: 30,
                         padding: EdgeInsets.zero,
-                        onPressed: _onPressed,
+                        onPressed: () {},
                         icon: const Icon(
-                          Icons.more_vert_rounded,
+                          Icons.edit_rounded,
                           size: 23,
                           color: softGrayColor,
                         ),

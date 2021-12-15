@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const endPointUrl = 'http://4244-123-214-62-216.ngrok.io';
+const endPointUrl = 'http://8493-221-150-78-79.ngrok.io';
 // Colors
 const splashViewBackgroundColor = Colors.white;
 const mainBackgroundColor = Color(0xffF4F3F8);

@@ -343,7 +343,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      controller.exercisePlan!['sets']
+                                      controller.exercisePlan!
                                               [controller.currentSet - 1]
                                               ['target_weight']!
                                           .toString(),
@@ -388,7 +388,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      controller.exercisePlan!['sets']
+                                      controller.exercisePlan!
                                               [controller.currentSet - 1]
                                               ['target_reps']!
                                           .toString(),

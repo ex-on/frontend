@@ -5,23 +5,16 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 
-class CommunityMainPage extends GetView<CommunityController> {
-  const CommunityMainPage({Key? key}) : super(key: key);
+class PostTabPage extends GetView<CommunityController> {
+  const PostTabPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const Color _searchIconColor = darkPrimaryColor;
     const String _postCategoryLabelText = '주제별 게시판';
     const String _expandPostViewButtonText = '더보기 >';
-
-    controller.postCategory.listen((val) {
-      controller.callback(val);
-    });
-
-    void _onSearchPressed() {}
 
     void _onCategoryButtonPressed(int index) {
       controller.postCategory.value = index;
@@ -33,25 +26,7 @@ class CommunityMainPage extends GetView<CommunityController> {
       controller.listPageCallback(controller.listPage.value);
     }
 
-    TabBar _tabBar = TabBar(
-      controller: controller.communityMainTabController,
-      indicatorColor: darkPrimaryColor,
-      labelColor: darkPrimaryColor,
-      tabs: const <Widget>[
-        Tab(child: Text('게시판')),
-        Tab(child: Text('Q&A')),
-        Tab(child: Text('보관함')),
-      ],
-    );
-
-    Widget _communitySearchBar = SearchHeader(
-      onPressed: _onSearchPressed,
-      backgroundColor: Colors.white,
-      bottom: _tabBar,
-      searchController: TextEditingController(),
-    );
-
-    Widget _postView = Column(
+    return Column(
       children: [
         Container(
           color: Colors.white,
@@ -181,8 +156,7 @@ class CommunityMainPage extends GetView<CommunityController> {
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return ContentPreviewBuilder(
-                              postType: 0, index: index);
+                          return ContentPreviewBuilder(index: index);
                         },
                         separatorBuilder: (context, index) => const Divider(
                           color: lightGrayColor,
@@ -198,30 +172,6 @@ class CommunityMainPage extends GetView<CommunityController> {
             ),
           ),
         ),
-      ],
-    );
-
-    Widget _tabBarView = TabBarView(
-      physics: const BouncingScrollPhysics(),
-      controller: controller.communityMainTabController,
-      children: <Widget>[
-        _postView,
-        Center(
-          child: Text("It's rainy here"),
-        ),
-        Center(
-          child: Text("It's sunny here"),
-        ),
-      ],
-    );
-
-    return Column(
-      children: [
-        SizedBox(
-          child: _communitySearchBar,
-          height: 100,
-        ),
-        Expanded(child: _tabBarView),
       ],
     );
   }

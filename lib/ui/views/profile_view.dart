@@ -1,17 +1,14 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
+import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/core/controllers/profile_controller.dart';
-import 'package:exon_app/helpers/disable_glow_list_view.dart';
-import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/color_badge.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({Key? key}) : super(key: key);
@@ -25,9 +22,15 @@ class ProfileView extends GetView<ProfileController> {
     const String _qnaPostLabelText = 'Q&A 답변';
     const String _expandButtonText = '전체보기';
 
-    Future.delayed(Duration.zero, () => AuthController.to.getUserInfo());
-    Future.delayed(
-        Duration.zero, () => controller.getUserRecentCommunityData());
+    Future.delayed(Duration.zero, () {
+      if (AuthController.to.userInfo.isEmpty) {
+        AuthController.to.getUserInfo();
+      }
+      if (controller.totalQnaAnswerNum == null ||
+          controller.totalPostNum == null) {
+        controller.getUserRecentCommunityData();
+      }
+    });
 
     void _onMenuPressed() {
       Get.toNamed('/settings');
@@ -112,23 +115,33 @@ class ProfileView extends GetView<ProfileController> {
                         itemBuilder: (context, index) {
                           return Container(
                             height: 170, // card height
-                            padding: const EdgeInsets.all(20),
                             margin: const EdgeInsets.symmetric(horizontal: 10),
                             decoration: BoxDecoration(
                               color: mainBackgroundColor,
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _.recentQnaList[index]['qna_data']['title'],
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    color: darkPrimaryColor,
+                            child: Material(
+                              type: MaterialType.transparency,
+                              child: InkWell(
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _.recentQnaList[index]['qna_data']
+                                            ['title'],
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          color: darkPrimaryColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           );
                         },
@@ -176,79 +189,104 @@ class ProfileView extends GetView<ProfileController> {
                       itemBuilder: (context, index) {
                         return Container(
                           height: 170, // card height
-                          padding: const EdgeInsets.all(20),
                           margin: const EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
                             color: mainBackgroundColor,
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: Text(
-                                  _.recentPostList[index]['post_data']['title'],
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: darkPrimaryColor,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                _.recentPostList[index]['post_data']['content'],
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: darkPrimaryColor,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      LikeIcon(),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 5),
-                                        child: Text(
-                                          _.recentPostList[index]['count']
-                                                  ['count_likes']
-                                              .toString(),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: darkPrimaryColor,
-                                          ),
+                          child: Material(
+                            type: MaterialType.transparency,
+                            child: InkWell(
+                              onTap: () {
+                                CommunityController.to.getPost(
+                                    _.recentPostList[index]['post_data']['id']);
+                                CommunityController.to.getPostCount(
+                                    _.recentPostList[index]['post_data']['id']);
+                                CommunityController.to.getPostComments(
+                                    _.recentPostList[index]['post_data']['id']);
+                                Get.toNamed('/community/post',
+                                    arguments: _.recentPostList[index]
+                                        ['post_data']['id']);
+                              },
+                              borderRadius: BorderRadius.circular(20),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: Text(
+                                        _.recentPostList[index]['post_data']
+                                            ['title'],
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: darkPrimaryColor,
                                         ),
                                       ),
-                                      horizontalSpacer(10),
-                                      CommentIcon(),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 5),
-                                        child: Text(
-                                          _.recentPostList[index]['count']
-                                                  ['count_comments']
-                                              .toString(),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: darkPrimaryColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    _.recentPostList[index]['post_data']
-                                        ['creation_date'],
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      color: deepGrayColor,
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      _.recentPostList[index]['post_data']
+                                          ['content'],
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: darkPrimaryColor,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            LikeIcon(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5),
+                                              child: Text(
+                                                _.recentPostList[index]['count']
+                                                        ['count_likes']
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: darkPrimaryColor,
+                                                ),
+                                              ),
+                                            ),
+                                            horizontalSpacer(10),
+                                            CommentIcon(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5),
+                                              child: Text(
+                                                _.recentPostList[index]['count']
+                                                        ['count_comments']
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: darkPrimaryColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          _.recentPostList[index]['post_data']
+                                              ['creation_date'],
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            color: deepGrayColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
+                            ),
                           ),
                         );
                       },

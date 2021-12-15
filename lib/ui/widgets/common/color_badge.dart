@@ -59,6 +59,7 @@ class ColorBadge extends StatelessWidget {
         style: TextStyle(
           height: 1.0,
           fontSize: fontSize,
+          fontWeight: FontWeight.w500,
           color: (int.parse(backgroundColor.toString().substring(10, 16),
                       radix: 16) <
                   int.parse('800000', radix: 16))

@@ -21,13 +21,28 @@ class CommunityPostPage extends GetView<CommunityController> {
     const String _commentLabelText = '댓글';
     const String _commentInputLabelText = '댓글을 입력하세요';
 
+    Future.delayed(
+        Duration.zero, () => controller.getPostUserStatus(postId, 'all'));
+
     void _onBackPressed() {
       Get.back();
     }
 
-    void _onLikePressed() {}
+    void _onLikePressed() {
+      controller.updatePostCountLikes(postId);
+    }
 
-    void _onSavePressed() {}
+    void _onSavePressed() {
+      controller.updatePostCountSaved(postId);
+    }
+
+    void _onCommentLikePressed(int index) {
+      controller.updatePostCommentCountLikes(index);
+    }
+
+    void _onReplyLikePressed(int commentIndex, int index) {
+      controller.updatePostCommentReplyCountLikes(commentIndex, index);
+    }
 
     void _onReplyPressed(int commentId) {
       controller.updateReplyCommentId(commentId);
@@ -208,8 +223,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                               padding:
                                   const EdgeInsets.only(left: 5, right: 12),
                               child: Text(
-                                _.postContent['post_count']['count_likes']
-                                    .toString(),
+                                _.postCount['count_likes'].toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: darkPrimaryColor,
@@ -225,8 +239,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                               padding:
                                   const EdgeInsets.only(left: 5, right: 12),
                               child: Text(
-                                _.postContent['post_count']['count_comments']
-                                    .toString(),
+                                _.postCount['count_comments'].toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: darkPrimaryColor,
@@ -242,8 +255,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                               padding:
                                   const EdgeInsets.only(left: 5, right: 12),
                               child: Text(
-                                _.postContent['post_count']['count_saved']
-                                    .toString(),
+                                _.postCount['count_saved'].toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: darkPrimaryColor,
@@ -282,7 +294,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                       ),
                     ),
                     Text(
-                      controller.postCommentList[index]['comment']['user_data']
+                      controller.postCommentList[index]['comments']['user_data']
                           ['username'],
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -311,23 +323,28 @@ class CommunityPostPage extends GetView<CommunityController> {
                             topLeft: Radius.circular(6),
                             bottomLeft: Radius.circular(6),
                           ),
-                          onTap: _onLikePressed,
+                          onTap: () => _onCommentLikePressed(index),
                           child: SizedBox(
                             height: 30,
                             width: 40,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: LikeIcon(
-                                    width: 11,
-                                    height: 21,
-                                    color: unselectedIconColor,
-                                  ),
-                                ),
+                                GetBuilder<CommunityController>(builder: (_) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 5),
+                                    child: LikeIcon(
+                                      width: 11,
+                                      height: 21,
+                                      color: _.postCommentList[index]
+                                              ['comments']['liked']
+                                          ? brightSecondaryColor
+                                          : unselectedIconColor,
+                                    ),
+                                  );
+                                }),
                                 Text(
-                                  controller.postCommentList[index]['comment']
+                                  controller.postCommentList[index]['comments']
                                           ['comment_count']['count_likes']
                                       .toString(),
                                   style: const TextStyle(
@@ -352,7 +369,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                             bottomRight: Radius.circular(6),
                           ),
                           onTap: () => _onReplyPressed(
-                              controller.postCommentList[index]['comment']
+                              controller.postCommentList[index]['comments']
                                   ['comment_data']['id']),
                           child: const SizedBox(
                             height: 30,
@@ -371,7 +388,7 @@ class CommunityPostPage extends GetView<CommunityController> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0, bottom: 5),
               child: Text(
-                controller.postCommentList[index]['comment']['comment_data']
+                controller.postCommentList[index]['comments']['comment_data']
                     ['content'],
                 style: const TextStyle(
                   fontSize: 12,
@@ -382,7 +399,7 @@ class CommunityPostPage extends GetView<CommunityController> {
             ),
             Text(
               formatDateTimeRawString(
-                controller.postCommentList[index]['comment']['comment_data']
+                controller.postCommentList[index]['comments']['comment_data']
                     ['creation_date'],
               ),
               style: const TextStyle(
@@ -395,7 +412,8 @@ class CommunityPostPage extends GetView<CommunityController> {
       );
     }
 
-    Widget _replyBlockBuilder(List<dynamic> replyList, int index) {
+    Widget _replyBlockBuilder(
+        int commentIndex, List<dynamic> replyList, int index) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(45, 5, 25, 10),
         child: Column(
@@ -441,20 +459,27 @@ class CommunityPostPage extends GetView<CommunityController> {
                           borderRadius: const BorderRadius.all(
                             Radius.circular(6),
                           ),
-                          onTap: _onLikePressed,
+                          onTap: () => _onReplyLikePressed(commentIndex, index),
                           child: SizedBox(
                             height: 30,
                             width: 40,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 5),
-                                  child: LikeIcon(
-                                    width: 11,
-                                    height: 21,
-                                    color: unselectedIconColor,
-                                  ),
+                                GetBuilder<CommunityController>(
+                                  builder: (_) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 5),
+                                      child: LikeIcon(
+                                        width: 11,
+                                        height: 21,
+                                        color: _.postCommentList[commentIndex]
+                                                ['replies'][index]['liked']
+                                            ? brightSecondaryColor
+                                            : unselectedIconColor,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 Text(
                                   replyList[index]['reply_count']['count_likes']
@@ -523,7 +548,7 @@ class CommunityPostPage extends GetView<CommunityController> {
               Column(
                 children: List.generate(
                     controller.postCommentList[index]['replies'].length,
-                    (val) => _replyBlockBuilder(
+                    (val) => _replyBlockBuilder(index,
                         controller.postCommentList[index]['replies'], val)),
               ),
               const Divider(

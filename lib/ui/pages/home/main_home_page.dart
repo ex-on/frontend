@@ -5,6 +5,7 @@ import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/excercise_blocks.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/home/time_counter.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,6 @@ class MainHomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     bool isDaytime = ColorTheme.day == controller.theme;
-    const String _userName = '순호님,';
     String _welcomeText = isDaytime
         ? DummyDataController.to.dailyExercisePlanList.isEmpty
             ? 'EXON과 함께\n운동을 시작해요.'
@@ -36,8 +36,8 @@ class MainHomePage extends GetView<HomeController> {
     const String _exercisePlanEmptyPromptText = '운동을 추가하러 가볼까요?';
     const String _daytimeIcon = 'assets/DaytimeIcon.svg';
     const String _nighttimeIcon = 'assets/NighttimeIcon.svg';
-    int _totalExercisePlanNum =
-        DummyDataController.to.dailyExercisePlanList.length;
+    // int _totalExercisePlanNum =
+    //     DummyDataController.to.dailyExercisePlanList.length;
     String _dayNightIcon = isDaytime ? _daytimeIcon : _nighttimeIcon;
     Color backgroundColor =
         isDaytime ? lightBrightPrimaryColor : darkPrimaryColor;
@@ -45,6 +45,8 @@ class MainHomePage extends GetView<HomeController> {
         isDaytime ? brightSecondaryColor : darkSecondaryColor;
     String _todayMonthDate = controller.currentMD;
     double _weekdayProgress = (weekDayStrToInt[controller.weekDay] ?? 0) / 7;
+
+    // Future.delayed(Duration.zero, () => controller.getTodayExercisePlans());
 
     Widget _titleBanner = SizedBox(
       width: 330,
@@ -124,104 +126,110 @@ class MainHomePage extends GetView<HomeController> {
     return DisableGlowListView(
       shrinkWrap: true,
       children: [
-        Column(
-          children: [
-            Container(
-              width: context.width,
-              height: context.height * 0.4,
-              decoration: BoxDecoration(
-                color: backgroundColor,
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    right: isDaytime ? 53 : 64,
-                    top: isDaytime ? 66 : 52,
-                    child: SvgPicture.asset(
-                      _dayNightIcon,
-                    ),
-                  ),
-                  Positioned(
-                    top: 82,
-                    left: 30,
-                    child: _titleBanner,
-                  ),
-                  Positioned(
-                      bottom: 27,
-                      left: 30,
-                      child: TimeCounter(theme: controller.theme)),
-                ],
-              ),
-            ),
-            _weekdayProgressBar,
-            verticalSpacer(30),
-            Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _totalExercisePlanNumText +
-                        _totalExercisePlanNum.toString(),
-                    style: const TextStyle(
-                      color: softGrayColor,
-                      fontSize: 13.7,
-                    ),
-                  ),
-                  TextActionButton(
-                    buttonText: _addExerciseButtonText,
-                    onPressed: _onAddPressed,
-                    fontSize: 13,
-                    textColor: softGrayColor,
-                    isUnderlined: false,
-                  )
-                  // AddExcerciseButton(onPressed: _onAddPressed),
-                ],
-              ),
-            ),
-            DummyDataController.to.dailyExercisePlanList.isEmpty
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    height: 95,
-                    margin: const EdgeInsets.only(left: 30, right: 30, top: 8),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      _exercisePlanEmptyPromptText,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: clearBlackColor,
+        GetBuilder<HomeController>(builder: (_) {
+          return Column(
+            children: [
+              Container(
+                width: context.width,
+                height: context.height * 0.4,
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                ),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      right: isDaytime ? 53 : 64,
+                      top: isDaytime ? 66 : 52,
+                      child: SvgPicture.asset(
+                        _dayNightIcon,
                       ),
                     ),
-                  )
-                : Column(
-                    children: List.generate(
-                      DummyDataController.to.dailyExercisePlanList.length,
-                      (index) {
-                        return ExcercisePlanBlock(
-                          id: index,
-                          exerciseId: DummyDataController
-                              .to.dailyExercisePlanList[index]['exercise_id'],
-                          targetMuscle: DummyDataController.to.exerciseInfoList[
-                              exerciseIdToName[DummyDataController
-                                      .to.dailyExercisePlanList[index]
-                                  ['exercise_id']]]!['target_muscle'],
-                          exerciseMethod:
-                              DummyDataController.to.exerciseInfoList[
-                                  exerciseIdToName[DummyDataController
-                                          .to.dailyExercisePlanList[index]
-                                      ['exercise_id']]]!['exercise_method'],
-                          numSets: DummyDataController
-                              .to.dailyExercisePlanList[index]['num_sets'],
-                        );
-                      },
+                    Positioned(
+                      top: 82,
+                      left: 30,
+                      child: _titleBanner,
                     ),
-                  ),
-          ],
-        ),
+                    Positioned(
+                        bottom: 27,
+                        left: 30,
+                        child: TimeCounter(theme: _.theme)),
+                  ],
+                ),
+              ),
+              _weekdayProgressBar,
+              verticalSpacer(30),
+              Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _totalExercisePlanNumText +
+                          _.todayExercisePlanList.length.toString(),
+                      style: const TextStyle(
+                        color: softGrayColor,
+                        fontSize: 13.7,
+                      ),
+                    ),
+                    TextActionButton(
+                      buttonText: _addExerciseButtonText,
+                      onPressed: _onAddPressed,
+                      fontSize: 13,
+                      textColor: softGrayColor,
+                      isUnderlined: false,
+                    )
+                    // AddExcerciseButton(onPressed: _onAddPressed),
+                  ],
+                ),
+              ),
+              _.loading
+                  ? const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 30),
+                      child: LoadingIndicator(icon: true),
+                    )
+                  : (_.todayExercisePlanList.isEmpty
+                      ? Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          height: 95,
+                          margin: const EdgeInsets.only(
+                              left: 30, right: 30, top: 8),
+                          alignment: Alignment.center,
+                          child: const Text(
+                            _exercisePlanEmptyPromptText,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: clearBlackColor,
+                            ),
+                          ),
+                        )
+                      : Column(
+                          children: List.generate(
+                            _.todayExercisePlanList.length,
+                            (index) {
+                              return ExcercisePlanBlock(
+                                id: _.todayExercisePlanList[index]['plan_data']
+                                    ['id'],
+                                exerciseId: _.todayExercisePlanList[index]
+                                    ['exercise_data']['id'],
+                                exerciseName: _.todayExercisePlanList[index]
+                                    ['exercise_data']['name'],
+                                targetMuscle: _.todayExercisePlanList[index]
+                                    ['exercise_data']['target_muscle'],
+                                exerciseMethod: _.todayExercisePlanList[index]
+                                    ['exercise_data']['exercise_method'],
+                                numSets: _.todayExercisePlanList[index]
+                                    ['plan_data']['num_sets'],
+                              );
+                            },
+                          ),
+                        )),
+            ],
+          );
+        }),
       ],
     );
   }

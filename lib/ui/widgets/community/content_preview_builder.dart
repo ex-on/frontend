@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ContentPreviewBuilder extends StatelessWidget {
-  final int postType;
   final int index;
   const ContentPreviewBuilder(
-      {Key? key, required this.postType, required this.index})
+      {Key? key, required this.index})
       : super(key: key);
 
   @override
@@ -21,6 +20,7 @@ class ContentPreviewBuilder extends StatelessWidget {
           child: InkWell(
             onTap: () {
               _.getPost(_.contentList[index]['post_data']['id']);
+              _.getPostCount(_.contentList[index]['post_data']['id']);
               _.getPostComments(_.contentList[index]['post_data']['id']);
               Get.toNamed('/community/post',
                   arguments: _.contentList[index]['post_data']['id']);
@@ -73,7 +73,7 @@ class ContentPreviewBuilder extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               backgroundColor: deepGrayColor,
                               radius: 8,
                             ),
