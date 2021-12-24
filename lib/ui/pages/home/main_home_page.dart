@@ -36,8 +36,7 @@ class MainHomePage extends GetView<HomeController> {
     const String _exercisePlanEmptyPromptText = '운동을 추가하러 가볼까요?';
     const String _daytimeIcon = 'assets/DaytimeIcon.svg';
     const String _nighttimeIcon = 'assets/NighttimeIcon.svg';
-    // int _totalExercisePlanNum =
-    //     DummyDataController.to.dailyExercisePlanList.length;
+
     String _dayNightIcon = isDaytime ? _daytimeIcon : _nighttimeIcon;
     Color backgroundColor =
         isDaytime ? lightBrightPrimaryColor : darkPrimaryColor;
@@ -45,8 +44,6 @@ class MainHomePage extends GetView<HomeController> {
         isDaytime ? brightSecondaryColor : darkSecondaryColor;
     String _todayMonthDate = controller.currentMD;
     double _weekdayProgress = (weekDayStrToInt[controller.weekDay] ?? 0) / 7;
-
-    // Future.delayed(Duration.zero, () => controller.getTodayExercisePlans());
 
     Widget _titleBanner = SizedBox(
       width: 330,
@@ -62,7 +59,7 @@ class MainHomePage extends GetView<HomeController> {
           ),
           Text(
             AuthController.to.userInfo['username'] + '님,',
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w300,
               color: Colors.white,
               fontSize: 27.15,

@@ -126,11 +126,15 @@ class ElevatedActionButton extends StatelessWidget {
   final String buttonText;
   final dynamic Function()? onPressed;
   final bool? activated;
+  final double? height;
+  final double? width;
   const ElevatedActionButton({
     Key? key,
     required this.buttonText,
     required dynamic Function() this.onPressed,
     this.activated,
+    this.height,
+    this.width,
   }) : super(key: key);
 
   @override

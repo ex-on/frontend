@@ -46,7 +46,9 @@ class HomeController extends GetxController {
     DateTime now = DateTime.now();
 
     var res = await ExerciseApiService.getExercisePlanDate(now);
-    todayExercisePlanList = res;
+    if (res != null) {
+      todayExercisePlanList = res;
+    }
     update();
     setLoading(false);
   }

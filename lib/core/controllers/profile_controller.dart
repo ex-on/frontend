@@ -52,5 +52,6 @@ class ProfileController extends GetxController
     recentPostList = data['post_data'];
     update();
     setLoading(false);
+    print(recentQnaList);
   }
 }

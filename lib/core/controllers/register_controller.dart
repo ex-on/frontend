@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
-import 'package:exon_app/core/services/api_service.dart';
-import 'package:exon_app/dummy_data_controller.dart';
+import 'package:exon_app/core/services/user_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/transformers.dart';
@@ -89,7 +87,7 @@ class RegisterController extends GetxController {
     var dio = Dio();
     try {
       isEmailAvailable =
-          await ApiService.checkUserEmailAvailable(emailController.text);
+          await UserApiService.checkUserEmailAvailable(emailController.text);
       print(isEmailAvailable);
     } catch (e) {
       print(e);
@@ -309,7 +307,7 @@ class RegisterInfoController extends GetxController {
 
   Future<void> checkAvailableUsername() async {
     isUsernameAvailable =
-        await ApiService.checkUsernameAvailable(usernameController.text);
+        await UserApiService.checkUsernameAvailable(usernameController.text);
     update();
   }
 
@@ -378,7 +376,7 @@ class RegisterInfoController extends GetxController {
   // Api control
   Future<void> checkUserInfo() async {
     setUserInfoLoading(true);
-    userInfoExists = await ApiService.checkUserInfo();
+    userInfoExists = await UserApiService.checkUserInfo();
     update();
     setUserInfoLoading(false);
   }
@@ -392,7 +390,7 @@ class RegisterInfoController extends GetxController {
       phoneNumber = RegisterController.to.phoneNumController.text;
       email = RegisterController.to.emailController.text;
     }
-    var res = await ApiService.registerUserInfo(
+    var res = await UserApiService.registerUserInfo(
       authProvider,
       genderToInt[gender]!,
       DateFormat('yyyy-MM-dd').format(birthDate!),
@@ -403,7 +401,7 @@ class RegisterInfoController extends GetxController {
   }
 
   void postUserPhysicalInfo() async {
-    ApiService.postUserPhysicalInfo(
+    UserApiService.postUserPhysicalInfo(
         height, weight, muscleMass, bodyFatPercentage);
   }
 

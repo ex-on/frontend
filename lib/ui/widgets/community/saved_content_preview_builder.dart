@@ -14,6 +14,8 @@ class SavedContentPreviewBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<CommunityController>(
       builder: (_) {
+        var isPost = _.savedList![index]['post_data'] != null;
+
         return DecoratedBox(
           decoration: BoxDecoration(
             color: (index % 2 == 0) ? null : Colors.white,
@@ -22,11 +24,19 @@ class SavedContentPreviewBuilder extends StatelessWidget {
             type: MaterialType.transparency,
             child: InkWell(
               onTap: () {
-                _.getPost(_.savedPostsList![index]['post_data']['id']);
-                _.getPostCount(_.savedPostsList![index]['post_data']['id']);
-                _.getPostComments(_.savedPostsList![index]['post_data']['id']);
-                Get.toNamed('/community/post',
-                    arguments: _.savedPostsList![index]['post_data']['id']);
+                if (_.savedList![index]['post_data'] != null) {
+                  var id = _.savedList![index]['post_data']['id'];
+                  _.getPost(id);
+                  _.getPostCount(id);
+                  _.getPostComments(id);
+                  Get.toNamed('/community/post', arguments: id);
+                } else if (_.savedList![index]['qna_data'] != null) {
+                  var id = _.savedList![index]['qna_data']['id'];
+                  _.getQna(id);
+                  _.getQnaCount(id);
+                  _.getQnaAnswers(id);
+                  Get.toNamed('/community/qna');
+                }
               },
               child: SizedBox(
                 height: 100,
@@ -42,7 +52,7 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            _.savedPostsList![index]['post_data']['title'],
+                            isPost ? _.savedList![index]['post_data']['title'] : _.savedList![index]['qna_data']['title'],
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -50,8 +60,7 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            _.savedPostsList![index]['post_data']
-                                ['creation_date'],
+                            isPost ? _.savedList![index]['post_data']['creation_date'] : _.savedList![index]['qna_data']['creation_date'],
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 12,
@@ -64,7 +73,7 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
-                          _.savedPostsList![index]['post_data']['content'],
+                          isPost ? _.savedList![index]['post_data']['content'] : _.savedList![index]['qna_data']['content'],
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -85,7 +94,8 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 5),
                                 child: Text(
-                                  _.contentList[index]['user_data']['username'],
+                                  _.postContentList[index]['user_data']
+                                      ['username'],
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
@@ -101,7 +111,8 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 5),
                                 child: Text(
-                                  _.contentList[index]['count']['count_likes']
+                                  _.postContentList[index]['count']
+                                          ['count_likes']
                                       .toString(),
                                   style: const TextStyle(
                                     fontSize: 12,
@@ -114,7 +125,7 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(left: 5),
                                 child: Text(
-                                  _.contentList[index]['count']
+                                  _.postContentList[index]['count']
                                           ['count_comments']
                                       .toString(),
                                   style: const TextStyle(

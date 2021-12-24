@@ -171,3 +171,10 @@ Map<int, String> postCategoryIntToStr = {
   3: '정보',
   4: '운동인증'
 };
+
+Map<int, String> qnaCategoryIntToStr = {
+  0: 'HOT',
+  1: '전체',
+  2: '미해결',
+  3: '해결',
+};

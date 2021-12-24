@@ -1,6 +1,7 @@
 import 'package:exon_app/core/controllers/community_controller.dart';
-import 'package:exon_app/ui/pages/community/post_tab_page.dart';
-import 'package:exon_app/ui/pages/community/saved_posts_page.dart';
+import 'package:exon_app/ui/pages/community/post_category_page.dart';
+import 'package:exon_app/ui/pages/community/qna_category_page.dart';
+import 'package:exon_app/ui/pages/community/saved_post_qnas_page.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +43,9 @@ class CommunityTabView extends GetView<CommunityController> {
             physics: const BouncingScrollPhysics(),
             controller: controller.communityMainTabController,
             children: const <Widget>[
-              PostTabPage(),
-              Center(
-                child: Text("It's rainy here"),
-              ),
-              SavedPostsPage(),
+              PostCategoryPage(),
+              QnaCategoryPage(),
+              SavedPostQnasPage(),
             ],
           ),
         ),

@@ -30,6 +30,7 @@ void main() {
   Get.put<ExerciseBlockController>(ExerciseBlockController());
   Get.put<HomeNavigationController>(HomeNavigationController());
   KakaoContext.clientId = kakaoClientId;
+
   runApp(const MyApp());
 }
 
@@ -42,6 +43,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _scaffoldKey = GlobalKey();
+  final ThemeData theme = ThemeData();
 
   @override
   void initState() {
@@ -67,6 +69,12 @@ class _MyAppState extends State<MyApp> {
         }
       },
       child: GetMaterialApp(
+        theme: theme.copyWith(
+          colorScheme: theme.colorScheme.copyWith(
+            // secondary: brightPrimaryColor.withOpacity(0.3),
+            secondary: deepGrayColor,
+          ),
+        ),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

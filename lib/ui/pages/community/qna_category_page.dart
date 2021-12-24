@@ -7,23 +7,22 @@ import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 
-class PostTabPage extends GetView<CommunityController> {
-  const PostTabPage({Key? key}) : super(key: key);
+class QnaCategoryPage extends GetView<CommunityController> {
+  const QnaCategoryPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const Color _searchIconColor = darkPrimaryColor;
-    const String _postCategoryLabelText = '주제별 게시판';
-    const String _expandPostViewButtonText = '더보기 >';
+    const String _qnaCategoryLabelText = '주제별 Q&A';
+    const String _expandQnaViewButtonText = '더보기 >';
 
     void _onCategoryButtonPressed(int index) {
-      controller.postCategory.value = index;
+      controller.qnaCategory.value = index;
       controller.update();
     }
 
-    void _onExpandPostViewPressed() {
-      Get.toNamed('/community/post_list');
-      controller.listPageCallback(controller.listPage.value);
+    void _onExpandQnaViewPressed() {
+      // Get.toNamed('/community/qna_list');
+      // controller.qnaListPageCallback(controller.qnaListPage.value);
     }
 
     return Column(
@@ -39,7 +38,7 @@ class PostTabPage extends GetView<CommunityController> {
               const Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  _postCategoryLabelText,
+                  _qnaCategoryLabelText,
                   style: TextStyle(
                     color: darkPrimaryColor,
                     fontSize: 18,
@@ -50,7 +49,7 @@ class PostTabPage extends GetView<CommunityController> {
               ),
               Expanded(
                 child: ListView.separated(
-                  itemCount: 5,
+                  itemCount: 4,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => horizontalSpacer(10),
@@ -71,7 +70,7 @@ class PostTabPage extends GetView<CommunityController> {
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     width: 3,
-                                    color: _.postCategory.value == index
+                                    color: _.qnaCategory.value == index
                                         ? lightBrightPrimaryColor
                                         : Colors.transparent,
                                   ),
@@ -86,11 +85,10 @@ class PostTabPage extends GetView<CommunityController> {
                               ),
                             ),
                             Text(
-                              postCategoryIntToStr[index] ?? '',
+                              qnaCategoryIntToStr[index] ?? '',
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: darkPrimaryColor,
-                                letterSpacing: -2,
                               ),
                             ),
                           ],
@@ -103,7 +101,7 @@ class PostTabPage extends GetView<CommunityController> {
             ],
           ),
         ),
-        verticalSpacer(20),
+        verticalSpacer(15),
         Expanded(
           child: Container(
             color: Colors.white,
@@ -120,13 +118,11 @@ class PostTabPage extends GetView<CommunityController> {
                           return Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: Text(
-                              (postCategoryIntToStr[_.postCategory.value] ??
-                                      '') +
-                                  ' 게시판',
+                              (qnaCategoryIntToStr[_.qnaCategory.value] ?? '') +
+                                  ' Q&A',
                               style: const TextStyle(
                                 color: darkPrimaryColor,
                                 fontSize: 18,
-                                letterSpacing: -2,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -134,8 +130,8 @@ class PostTabPage extends GetView<CommunityController> {
                         },
                       ),
                       TextActionButton(
-                        buttonText: _expandPostViewButtonText,
-                        onPressed: _onExpandPostViewPressed,
+                        buttonText: _expandQnaViewButtonText,
+                        onPressed: _onExpandQnaViewPressed,
                         isUnderlined: false,
                         textColor: deepGrayColor,
                       ),
@@ -156,14 +152,14 @@ class PostTabPage extends GetView<CommunityController> {
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return ContentPreviewBuilder(index: index);
+                          return QnaContentPreviewBuilder(data: _.qnaContentList[index]);
                         },
                         separatorBuilder: (context, index) => const Divider(
                           color: lightGrayColor,
                           thickness: 0.5,
                           height: 0.5,
                         ),
-                        itemCount: _.contentList.length,
+                        itemCount: _.qnaContentList.length,
                       ),
                     );
                   }

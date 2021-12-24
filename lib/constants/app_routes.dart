@@ -1,5 +1,7 @@
 import 'package:exon_app/ui/pages/community/community_post_list_page.dart';
 import 'package:exon_app/ui/pages/community/community_post_page.dart';
+import 'package:exon_app/ui/pages/community/community_qna_page.dart';
+import 'package:exon_app/ui/pages/community/qna_answer_comments_page.dart';
 import 'package:exon_app/ui/views/add_exercise_view.dart';
 import 'package:exon_app/ui/views/auth_landing_view.dart';
 import 'package:exon_app/ui/views/exercise_block_view.dart';
@@ -29,6 +31,8 @@ class AppRoutes {
         name: '/community/post_list',
         page: () => const CommunityPostListPage()),
     GetPage(name: '/community/post', page: () => const CommunityPostPage()),
+    GetPage(name: '/community/qna', page: () => const CommunityQnaPage()),
+    GetPage(name: '/community/qna/answer_comments', page: () => const QnaAnswerCommentsPage()),
     GetPage(
         name: '/settings',
         page: () => const SettingsView(),

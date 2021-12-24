@@ -1,9 +1,11 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/core/controllers/profile_controller.dart';
+import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/ui/views/community_tab_view.dart';
 import 'package:exon_app/ui/views/profile_view.dart';
 import 'package:exon_app/ui/views/home_view.dart';
+import 'package:exon_app/ui/views/stats_view.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -11,17 +13,11 @@ import 'package:exon_app/core/controllers/home_navigation_controller.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/ui/widgets/common/home_navigation_bar.dart';
 import 'package:get/get.dart';
-
 class HomeNavigationView extends StatelessWidget {
   HomeNavigationView({Key? key}) : super(key: key);
 
-  final homeController = Get.put<HomeController>(HomeController());
-  final communityController =
-      Get.put<CommunityController>(CommunityController());
-  final profileController = Get.put<ProfileController>(ProfileController());
-
   final List<Widget> _pages = [
-    LoadingIndicator(),
+    const StatsView(),
     const CommunityTabView(),
     HomeView(),
     LoadingIndicator(),
@@ -30,9 +26,10 @@ class HomeNavigationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put<HomeController>(HomeController());
-    // Get.put<CommunityController>(CommunityController());
-    // Get.put<ProfileController>(ProfileController());
+    Get.put<StatsController>(StatsController());
+    Get.put<HomeController>(HomeController());
+    Get.put<CommunityController>(CommunityController());
+    Get.put<ProfileController>(ProfileController());
     return GetBuilder<HomeNavigationController>(
       builder: (_) {
         return Scaffold(

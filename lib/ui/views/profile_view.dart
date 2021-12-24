@@ -4,6 +4,7 @@ import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/core/controllers/profile_controller.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
+import 'package:exon_app/ui/widgets/common/index_indicator.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
@@ -56,27 +57,6 @@ class ProfileView extends GetView<ProfileController> {
       ],
     );
 
-    Widget _indexIndicator(int currentIndex, int totalLength) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          totalLength,
-          (index) {
-            return Container(
-              height: 6,
-              width: 6,
-              margin: const EdgeInsets.fromLTRB(4, 12, 4, 0),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color:
-                    index == currentIndex ? darkPrimaryColor : lightGrayColor,
-              ),
-            );
-          },
-        ),
-      );
-    }
-
     Widget _qnaPostContentBuilder() {
       return GetBuilder<ProfileController>(
         builder: (_) {
@@ -123,20 +103,96 @@ class ProfileView extends GetView<ProfileController> {
                             child: Material(
                               type: MaterialType.transparency,
                               child: InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  int id =
+                                      _.recentQnaList[index]['qna_data']['id'];
+                                  print(id);
+                                  CommunityController.to.getQna(id);
+                                  CommunityController.to.getQnaCount(id);
+                                  CommunityController.to
+                                      .getQnaAnswerComments(id);
+                                  CommunityController.to.updateQnaId(id);
+                                  CommunityController.to.updateQnaType(
+                                      _.recentQnaList[index]['qna_data']
+                                          ['type']);
+                                  Get.toNamed('/community/qna');
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10),
+                                        child: Text(
+                                          _.recentQnaList[index]['qna_data']
+                                              ['qna_title'],
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: darkPrimaryColor,
+                                          ),
+                                        ),
+                                      ),
                                       Text(
                                         _.recentQnaList[index]['qna_data']
-                                            ['title'],
+                                            ['answer_content'],
                                         style: const TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 13,
                                           color: darkPrimaryColor,
                                         ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              LikeIcon(),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5),
+                                                child: Text(
+                                                  _.recentQnaList[index]
+                                                          ['count']
+                                                          ['count_likes']
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: darkPrimaryColor,
+                                                  ),
+                                                ),
+                                              ),
+                                              horizontalSpacer(10),
+                                              CommentIcon(),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5),
+                                                child: Text(
+                                                  _.recentQnaList[index]
+                                                          ['count']
+                                                          ['count_answers']
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: darkPrimaryColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            _.recentQnaList[index]['qna_data']
+                                                ['creation_date'],
+                                            style: const TextStyle(
+                                              fontSize: 13,
+                                              color: deepGrayColor,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -148,8 +204,11 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                     ),
                   ),
-                  _indexIndicator(_.currentQnaIndex,
-                      (_.totalQnaAnswerNum! > 8) ? 8 : _.totalQnaAnswerNum!)
+                  IndexIndicator(
+                    currentIndex: _.currentQnaIndex,
+                    totalLength:
+                        (_.totalQnaAnswerNum! > 8) ? 8 : _.totalQnaAnswerNum!,
+                  ),
                 ],
               );
             }
@@ -198,15 +257,16 @@ class ProfileView extends GetView<ProfileController> {
                             type: MaterialType.transparency,
                             child: InkWell(
                               onTap: () {
-                                CommunityController.to.getPost(
-                                    _.recentPostList[index]['post_data']['id']);
-                                CommunityController.to.getPostCount(
-                                    _.recentPostList[index]['post_data']['id']);
-                                CommunityController.to.getPostComments(
-                                    _.recentPostList[index]['post_data']['id']);
-                                Get.toNamed('/community/post',
-                                    arguments: _.recentPostList[index]
-                                        ['post_data']['id']);
+                                var id =
+                                    _.recentPostList[index]['post_data']['id'];
+                                CommunityController.to.getPost(id);
+                                CommunityController.to.getPostCount(id);
+                                CommunityController.to.getPostComments(id);
+                                CommunityController.to.updatePostId(id);
+                                CommunityController.to.updatePostType(
+                                    _.recentPostList[index]['post_data']
+                                        ['type']);
+                                Get.toNamed('/community/post');
                               },
                               borderRadius: BorderRadius.circular(20),
                               child: Padding(
@@ -293,8 +353,9 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                   ),
                 ),
-                _indexIndicator(_.currentPostIndex,
-                    (_.totalPostNum! > 8) ? 8 : _.totalPostNum!),
+                IndexIndicator(
+                    currentIndex: _.currentPostIndex,
+                    totalLength: (_.totalPostNum! > 8) ? 8 : _.totalPostNum!),
               ],
             );
           }
@@ -308,36 +369,40 @@ class ProfileView extends GetView<ProfileController> {
       ],
     );
 
-    Widget _profileCommunityView = Column(
+    Widget _profileCommunityView = ListView(
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(30, 35, 30, 15),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(right: 6),
-                child: Text(
-                  _qnaPostLabelText,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    letterSpacing: -2,
-                    color: clearBlackColor,
+              Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 6),
+                    child: Text(
+                      _qnaPostLabelText,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        letterSpacing: -2,
+                        color: clearBlackColor,
+                      ),
+                    ),
                   ),
-                ),
+                  GetBuilder<ProfileController>(builder: (_) {
+                    return Text(
+                      _.totalQnaAnswerNum != null
+                          ? _.totalQnaAnswerNum.toString()
+                          : '---',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: brightPrimaryColor,
+                      ),
+                    );
+                  }),
+                ],
               ),
-              GetBuilder<ProfileController>(builder: (_) {
-                return Text(
-                  _.totalQnaAnswerNum != null
-                      ? _.totalQnaAnswerNum.toString()
-                      : '---',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: brightPrimaryColor,
-                  ),
-                );
-              }),
-              Expanded(child: horizontalSpacer(0)),
               TextActionButton(
                 buttonText: _expandButtonText,
                 onPressed: _onExpandQnaPressed,
@@ -351,29 +416,35 @@ class ProfileView extends GetView<ProfileController> {
         Padding(
           padding: const EdgeInsets.fromLTRB(30, 35, 30, 15),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(right: 6),
-                child: Text(
-                  _postLabelText,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    letterSpacing: -2,
-                    color: clearBlackColor,
+              Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 6),
+                    child: Text(
+                      _postLabelText,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        letterSpacing: -2,
+                        color: clearBlackColor,
+                      ),
+                    ),
                   ),
-                ),
+                  GetBuilder<ProfileController>(builder: (_) {
+                    return Text(
+                      _.totalPostNum != null
+                          ? _.totalPostNum.toString()
+                          : '---',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: brightPrimaryColor,
+                      ),
+                    );
+                  }),
+                ],
               ),
-              GetBuilder<ProfileController>(builder: (_) {
-                return Text(
-                  _.totalPostNum != null ? _.totalPostNum.toString() : '---',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: brightPrimaryColor,
-                  ),
-                );
-              }),
-              Expanded(child: horizontalSpacer(0)),
               TextActionButton(
                 buttonText: _expandButtonText,
                 onPressed: _onExpandQnaPressed,

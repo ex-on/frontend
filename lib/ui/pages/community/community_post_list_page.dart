@@ -15,14 +15,14 @@ class CommunityPostListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put<CommunityController>(CommunityController());
 
-    controller.listPage.listen((val) {
-      controller.listPageCallback(val);
+    controller.postListPage.listen((val) {
+      controller.postListPageCallback(val);
     });
 
     void _onBackPressed() {
       controller.resetContent();
       Get.back();
-      controller.callback(controller.postCategory.value);
+      controller.postListCallback(controller.postCategory.value);
     }
 
     return Scaffold(
@@ -52,11 +52,11 @@ class CommunityPostListPage extends StatelessWidget {
                           return true;
                         },
                         child: ListView.separated(
-                          controller: _.scrollController,
+                          controller: _.postListScrollController,
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, index) {
-                            if (index == _.contentList.length) {
+                            if (index == _.postContentList.length) {
                               return const Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20),
@@ -65,14 +65,14 @@ class CommunityPostListPage extends StatelessWidget {
                                 ),
                               );
                             }
-                            return ContentPreviewBuilder(index: index);
+                            return PostContentPreviewBuilder(data: _.postContentList[index]);
                           },
                           separatorBuilder: (context, index) => const Divider(
                             color: lightGrayColor,
                             thickness: 0.5,
                             height: 0.5,
                           ),
-                          itemCount: _.contentList.length +
+                          itemCount: _.postContentList.length +
                               (_.listPageLoading ? 1 : 0),
                         ),
                       ),

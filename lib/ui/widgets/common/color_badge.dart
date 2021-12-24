@@ -9,6 +9,7 @@ class ColorBadge extends StatelessWidget {
   final double? height;
   final double? fontSize;
   final Color? color;
+  final FontWeight? fontWeight;
   const ColorBadge({
     Key? key,
     required this.text,
@@ -16,6 +17,7 @@ class ColorBadge extends StatelessWidget {
     this.width,
     this.height = 26,
     this.fontSize = 14,
+    this.fontWeight = FontWeight.w500,
     this.color,
   }) : super(key: key);
 
@@ -59,7 +61,7 @@ class ColorBadge extends StatelessWidget {
         style: TextStyle(
           height: 1.0,
           fontSize: fontSize,
-          fontWeight: FontWeight.w500,
+          fontWeight: fontWeight,
           color: (int.parse(backgroundColor.toString().substring(10, 16),
                       radix: 16) <
                   int.parse('800000', radix: 16))

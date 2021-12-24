@@ -251,8 +251,7 @@ class SelectExercisePage extends StatelessWidget {
                     exerciseMethod: _.selectedExerciseDataList[index]
                             ['exercise_method'] ??
                         '',
-                    onTap: () =>
-                        _onExerciseBlockPressed(index),
+                    onTap: () => _onExerciseBlockPressed(index),
                   ),
                 ],
               );
@@ -351,7 +350,8 @@ class _ExerciseBlock extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 24),
-                            child: FittedBox(
+                            child: 
+                            FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 name,
@@ -359,7 +359,7 @@ class _ExerciseBlock extends StatelessWidget {
                                   overflow: TextOverflow.clip,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  letterSpacing: -2,
+                                  letterSpacing: 0,
                                 ),
                               ),
                             ),
