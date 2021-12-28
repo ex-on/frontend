@@ -42,7 +42,9 @@ class CommunityQnaPage extends GetView<CommunityController> {
       Get.toNamed('/community/qna/answer_comments');
     }
 
-    void _onAnswerPressed() {}
+    void _onAnswerPressed() {
+      Get.toNamed('community/qna/answer/write');
+    }
 
     Widget _qnaContent = SizedBox(
       width: context.width,
@@ -213,11 +215,17 @@ class CommunityQnaPage extends GetView<CommunityController> {
                   ),
                   Center(
                     child: SizedBox(
-                      width: 220,
+                      width: 300,
                       height: 60,
                       child: ElevatedActionButton(
                         buttonText: _answerButtonText,
                         onPressed: _onAnswerPressed,
+                        backgroundColor: mainBackgroundColor,
+                        width: 300,
+                        textStyle: const TextStyle(
+                          color: darkSecondaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

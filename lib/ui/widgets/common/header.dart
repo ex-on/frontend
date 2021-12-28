@@ -8,12 +8,14 @@ class Header extends StatelessWidget {
   final dynamic Function() onPressed;
   final Color? color;
   final String? title;
+  final List<Widget>? actions;
 
   const Header({
     Key? key,
     required this.onPressed,
     this.color = Colors.transparent,
     this.title,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class Header extends StatelessWidget {
             ),
             elevation: 0,
             backgroundColor: color,
+            actions: actions,
           )
         : AppBar(
             leading: IconButton(
@@ -45,6 +48,7 @@ class Header extends StatelessWidget {
             centerTitle: true,
             elevation: 0,
             backgroundColor: color,
+            actions: actions,
           );
   }
 }

@@ -62,6 +62,7 @@ class TextActionButton extends StatelessWidget {
   final bool? isUnderlined;
   final Widget? leading;
   final double? width;
+  final double? height;
   final FontWeight? fontWeight;
 
   const TextActionButton({
@@ -73,6 +74,7 @@ class TextActionButton extends StatelessWidget {
     this.isUnderlined = true,
     this.leading,
     this.width,
+    this.height,
     this.fontWeight,
   }) : super(key: key);
 
@@ -86,6 +88,7 @@ class TextActionButton extends StatelessWidget {
 
     return SizedBox(
       width: width,
+      height: height,
       child: TextButton(
         onPressed: onPressed,
         child: leading == null
@@ -128,6 +131,8 @@ class ElevatedActionButton extends StatelessWidget {
   final bool? activated;
   final double? height;
   final double? width;
+  final Color? backgroundColor;
+  final TextStyle? textStyle;
   const ElevatedActionButton({
     Key? key,
     required this.buttonText,
@@ -135,6 +140,8 @@ class ElevatedActionButton extends StatelessWidget {
     this.activated,
     this.height,
     this.width,
+    this.backgroundColor = brightPrimaryColor,
+    this.textStyle = const TextStyle(color: Colors.white),
   }) : super(key: key);
 
   @override
@@ -145,7 +152,7 @@ class ElevatedActionButton extends StatelessWidget {
           if (states.contains(MaterialState.disabled)) {
             return deepGrayColor;
           }
-          return elevatedActionButtonColor; // Use the component's default.
+          return backgroundColor!; // Use the component's default.
         },
       ),
       minimumSize: MaterialStateProperty.all(const Size(250, 50)),
@@ -159,12 +166,7 @@ class ElevatedActionButton extends StatelessWidget {
     );
 
     return ElevatedButton(
-      child: Text(
-        buttonText,
-        style: const TextStyle(
-          color: Colors.white,
-        ),
-      ),
+      child: Text(buttonText, style: textStyle),
       onPressed: activated == null || activated! ? onPressed : null,
       style: style,
     );

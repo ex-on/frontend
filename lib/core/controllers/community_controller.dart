@@ -11,6 +11,7 @@ class CommunityController extends GetxController
   TabController? communityMainTabController;
   ScrollController postListScrollController = ScrollController();
   ScrollController postScrollController = ScrollController();
+  ScrollController qnaListScrollController = ScrollController();
   int page = 0;
   int? commentId;
   int? postId;

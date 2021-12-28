@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const endPointUrl = 'http://f5da-221-150-78-79.ngrok.io';
+const endPointUrl = 'http://6cbc-123-214-62-216.ngrok.io';
 // Colors
 const splashViewBackgroundColor = Colors.white;
 const mainBackgroundColor = Color(0xffF4F3F8);
@@ -9,7 +9,6 @@ const kakaoLoginColor = Color(0xffFAE100);
 const facebookLoginColor = Color(0xff4F66A5);
 
 const textFieldFillColor = Color(0xffF4F3F8);
-const elevatedActionButtonColor = Color(0xff00B9E4);
 const deepGrayColor = Color(0xff777777);
 
 const lightBrightPrimaryColor = Color(0xff9AD9E8);

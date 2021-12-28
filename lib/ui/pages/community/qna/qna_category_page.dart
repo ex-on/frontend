@@ -7,23 +7,22 @@ import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 
-class PostCategoryPage extends GetView<CommunityController> {
-  const PostCategoryPage({Key? key}) : super(key: key);
+class QnaCategoryPage extends GetView<CommunityController> {
+  const QnaCategoryPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const Color _searchIconColor = darkPrimaryColor;
-    const String _postCategoryLabelText = '주제별 게시판';
-    const String _expandPostViewButtonText = '더보기 >';
+    const String _qnaCategoryLabelText = '주제별 Q&A';
+    const String _expandQnaViewButtonText = '더보기 >';
 
     void _onCategoryButtonPressed(int index) {
-      controller.postCategory.value = index;
+      controller.qnaCategory.value = index;
       controller.update();
     }
 
-    void _onExpandPostViewPressed() {
-      Get.toNamed('/community/post_list');
-      controller.postListPageCallback(controller.postListPage.value);
+    void _onExpandQnaViewPressed() {
+      Get.toNamed('/community/qna/list');
+      controller.qnaListPageCallback(controller.qnaListPage.value);
     }
 
     return Column(
@@ -39,7 +38,7 @@ class PostCategoryPage extends GetView<CommunityController> {
               const Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Text(
-                  _postCategoryLabelText,
+                  _qnaCategoryLabelText,
                   style: TextStyle(
                     color: darkPrimaryColor,
                     fontSize: 18,
@@ -50,7 +49,7 @@ class PostCategoryPage extends GetView<CommunityController> {
               ),
               Expanded(
                 child: ListView.separated(
-                  itemCount: 5,
+                  itemCount: 4,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => horizontalSpacer(10),
@@ -71,7 +70,7 @@ class PostCategoryPage extends GetView<CommunityController> {
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     width: 3,
-                                    color: _.postCategory.value == index
+                                    color: _.qnaCategory.value == index
                                         ? lightBrightPrimaryColor
                                         : Colors.transparent,
                                   ),
@@ -86,7 +85,7 @@ class PostCategoryPage extends GetView<CommunityController> {
                               ),
                             ),
                             Text(
-                              postCategoryIntToStr[index] ?? '',
+                              qnaCategoryIntToStr[index] ?? '',
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: darkPrimaryColor,
@@ -119,9 +118,8 @@ class PostCategoryPage extends GetView<CommunityController> {
                           return Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: Text(
-                              (postCategoryIntToStr[_.postCategory.value] ??
-                                      '') +
-                                  ' 게시판',
+                              (qnaCategoryIntToStr[_.qnaCategory.value] ?? '') +
+                                  ' Q&A',
                               style: const TextStyle(
                                 color: darkPrimaryColor,
                                 fontSize: 18,
@@ -132,8 +130,8 @@ class PostCategoryPage extends GetView<CommunityController> {
                         },
                       ),
                       TextActionButton(
-                        buttonText: _expandPostViewButtonText,
-                        onPressed: _onExpandPostViewPressed,
+                        buttonText: _expandQnaViewButtonText,
+                        onPressed: _onExpandQnaViewPressed,
                         isUnderlined: false,
                         textColor: deepGrayColor,
                       ),
@@ -154,14 +152,14 @@ class PostCategoryPage extends GetView<CommunityController> {
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return PostContentPreviewBuilder(data: _.postContentList[index]);
+                          return QnaContentPreviewBuilder(data: _.qnaContentList[index]);
                         },
                         separatorBuilder: (context, index) => const Divider(
                           color: lightGrayColor,
                           thickness: 0.5,
                           height: 0.5,
                         ),
-                        itemCount: _.postContentList.length,
+                        itemCount: _.qnaContentList.length,
                       ),
                     );
                   }

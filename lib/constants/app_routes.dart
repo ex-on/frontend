@@ -1,7 +1,11 @@
-import 'package:exon_app/ui/pages/community/community_post_list_page.dart';
-import 'package:exon_app/ui/pages/community/community_post_page.dart';
-import 'package:exon_app/ui/pages/community/community_qna_page.dart';
-import 'package:exon_app/ui/pages/community/qna_answer_comments_page.dart';
+import 'package:exon_app/ui/pages/community/post/post_list_page.dart';
+import 'package:exon_app/ui/pages/community/post/community_post_page.dart';
+import 'package:exon_app/ui/pages/community/qna/community_qna_page.dart';
+import 'package:exon_app/ui/pages/community/post/post_write_page.dart';
+import 'package:exon_app/ui/pages/community/qna/qna_answer_comments_page.dart';
+import 'package:exon_app/ui/pages/community/qna/qna_answer_write_page.dart';
+import 'package:exon_app/ui/pages/community/qna/qna_list_page.dart';
+import 'package:exon_app/ui/pages/community/qna/qna_write_page.dart';
 import 'package:exon_app/ui/views/add_exercise_view.dart';
 import 'package:exon_app/ui/views/auth_landing_view.dart';
 import 'package:exon_app/ui/views/exercise_block_view.dart';
@@ -27,12 +31,18 @@ class AppRoutes {
     GetPage(name: '/add_excercise', page: () => AddExerciseView()),
     GetPage(name: '/exercise_block', page: () => const ExerciseBlockView()),
     GetPage(name: '/excercise_info', page: () => const ExerciseInfoPage()),
-    GetPage(
-        name: '/community/post_list',
-        page: () => const CommunityPostListPage()),
+    GetPage(name: '/community/post/list', page: () => const PostListPage()),
     GetPage(name: '/community/post', page: () => const CommunityPostPage()),
+    GetPage(name: '/community/post/write', page: () => const PostWritePage()),
     GetPage(name: '/community/qna', page: () => const CommunityQnaPage()),
-    GetPage(name: '/community/qna/answer_comments', page: () => const QnaAnswerCommentsPage()),
+    GetPage(name: '/community/qna/list', page: () => const QnaListPage()),
+    GetPage(name: '/community/qna/write', page: () => const QnaWritePage()),
+    GetPage(
+        name: '/community/qna/answer/write',
+        page: () => const QnaAnswerWritePage()),
+    GetPage(
+        name: '/community/qna/answer_comments',
+        page: () => const QnaAnswerCommentsPage()),
     GetPage(
         name: '/settings',
         page: () => const SettingsView(),

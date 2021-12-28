@@ -2,27 +2,30 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
-import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/floating_write_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CommunityPostListPage extends StatelessWidget {
-  const CommunityPostListPage({Key? key}) : super(key: key);
+class QnaListPage extends StatelessWidget {
+  const QnaListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<CommunityController>(CommunityController());
 
-    controller.postListPage.listen((val) {
-      controller.postListPageCallback(val);
+    controller.qnaListPage.listen((val) {
+      controller.qnaListPageCallback(val);
     });
 
     void _onBackPressed() {
       controller.resetContent();
       Get.back();
-      controller.postListCallback(controller.postCategory.value);
+      controller.qnaListCallback(controller.qnaCategory.value);
+    }
+
+    void _onWritePressed() {
+      Get.toNamed('community/qna/write');
     }
 
     return Scaffold(
@@ -32,7 +35,7 @@ class CommunityPostListPage extends StatelessWidget {
             children: [
               Header(
                 onPressed: _onBackPressed,
-                title: (postCategoryIntToStr[controller.postCategory.value] ??
+                title: (qnaCategoryIntToStr[controller.qnaCategory.value] ??
                         '') +
                     ' 게시판',
               ),
@@ -52,11 +55,11 @@ class CommunityPostListPage extends StatelessWidget {
                           return true;
                         },
                         child: ListView.separated(
-                          controller: _.postListScrollController,
+                          controller: _.qnaListScrollController,
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, index) {
-                            if (index == _.postContentList.length) {
+                            if (index == _.qnaContentList.length) {
                               return const Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20),
@@ -65,19 +68,20 @@ class CommunityPostListPage extends StatelessWidget {
                                 ),
                               );
                             }
-                            return PostContentPreviewBuilder(data: _.postContentList[index]);
+                            return QnaContentPreviewBuilder(
+                                data: _.qnaContentList[index]);
                           },
                           separatorBuilder: (context, index) => const Divider(
                             color: lightGrayColor,
                             thickness: 0.5,
                             height: 0.5,
                           ),
-                          itemCount: _.postContentList.length +
+                          itemCount: _.qnaContentList.length +
                               (_.listPageLoading ? 1 : 0),
                         ),
                       ),
                       Positioned(
-                        child: FloatingWriteButton(onPressed: () {}),
+                        child: FloatingWriteButton(onPressed: _onWritePressed),
                         bottom: 25,
                         right: 25,
                       ),

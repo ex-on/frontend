@@ -22,10 +22,10 @@ class FloatingWriteButton extends StatelessWidget {
           onPressed: onPressed,
           child: const Icon(
             Icons.edit_rounded,
-            color: brightPrimaryColor,
+            color: Colors.white,
             size: 35,
           ),
-          backgroundColor: const Color(0xffE2FAFF),
+          backgroundColor: brightPrimaryColor,
         ),
       ),
     );

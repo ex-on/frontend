@@ -449,3 +449,82 @@ class NumberInputFieldDisplay extends StatelessWidget {
     );
   }
 }
+
+class TitleInputField extends StatelessWidget {
+  final String? hintText;
+  // final TextEditingController controller;
+  const TitleInputField({Key? key, this.hintText = '제목'}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.only(
+          left: 2,
+          bottom: 15,
+        ),
+        border: const UnderlineInputBorder(
+          borderSide: BorderSide(color: lightGrayColor, width: 0.5),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: lightGrayColor,
+            width: 0.5,
+          ),
+        ),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: lightGrayColor,
+            width: 0.5,
+          ),
+        ),
+        hintText: hintText,
+        hintStyle: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Color(0xffAEADAD),
+        ),
+      ),
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: clearBlackColor,
+      ),
+    );
+  }
+}
+
+class ContentInputField extends StatelessWidget {
+  // final TextEditingController controller;
+  const ContentInputField({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.only(
+          left: 2,
+          bottom: 15,
+        ),
+        border: InputBorder.none,
+        constraints: BoxConstraints(
+          minHeight: 300,
+        ),
+        hintText: '내용을 입력하세요',
+        hintStyle: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w300,
+          height: 1.3,
+          color: Color(0xffAEADAD),
+        ),
+      ),
+      maxLines: null,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.3,
+        color: clearBlackColor,
+      ),
+    );
+  }
+}

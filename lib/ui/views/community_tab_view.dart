@@ -1,6 +1,6 @@
 import 'package:exon_app/core/controllers/community_controller.dart';
-import 'package:exon_app/ui/pages/community/post_category_page.dart';
-import 'package:exon_app/ui/pages/community/qna_category_page.dart';
+import 'package:exon_app/ui/pages/community/post/post_category_page.dart';
+import 'package:exon_app/ui/pages/community/qna/qna_category_page.dart';
 import 'package:exon_app/ui/pages/community/saved_post_qnas_page.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/constants/constants.dart';
