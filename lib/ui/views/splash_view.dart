@@ -11,6 +11,8 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put<AuthController>(AuthController());
+    Future.delayed(
+        Duration.zero, () async => await AuthController.to.asyncMethod());
     const _logo = "assets/exonLogo.svg";
     const double _logoWidth = 130;
     const double _logoHeight = 100;

@@ -152,6 +152,7 @@ class QnaContentPreviewBuilder extends StatelessWidget {
               _.getQnaCount(id);
               _.getQnaAnswers(id);
               _.updateQnaId(id);
+              _.updateQnaType(data['qna_data']['type']);
               Get.toNamed('/community/qna');
             },
             child: SizedBox(

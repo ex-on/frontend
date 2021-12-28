@@ -58,7 +58,9 @@ class MainHomePage extends GetView<HomeController> {
             ),
           ),
           Text(
-            AuthController.to.userInfo['username'] + '님,',
+            (AuthController.to.userInfo.length != 0)
+                ? AuthController.to.userInfo['username'] + '님,'
+                : '',
             style: const TextStyle(
               fontWeight: FontWeight.w300,
               color: Colors.white,
@@ -102,7 +104,7 @@ class MainHomePage extends GetView<HomeController> {
               width: context.width / 7,
               child: Center(
                 child: Text(
-                  weekDayIntToStr[index + 1] ?? '',
+                  weekdayIntToStr[index + 1] ?? '',
                   style: TextStyle(
                     color: index + 1 == weekDayStrToInt[controller.weekDay]
                         ? secondaryColor

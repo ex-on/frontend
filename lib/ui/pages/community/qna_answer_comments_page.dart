@@ -117,7 +117,7 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                       (element) =>
                                                           element['answer_data']
                                                               ['id'] ==
-                                                          _.answerId) as Map)[
+                                                          _.answerId).toList()[0])[
                                                   'user_data']['username'])
                                             const CommentBadge(text: '답변자'),
                                         ],

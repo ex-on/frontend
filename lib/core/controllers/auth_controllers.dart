@@ -40,10 +40,10 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    WidgetsFlutterBinding.ensureInitialized();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _asyncMethod();
-    });
+    // WidgetsFlutterBinding.ensureInitialized();
+    // WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    //   await _asyncMethod();
+    // });
   }
 
   void setLoading(bool val) {
@@ -51,7 +51,7 @@ class AuthController extends GetxController {
     update();
   }
 
-  void _asyncMethod() async {
+  Future<void> asyncMethod() async {
     await getUserInfo();
     Get.offNamed('/home');
   }

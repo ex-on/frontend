@@ -7,6 +7,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   TabController? byPeriodStatsTabController;
   int page = 0;
   int currentCumulativeExerciseIndex = 0;
+  DateTime selectedDate = DateTime.now();
 
   @override
   void onInit() {
@@ -34,6 +35,11 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
 
   void updateCurrentCumulativeExerciseIndex(int index) {
     currentCumulativeExerciseIndex = index;
+    update();
+  }
+
+  void updateSelectedDate(DateTime dateTime) {
+    selectedDate = dateTime;
     update();
   }
 }

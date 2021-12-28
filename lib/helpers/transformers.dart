@@ -127,7 +127,7 @@ Map<String, int> weekDayStrToInt = {
   '일': 7,
 };
 
-Map<int, String> weekDayIntToStr = {
+Map<int, String> weekdayIntToStr = {
   1: '월',
   2: '화',
   3: '수',

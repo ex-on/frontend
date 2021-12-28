@@ -14,7 +14,7 @@ class ColorBadge extends StatelessWidget {
     Key? key,
     required this.text,
     this.type,
-    this.width,
+    this.width = 45,
     this.height = 26,
     this.fontSize = 14,
     this.fontWeight = FontWeight.w500,
