@@ -1,3 +1,4 @@
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/horizontal_number_picker.dart';
@@ -35,6 +36,7 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
     void _onStartPressed() {
       controller.postUserInfo();
       controller.postUserPhysicalInfo();
+      AuthController.to.getUserInfo();
       Get.offAllNamed('/home');
       controller.reset();
     }

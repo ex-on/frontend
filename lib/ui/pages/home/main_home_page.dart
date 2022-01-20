@@ -2,11 +2,11 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
-import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/excercise_blocks.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/home/time_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,7 +19,8 @@ class MainHomePage extends GetView<HomeController> {
 
   void _onAddPressed() {
     AddExerciseController.to.jumpToPage(0);
-    Get.toNamed('/add_excercise');
+    Get.toNamed('/add_exercise');
+    // Get.toNamed('/exercise_summary');
   }
 
   @override
@@ -32,8 +33,6 @@ class MainHomePage extends GetView<HomeController> {
         : '더 어두워지기 전에\n운동을 시작할까요?';
     // const String _phraseOfTheDay = '"인생의 가장 아름다운 순간은 돌아오지 않는다."';
     const String _totalExercisePlanNumText = '총 운동 ';
-    const String _addExerciseButtonText = '운동 추가하기 >';
-    const String _exercisePlanEmptyPromptText = '운동을 추가하러 가볼까요?';
     const String _daytimeIcon = 'assets/DaytimeIcon.svg';
     const String _nighttimeIcon = 'assets/NighttimeIcon.svg';
 
@@ -122,114 +121,120 @@ class MainHomePage extends GetView<HomeController> {
       ],
     );
 
-    return DisableGlowListView(
-      shrinkWrap: true,
-      children: [
-        GetBuilder<HomeController>(builder: (_) {
-          return Column(
-            children: [
-              Container(
-                width: context.width,
-                height: context.height * 0.4,
-                decoration: BoxDecoration(
-                  color: backgroundColor,
+    return GetBuilder<HomeController>(builder: (_) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: context.width,
+            height: 350,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  right: isDaytime ? 53 : 64,
+                  top: isDaytime ? 66 : 52,
+                  child: SvgPicture.asset(
+                    _dayNightIcon,
+                  ),
                 ),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      right: isDaytime ? 53 : 64,
-                      top: isDaytime ? 66 : 52,
-                      child: SvgPicture.asset(
-                        _dayNightIcon,
-                      ),
-                    ),
-                    Positioned(
-                      top: 82,
-                      left: 30,
-                      child: _titleBanner,
-                    ),
-                    Positioned(
-                        bottom: 27,
-                        left: 30,
-                        child: TimeCounter(theme: _.theme)),
-                  ],
+                Positioned(
+                  top: 82,
+                  left: 30,
+                  child: _titleBanner,
                 ),
+                Positioned(
+                  bottom: 27,
+                  left: 30,
+                  child: ExerciseTimeCounter(
+                    theme: _.theme,
+                    totalExerciseTime: _.totalExerciseTime,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _weekdayProgressBar,
+          verticalSpacer(30),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: Text(
+              _totalExercisePlanNumText +
+                  _.todayExercisePlanList.length.toString() +
+                  '개',
+              style: const TextStyle(
+                color: softGrayColor,
+                fontSize: 13.7,
               ),
-              _weekdayProgressBar,
-              verticalSpacer(30),
-              Padding(
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      _totalExercisePlanNumText +
-                          _.todayExercisePlanList.length.toString(),
-                      style: const TextStyle(
-                        color: softGrayColor,
-                        fontSize: 13.7,
-                      ),
-                    ),
-                    TextActionButton(
-                      buttonText: _addExerciseButtonText,
-                      onPressed: _onAddPressed,
-                      fontSize: 13,
-                      textColor: softGrayColor,
-                      isUnderlined: false,
-                    )
-                    // AddExcerciseButton(onPressed: _onAddPressed),
-                  ],
+            ),
+          ),
+          Expanded(
+            child: Stack(
+              children: [
+                GetBuilder<HomeController>(
+                  builder: (_) {
+                    bool _isEmpty = _.todayExercisePlanList.isEmpty &&
+                        _.todayExerciseRecordList.isEmpty;
+                    List<Widget> _children = List.generate(
+                      _.todayExercisePlanList.length,
+                      (index) {
+                        return ExcercisePlanBlock(
+                          exerciseData: _.todayExercisePlanList[index]
+                              ['exercise_data'],
+                          id: _.todayExercisePlanList[index]['plan_data']['id'],
+                          numSets: _.todayExercisePlanList[index]['plan_data']
+                              ['num_sets'],
+                        );
+                      },
+                    );
+                    _.todayExerciseRecordList.asMap().forEach((index, element) {
+                      _children.add(
+                        ExcerciseRecordBlock(
+                          exerciseData: _.todayExerciseRecordList[index]
+                              ['exercise_data'],
+                          totalSets: _.todayExerciseRecordList[index]
+                              ['record_data']['total_sets'],
+                          totalVolume: _.todayExerciseRecordList[index]
+                              ['record_data']['total_volume'],
+                        ),
+                      );
+                    });
+
+                    return ListView(
+                      children: [
+                        _.loading
+                            ? const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 30),
+                                child: LoadingIndicator(icon: true),
+                              )
+                            : _isEmpty
+                                ? const Center(child: TiredCharacter())
+                                : Column(
+                                    children: _children,
+                                  ),
+                      ],
+                    );
+                  },
                 ),
-              ),
-              _.loading
-                  ? const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 30),
-                      child: LoadingIndicator(icon: true),
-                    )
-                  : (_.todayExercisePlanList.isEmpty
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          height: 95,
-                          margin: const EdgeInsets.only(
-                              left: 30, right: 30, top: 8),
-                          alignment: Alignment.center,
-                          child: const Text(
-                            _exercisePlanEmptyPromptText,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: clearBlackColor,
-                            ),
-                          ),
-                        )
-                      : Column(
-                          children: List.generate(
-                            _.todayExercisePlanList.length,
-                            (index) {
-                              return ExcercisePlanBlock(
-                                id: _.todayExercisePlanList[index]['plan_data']
-                                    ['id'],
-                                exerciseId: _.todayExercisePlanList[index]
-                                    ['exercise_data']['id'],
-                                exerciseName: _.todayExercisePlanList[index]
-                                    ['exercise_data']['name'],
-                                targetMuscle: _.todayExercisePlanList[index]
-                                    ['exercise_data']['target_muscle'],
-                                exerciseMethod: _.todayExercisePlanList[index]
-                                    ['exercise_data']['exercise_method'],
-                                numSets: _.todayExercisePlanList[index]
-                                    ['plan_data']['num_sets'],
-                              );
-                            },
-                          ),
-                        )),
-            ],
-          );
-        }),
-      ],
-    );
+                Positioned(
+                  bottom: 35 + context.mediaQueryPadding.bottom,
+                  right: 35,
+                  child: FloatingIconButton(
+                    onPressed: _onAddPressed,
+                    icon: const Icon(
+                      Icons.add_rounded,
+                      size: 50,
+                    ),
+                    // SvgPicture.asset(_addIcon, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    });
   }
 }

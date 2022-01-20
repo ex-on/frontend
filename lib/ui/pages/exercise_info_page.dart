@@ -114,7 +114,7 @@ class ExerciseInfoPage extends StatelessWidget {
                                         horizontalSpacer(9),
                                         ColorBadge(
                                           text:
-                                              "${excerciseMethodIntToStr[_data['exercise_method']]}",
+                                              "${exerciseMethodIntToStr[_data['exercise_method']]}",
                                           type: 'exerciseMethod',
                                           height: 35,
                                           width: 57,

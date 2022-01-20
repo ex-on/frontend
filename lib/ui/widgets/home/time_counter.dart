@@ -2,15 +2,19 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:flutter/material.dart';
 
-class TimeCounter extends StatelessWidget {
+class ExerciseTimeCounter extends StatelessWidget {
   final ColorTheme theme;
-  const TimeCounter({Key? key, required this.theme}) : super(key: key);
+  final int totalExerciseTime;
+  const ExerciseTimeCounter({
+    Key? key,
+    required this.theme,
+    required this.totalExerciseTime,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const String _timerLabel = '오늘의 운동시간';
-    const String _timeCount = '-- : -- : --';
-    // const String _completeIconText = '목표 달성';
+    const String _timeCount = '00 : 00 : 00';
     Color primaryColor =
         theme == ColorTheme.day ? brightPrimaryColor : darkPrimaryColor;
 
@@ -39,7 +43,7 @@ class TimeCounter extends StatelessWidget {
                 ),
               ),
               Text(
-                _timeCount,
+                formatHHMMSS(totalExerciseTime),
                 style: TextStyle(
                   fontSize: 28,
                   letterSpacing: -2,
@@ -50,14 +54,14 @@ class TimeCounter extends StatelessWidget {
               )
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Icon(
-              Icons.verified,
-              color: primaryColor,
-              size: 23,
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(bottom: 8.0),
+          //   child: Icon(
+          //     Icons.verified,
+          //     color: primaryColor,
+          //     size: 23,
+          //   ),
+          // ),
         ],
       ),
     );

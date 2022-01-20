@@ -186,7 +186,7 @@ class ProfileView extends GetView<ProfileController> {
                                           ),
                                           Text(
                                             _.recentQnaList[index]['qna_data']
-                                                ['creation_date'],
+                                                ['created_at'],
                                             style: const TextStyle(
                                               fontSize: 13,
                                               color: deepGrayColor,
@@ -226,7 +226,7 @@ class ProfileView extends GetView<ProfileController> {
           );
         } else {
           if (_.totalPostNum == 0 || _.totalPostNum == null) {
-            return const Text('쓴 글이 없습니다');
+            return const Center(child: Text('쓴 글이 없습니다'));
           } else {
             return Column(
               children: [
@@ -335,7 +335,7 @@ class ProfileView extends GetView<ProfileController> {
                                         ),
                                         Text(
                                           _.recentPostList[index]['post_data']
-                                              ['creation_date'],
+                                              ['created_at'],
                                           style: const TextStyle(
                                             fontSize: 13,
                                             color: deepGrayColor,
@@ -549,6 +549,7 @@ class ProfileView extends GetView<ProfileController> {
           Expanded(
             child: _tabBarView,
           ),
+          // verticalSpacer(88),
         ],
       ),
     );

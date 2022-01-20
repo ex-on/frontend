@@ -6,6 +6,8 @@ import 'package:exon_app/ui/pages/community/qna/qna_answer_comments_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_answer_write_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_list_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_write_page.dart';
+import 'package:exon_app/ui/pages/exercise/end_exercise_summary_page.dart';
+import 'package:exon_app/ui/pages/exercise/update_exercise_details_page.dart';
 import 'package:exon_app/ui/views/add_exercise_view.dart';
 import 'package:exon_app/ui/views/auth_landing_view.dart';
 import 'package:exon_app/ui/views/exercise_block_view.dart';
@@ -28,9 +30,14 @@ class AppRoutes {
     GetPage(name: '/register_info', page: () => const RegisterInfoView()),
     GetPage(name: '/login', page: () => const LoginView()),
     GetPage(name: '/home', page: () => HomeNavigationView()),
-    GetPage(name: '/add_excercise', page: () => AddExerciseView()),
+    GetPage(name: '/add_exercise', page: () => AddExerciseView()),
+    GetPage(
+        name: '/add_exercise/update',
+        page: () => const UpdateExerciseDetailsPage()),
     GetPage(name: '/exercise_block', page: () => const ExerciseBlockView()),
     GetPage(name: '/excercise_info', page: () => const ExerciseInfoPage()),
+    GetPage(
+        name: '/exercise_summary', page: () => const EndExerciseSummaryPage()),
     GetPage(name: '/community/post/list', page: () => const PostListPage()),
     GetPage(name: '/community/post', page: () => const CommunityPostPage()),
     GetPage(name: '/community/post/write', page: () => const PostWritePage()),

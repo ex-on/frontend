@@ -9,12 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/transformers.dart';
 
-class SelectExercisePage extends StatelessWidget {
+class SelectExercisePage extends GetView<AddExerciseController> {
   const SelectExercisePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AddExerciseController());
     const _headerTitle = '운동 추가하기';
     const _searchFieldLabelText = '';
     const List<String> _targetMuscleList = [
@@ -184,7 +183,7 @@ class SelectExercisePage extends StatelessWidget {
                           onPressed: () => _onTargetMusclePressed(
                               _exerciseMethodList[(index ~/ 2)]),
                           style: ElevatedButton.styleFrom(
-                            primary: brightPrimaryColor,
+                            primary: lightGrayColor,
                             minimumSize: Size.zero,
                             padding:
                                 const EdgeInsets.fromLTRB(10, 8.5, 10, 8.5),
@@ -198,7 +197,7 @@ class SelectExercisePage extends StatelessWidget {
                             _exerciseMethodList[(index ~/ 2)],
                             style: const TextStyle(
                               fontSize: _exerciseMethodSelectFontSize,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
                         );
@@ -350,8 +349,7 @@ class _ExerciseBlock extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 24),
-                            child: 
-                            FittedBox(
+                            child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 name,
@@ -366,36 +364,50 @@ class _ExerciseBlock extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffFFC700),
-                                  borderRadius: BorderRadius.circular(30),
+                              DecoratedBox(
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    left: BorderSide(
+                                      color: brightSecondaryColor,
+                                      width: 2,
+                                    ),
+                                  ),
                                 ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  targetMuscleIntToStr[targetMuscle]!,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 6, top: 2),
+                                  child: Text(
+                                    targetMuscleIntToStr[targetMuscle]!,
+                                    style: const TextStyle(
+                                      height: 1.0,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: clearBlackColor,
+                                    ),
                                   ),
                                 ),
                               ),
                               horizontalSpacer(10),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: brightPrimaryColor,
-                                  borderRadius: BorderRadius.circular(30),
+                              DecoratedBox(
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    left: BorderSide(
+                                      color: lightGrayColor,
+                                      width: 2,
+                                    ),
+                                  ),
                                 ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  excerciseMethodIntToStr[exerciseMethod]!,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 6, top: 2),
+                                  child: Text(
+                                    exerciseMethodIntToStr[exerciseMethod]!,
+                                    style: const TextStyle(
+                                      height: 1.0,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: clearBlackColor,
+                                    ),
                                   ),
                                 ),
                               ),

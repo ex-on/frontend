@@ -13,6 +13,7 @@ class ExerciseApiService extends ApiService {
       return false;
     }
   }
+
   static Future<dynamic> postExercisePlanWeight(
       int exerciseId, List setData) async {
     String path = '/exercise/post_exercise_plan_weight';
@@ -23,7 +24,7 @@ class ExerciseApiService extends ApiService {
       Map<String, dynamic> data = {
         'set_num': i + 1,
         'target_weight': double.parse((setData[i][0].text)),
-        'target_reps': int.parse((setData[i][0].text)),
+        'target_reps': int.parse((setData[i][1].text)),
       };
       sets.add(data);
     }
@@ -41,8 +42,8 @@ class ExerciseApiService extends ApiService {
     }
   }
 
-  static Future<dynamic> getExercisePlanDate(DateTime dateTime) async {
-    String path = '/exercise/plan_weight_date';
+  static Future<dynamic> getExerciseStatusDate(DateTime dateTime) async {
+    String path = '/exercise/status_date';
 
     Map<String, dynamic> parameters = {
       'date': DateFormat('yyyy-MM-dd').format(dateTime),
@@ -62,6 +63,33 @@ class ExerciseApiService extends ApiService {
 
     Map<String, dynamic> parameters = {
       'exercise_plan_weight_id': exercisePlanWeightId,
+    };
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<dynamic> postExerciseRecordWeight(
+      Map<String, dynamic> recordData) async {
+    String path = '/exercise/record_weight';
+
+    try {
+      var res = await ApiService.post(path, recordData);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<dynamic> getExerciseRecordWeight(int id) async {
+    String path = '/exercise/record_weight';
+
+    Map<String, dynamic> parameters = {
+      'id': id,
     };
 
     try {

@@ -14,7 +14,7 @@ class QnaListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put<CommunityController>(CommunityController());
 
-    controller.qnaListPage.listen((val) {
+    controller.qnaListStartIndex.listen((val) {
       controller.qnaListPageCallback(val);
     });
 
@@ -35,59 +35,66 @@ class QnaListPage extends StatelessWidget {
             children: [
               Header(
                 onPressed: _onBackPressed,
-                title: (qnaCategoryIntToStr[controller.qnaCategory.value] ??
-                        '') +
-                    ' 게시판',
+                title:
+                    (qnaCategoryIntToStr[controller.qnaCategory.value] ?? '') +
+                        ' Q&A',
               ),
               Expanded(
-                child: GetBuilder<CommunityController>(builder: (_) {
-                  if (_.loading) {
-                    return const Center(
-                      child:
-                          CircularProgressIndicator(color: brightPrimaryColor),
-                    );
-                  } else {
-                    return Stack(children: [
-                      NotificationListener<OverscrollIndicatorNotification>(
-                        onNotification:
-                            (OverscrollIndicatorNotification overscroll) {
-                          overscroll.disallowGlow();
-                          return true;
-                        },
-                        child: ListView.separated(
-                          controller: _.qnaListScrollController,
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            if (index == _.qnaContentList.length) {
-                              return const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 20),
-                                  child: CircularProgressIndicator(
-                                      color: brightPrimaryColor),
-                                ),
-                              );
-                            }
-                            return QnaContentPreviewBuilder(
-                                data: _.qnaContentList[index]);
-                          },
-                          separatorBuilder: (context, index) => const Divider(
-                            color: lightGrayColor,
-                            thickness: 0.5,
-                            height: 0.5,
+                child: GetBuilder<CommunityController>(
+                  builder: (_) {
+                    if (_.loading) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                            color: brightPrimaryColor),
+                      );
+                    } else {
+                      return Stack(
+                        children: [
+                          NotificationListener<OverscrollIndicatorNotification>(
+                            onNotification:
+                                (OverscrollIndicatorNotification overscroll) {
+                              overscroll.disallowGlow();
+                              return true;
+                            },
+                            child: ListView.separated(
+                              controller: _.qnaListScrollController,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context, index) {
+                                if (index == _.qnaContentList.length) {
+                                  return const Center(
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20),
+                                      child: CircularProgressIndicator(
+                                          color: brightPrimaryColor),
+                                    ),
+                                  );
+                                }
+                                return QnaContentPreviewBuilder(
+                                    data: _.qnaContentList[index]);
+                              },
+                              separatorBuilder: (context, index) =>
+                                  const Divider(
+                                color: lightGrayColor,
+                                thickness: 0.5,
+                                height: 0.5,
+                              ),
+                              itemCount: _.qnaContentList.length +
+                                  (_.listPageLoading ? 1 : 0),
+                            ),
                           ),
-                          itemCount: _.qnaContentList.length +
-                              (_.listPageLoading ? 1 : 0),
-                        ),
-                      ),
-                      Positioned(
-                        child: FloatingWriteButton(onPressed: _onWritePressed),
-                        bottom: 25,
-                        right: 25,
-                      ),
-                    ]);
-                  }
-                }),
+                          Positioned(
+                            child:
+                                FloatingWriteButton(onPressed: _onWritePressed),
+                            bottom: 35 + context.mediaQueryPadding.bottom + 88,
+                            right: 35,
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
               ),
             ],
           );

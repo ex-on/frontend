@@ -1,10 +1,12 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/floating_write_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class PostListPage extends StatelessWidget {
@@ -12,9 +14,10 @@ class PostListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String _arrowDropUp = 'assets/icons/arrowDropUp.svg';
     final controller = Get.put<CommunityController>(CommunityController());
 
-    controller.postListPage.listen((val) {
+    controller.postListStartIndex.listen((val) {
       controller.postListPageCallback(val);
     });
 
@@ -26,6 +29,11 @@ class PostListPage extends StatelessWidget {
 
     void _onWritePressed() {
       Get.toNamed('community/post/write');
+    }
+
+    void _onScrollUpPressed() {
+      controller.postListScrollController.animateTo(0,
+          duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
     }
 
     return Scaffold(
@@ -47,7 +55,7 @@ class PostListPage extends StatelessWidget {
                           CircularProgressIndicator(color: brightPrimaryColor),
                     );
                   } else {
-                    return Stack(children: [
+                    return Stack(alignment: Alignment.center, children: [
                       NotificationListener<OverscrollIndicatorNotification>(
                         onNotification:
                             (OverscrollIndicatorNotification overscroll) {
@@ -80,11 +88,25 @@ class PostListPage extends StatelessWidget {
                               (_.listPageLoading ? 1 : 0),
                         ),
                       ),
+                      controller.postCategory.value != 0
+                          ? Positioned(
+                              child: FloatingWriteButton(
+                                  onPressed: _onWritePressed),
+                              bottom:
+                                  35 + context.mediaQueryPadding.bottom + 88,
+                              right: 35,
+                            )
+                          : const SizedBox.shrink(),
                       Positioned(
-                        child: FloatingWriteButton(onPressed: _onWritePressed),
-                        bottom: 25,
-                        right: 25,
-                      ),
+                        bottom: 50,
+                        child: FloatingIconButton(
+                          backgroundColor: Colors.white,
+                          onPressed: _onScrollUpPressed,
+                          icon: SvgPicture.asset(_arrowDropUp),
+                          height: 40,
+                          width: 40,
+                        ),
+                      )
                     ]);
                   }
                 }),

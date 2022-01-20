@@ -4,6 +4,7 @@ import 'package:exon_app/core/controllers/home_navigation_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
 const String _chartIcon = 'assets/icons/chart.svg';
 const String _deskIcon = 'assets/icons/desk.svg';
@@ -45,9 +46,12 @@ class HomeNavigationBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               _chartIcon,
+              // width: 32,
+              // height: 32,
               color: currentIndex == 0 ? primaryColor : null,
             ),
             label: _statViewLabel,
+            tooltip: '',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
@@ -55,6 +59,7 @@ class HomeNavigationBar extends StatelessWidget {
               color: currentIndex == 1 ? primaryColor : null,
             ),
             label: _communityViewLabel,
+            tooltip: '',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
@@ -62,6 +67,7 @@ class HomeNavigationBar extends StatelessWidget {
               color: currentIndex == 2 ? primaryColor : null,
             ),
             label: _homeViewLabel,
+            tooltip: '',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
@@ -69,6 +75,7 @@ class HomeNavigationBar extends StatelessWidget {
               color: currentIndex == 3 ? primaryColor : null,
             ),
             label: _rankViewLabel,
+            tooltip: '',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
@@ -76,14 +83,16 @@ class HomeNavigationBar extends StatelessWidget {
               color: currentIndex == 4 ? primaryColor : null,
             ),
             label: _profileViewLabel,
+            tooltip: '',
           ),
         ],
         onTap: onIconTap,
         currentIndex: currentIndex,
         backgroundColor: _bottomNavigationBarColor,
         type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+        selectedItemColor: primaryColor,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
       ),
     );
   }

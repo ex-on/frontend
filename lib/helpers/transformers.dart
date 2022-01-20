@@ -40,7 +40,7 @@ const Map<String, int> excerciseMethodStrToInt = {
   '기타': 11,
 };
 
-const Map<int, String> excerciseMethodIntToStr = {
+const Map<int, String> exerciseMethodIntToStr = {
   0: '전체',
   1: '맨몸',
   2: '머신',
@@ -164,17 +164,36 @@ String formatMSS(int seconds) {
   return "$minutesStr:$secondsStr";
 }
 
+String formatMMSS(int seconds) {
+  int minutes = (seconds / 60).truncate();
+  String minutesStr = (minutes).toString().padLeft(2, '0');
+  String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+  return "$minutesStr : $secondsStr";
+}
+
 Map<int, String> postCategoryIntToStr = {
-  0: '전체',
-  1: 'HOT',
-  2: '자유',
-  3: '정보',
-  4: '운동인증'
+  0: 'HOT',
+  1: '자유',
+  2: '정보',
 };
 
 Map<int, String> qnaCategoryIntToStr = {
   0: 'HOT',
-  1: '전체',
-  2: '미해결',
-  3: '해결',
+  1: '미해결',
+  2: '해결',
+};
+
+String getCleanTextFromDouble(double val) {
+  if (val % 1 != 0) {
+    return val.toString();
+  } else {
+    return val.toInt().toString();
+  }
+}
+
+Map<int, String> userActivityLevelIntToStr = {
+  0: '헬스세포',
+  1: '헬생아',
+  2: '헬린이',
+  3: '걸어다니는 헬스장',
 };

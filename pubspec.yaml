@@ -46,6 +46,8 @@ dependencies:
   intl: ^0.17.0
   flutter_secure_storage: ^5.0.2
   fl_chart: ^0.40.6
+  liquid_progress_indicator: ^0.4.0
+  confetti: ^0.6.0
   # screen_loader: ^3.0.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -77,22 +79,37 @@ flutter:
   assets:
     - assets/exonLogo.svg
     - assets/benchpress.png
+    - assets/completeIcon.svg
+    - assets/loadingLogo.svg
+    - assets/exonWatermark.svg
+    - assets/searchCharacter.svg
+    - assets/DaytimeIcon.svg
+    - assets/NighttimeIcon.svg
     - assets/icons/chart.svg
     - assets/icons/desk.svg
     - assets/icons/home.svg
     - assets/icons/star.svg
     - assets/icons/userCircle.svg
-    - assets/DaytimeIcon.svg
-    - assets/NighttimeIcon.svg
-    - assets/loadingLogo.svg
     - assets/icons/commentIcon.svg
     - assets/icons/lightningIcon.svg
     - assets/icons/bookmarkIcon.svg
     - assets/icons/Calendar.svg
     - assets/icons/proteinIcon.svg
     - assets/icons/whiteProteinIcon.svg
-    - assets/exonWatermark.svg
     - assets/icons/replyArrowIcon.svg
+    - assets/icons/addIcon.svg
+    - assets/icons/subtractIcon.svg
+    - assets/icons/playIcon.svg
+    - assets/icons/arrowDropUp.svg
+    - assets/icons/rankBadgeFirstIcon.svg
+    - assets/icons/rankBadgeSecondIcon.svg
+    - assets/icons/rankBadgeThirdIcon.svg
+    - assets/icons/lightningEnergyIcon.svg
+    - assets/icons/helpIcon.svg
+    - assets/icons/XIcon.svg
+    - assets/icons/checkIcon.svg
+    - assets/characters/excitedCharacter.svg
+    - assets/characters/tiredCharacter.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -104,7 +121,23 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope/Manrope-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Manrope/Manrope-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Manrope/Manrope-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Manrope/Manrope-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Manrope/Manrope-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Manrope/Manrope-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Manrope/Manrope-SemiBold.ttf
+          weight: 600
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

@@ -5,15 +5,14 @@ import 'package:intl/intl.dart';
 
 class HomeController extends GetxController {
   static HomeController to = Get.find();
-  final totalExcerciseTime =
-      const Duration(hours: 0, minutes: 0, seconds: 0).obs;
   final now = DateTime.now();
-  int page = 0;
   int currentTime = 0;
+  int totalExerciseTime = 0;
   bool loading = false;
   String weekDay = '';
   String currentMD = '';
   List<dynamic> todayExercisePlanList = [];
+  List<dynamic> todayExerciseRecordList = [];
   ColorTheme theme = ColorTheme.day;
 
   @override
@@ -28,12 +27,7 @@ class HomeController extends GetxController {
     weekDay = DateFormat.E('ko_KR').format(now);
     update();
     super.onInit();
-    Future.delayed(Duration.zero, () => getTodayExercisePlans());
-  }
-
-  void jumpToPage(int pageNum) {
-    page = pageNum;
-    update();
+    Future.delayed(Duration.zero, () => getTodayExerciseStatus());
   }
 
   void setLoading(bool val) {
@@ -41,13 +35,15 @@ class HomeController extends GetxController {
     update();
   }
 
-  Future<void> getTodayExercisePlans() async {
+  Future<void> getTodayExerciseStatus() async {
     setLoading(true);
     DateTime now = DateTime.now();
 
-    var res = await ExerciseApiService.getExercisePlanDate(now);
+    var res = await ExerciseApiService.getExerciseStatusDate(now);
     if (res != null) {
-      todayExercisePlanList = res;
+      todayExercisePlanList = res['plans'];
+      todayExerciseRecordList = res['records'];
+      totalExerciseTime = res['total_exercise_time'];
     }
     update();
     setLoading(false);

@@ -72,3 +72,111 @@ class ColorBadge extends StatelessWidget {
     );
   }
 }
+
+class TargetMuscleLabel extends StatelessWidget {
+  final String text;
+  final double? fontSize;
+  const TargetMuscleLabel({
+    Key? key,
+    required this.text,
+    this.fontSize = 14,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: brightSecondaryColor,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 6, top: 2),
+        child: Text(
+          text,
+          style: TextStyle(
+            height: 1.0,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            color: clearBlackColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ExerciseMethodLabel extends StatelessWidget {
+  final String text;
+  final double? fontSize;
+  const ExerciseMethodLabel({
+    Key? key,
+    required this.text,
+    this.fontSize = 14,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: lightGrayColor,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 6, top: 2),
+        child: Text(
+          text,
+          style: TextStyle(
+            height: 1.0,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            color: clearBlackColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ExerciseRecordLabel extends StatelessWidget {
+  final String text;
+  final double? fontSize;
+  const ExerciseRecordLabel({
+    Key? key,
+    required this.text,
+    this.fontSize = 14,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: brightPrimaryColor,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 6, top: 2),
+        child: Text(
+          text,
+          style: TextStyle(
+            height: 1.0,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            color: brightPrimaryColor,
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -192,11 +192,13 @@ class NumberInputField extends StatelessWidget {
   final TextEditingController controller;
   final String? hintText;
   final int? maxLength;
+  final double? fontSize;
   final Function(String)? onChanged;
   const NumberInputField({
     Key? key,
     required this.controller,
     this.hintText,
+    this.fontSize = 40,
     this.maxLength,
     this.onChanged,
   }) : super(key: key);
@@ -204,33 +206,38 @@ class NumberInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 70,
-      height: 45,
+      width: 95,
       child: TextField(
         onChanged: onChanged,
+        onTap: () {
+          if (controller.text == '0.0' || controller.text == '0') {
+            controller.clear();
+          }
+        },
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.bottom,
         scrollPadding: EdgeInsets.zero,
-        keyboardType: TextInputType.number,
+        keyboardType: const TextInputType.numberWithOptions(
+          decimal: true,
+        ),
         controller: controller,
-        style: const TextStyle(
-          fontSize: 18,
+        style: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          color: brightPrimaryColor,
+          fontFamily: 'Manrope',
         ),
         maxLength: maxLength,
         decoration: InputDecoration(
           counter: const SizedBox.shrink(),
-          contentPadding: const EdgeInsets.only(bottom: 12),
           hintText: hintText,
-          hintStyle: const TextStyle(
-            fontSize: 18,
+          hintStyle: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            color: brightPrimaryColor,
+            fontFamily: 'Manrope',
           ),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(
-              color: deepGrayColor,
-              width: 1,
-            ),
-          ),
+          border: InputBorder.none,
         ),
       ),
     );
@@ -452,12 +459,15 @@ class NumberInputFieldDisplay extends StatelessWidget {
 
 class TitleInputField extends StatelessWidget {
   final String? hintText;
-  // final TextEditingController controller;
-  const TitleInputField({Key? key, this.hintText = '제목'}) : super(key: key);
+  final TextEditingController controller;
+  const TitleInputField(
+      {Key? key, required this.controller, this.hintText = '제목'})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(
           left: 2,
@@ -495,12 +505,16 @@ class TitleInputField extends StatelessWidget {
 }
 
 class ContentInputField extends StatelessWidget {
-  // final TextEditingController controller;
-  const ContentInputField({Key? key}) : super(key: key);
+  final TextEditingController controller;
+  const ContentInputField({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: const InputDecoration(
         contentPadding: EdgeInsets.only(
           left: 2,
@@ -519,7 +533,48 @@ class ContentInputField extends StatelessWidget {
         ),
       ),
       maxLines: null,
-      style: TextStyle(
+      style: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.3,
+        color: clearBlackColor,
+      ),
+    );
+  }
+}
+
+class SearchInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode? focusNode;
+  const SearchInputField({
+    Key? key,
+    required this.controller,
+    this.focusNode,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      focusNode: focusNode,
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.only(
+          left: 2,
+          // bottom: 15,
+        ),
+        border: InputBorder.none,
+        constraints: BoxConstraints(
+          minHeight: 300,
+        ),
+        hintText: '검색어를 입력해주세요',
+        hintStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w300,
+          height: 1.3,
+          color: lightGrayColor,
+        ),
+      ),
+      maxLines: 1,
+      style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
         height: 1.3,

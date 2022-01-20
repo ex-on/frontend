@@ -21,7 +21,7 @@ class FloatingWriteButton extends StatelessWidget {
         child: FloatingActionButton(
           onPressed: onPressed,
           child: const Icon(
-            Icons.edit_rounded,
+            Icons.edit_rounded, 
             color: Colors.white,
             size: 35,
           ),

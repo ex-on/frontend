@@ -106,7 +106,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                               ),
                               Text(
                                 formatDateTimeRawString(
-                                    _.postContent['post']['creation_date']),
+                                    _.postContent['post']['created_at']),
                                 style: const TextStyle(
                                   fontSize: 10,
                                   color: lightGrayColor,
@@ -207,7 +207,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                     style: const TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 13,
-                      color: darkPrimaryColor,
+                      color: clearBlackColor,
                       height: 1.3,
                     ),
                   ),
@@ -377,12 +377,25 @@ class CommunityPostPage extends GetView<CommunityController> {
                                 onTap: () => _onReplyPressed(
                                     controller.postCommentList[index]
                                         ['comments']['comment_data']['id']),
-                                child: const SizedBox(
+                                child: SizedBox(
                                   height: 30,
                                   width: 30,
-                                  child: Center(
-                                    child: CommentIcon(),
-                                  ),
+                                  child: GetBuilder<CommunityController>(
+                                      builder: (_) {
+                                    return Center(
+                                      child: CommentIcon(
+                                        color: (_.commentId ==
+                                                    _.postCommentList[index]
+                                                                ['comments']
+                                                            ['comment_data']
+                                                        ['id'] &&
+                                                _.commentTextFieldFocus!
+                                                    .hasFocus)
+                                            ? brightPrimaryColor
+                                            : unselectedIconColor,
+                                      ),
+                                    );
+                                  }),
                                 ),
                               ),
                             ),
@@ -400,7 +413,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                     style: const TextStyle(
                       fontSize: 12,
                       height: 1.3,
-                      color: darkPrimaryColor,
+                      color: clearBlackColor,
                     ),
                   ),
                 ),
@@ -409,7 +422,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                     Text(
                       formatDateTimeRawString(
                         controller.postCommentList[index]['comments']
-                            ['comment_data']['creation_date'],
+                            ['comment_data']['created_at'],
                       ),
                       style: const TextStyle(
                         fontSize: 11,
@@ -542,7 +555,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                     style: const TextStyle(
                       fontSize: 12,
                       height: 1.3,
-                      color: darkPrimaryColor,
+                      color: clearBlackColor,
                     ),
                   ),
                 ),
@@ -550,7 +563,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                   children: [
                     Text(
                       formatDateTimeRawString(
-                        replyList[index]['reply_data']['creation_date'],
+                        replyList[index]['reply_data']['created_at'],
                       ),
                       style: const TextStyle(
                         fontSize: 11,
@@ -649,7 +662,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                     child: GetBuilder<CommunityController>(builder: (_) {
                       if (!_.commentsLoading) {
                         return Text(
-                          _.postCommentList.length.toString(),
+                          _.postCount['count_comments'].toString(),
                           style: const TextStyle(
                             color: brightPrimaryColor,
                             fontWeight: FontWeight.bold,
@@ -712,7 +725,7 @@ class CommunityPostPage extends GetView<CommunityController> {
           children: [
             Header(
               onPressed: _onBackPressed,
-              title: (postCategoryIntToStr[controller.postType! + 1] ?? '') +
+              title: (postCategoryIntToStr[controller.postCategory] ?? '') +
                   ' 게시판',
             ),
             Expanded(

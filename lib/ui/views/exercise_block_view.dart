@@ -1,555 +1,1142 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
-import 'package:exon_app/dummy_data_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
+import 'package:exon_app/helpers/enums.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/color_badge.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/exercise/set_input_bottom_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 class ExerciseBlockView extends GetView<ExerciseBlockController> {
   const ExerciseBlockView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const String _totalExerciseTimeLabelText = '총 운동시간';
-    const String _totalRestTimeLabelText = '총 휴식시간';
-    const String _exerciseOngoingLabelText = '진행중';
-    const String _exercisePausedLabelText = '휴식중';
-    const String _recommendedRestTimeLabelText = '권장 휴식';
-    const String _nextExerciseSetLabelText = '다음 운동';
+    Future.delayed(
+      Duration.zero,
+      () => controller.restTime.listen((time) {
+        controller.checkEndRest();
+      }),
+    );
 
-    void _onBackPressed() {
-      Get.back();
+    void _quitExercise() {
+      Get.back(closeOverlays: true);
       controller.reset();
     }
 
-    void _onCompleteSetPressed() {
-      if (controller.exercisePaused) {
-        controller.startNextSet();
-      } else if (controller.currentSet == controller.numSets) {
+    void _onCompleteSetRecordPressed() {
+      if (controller.currentSet == controller.numSets) {
         controller.endExercise();
-        Get.back();
       } else {
-        controller.completeExerciseSet();
+        controller.completeExerciseSetRecord();
       }
     }
 
-    void _onBottomSheetClosePressed() {
-      Get.back();
+    void _updateWeightChangeValue(int index) {
+      controller
+          .updateInputWeightChangeValue(inputWeightChangeValueList[index]);
     }
 
-    void _onBottomSheetCompletePressed() {
-      controller.updateInputSetValues();
-      Get.back();
+    void _onWeightRecordInputChanged(String value) {
+      controller.onWeightRecordInputChanged(value);
     }
 
-    void _onInputSetWeightChanged(int index) {
-      controller.updateCurrentInputSetWeight(index + 1);
+    void _onSubtractWeightRecordPressed() {
+      controller.subtractInputWeightRecord();
     }
 
-    void _onInputSetRepsChanged(int index) {
-      controller.updateCurrentInputSetReps(index + 1);
+    void _onAddWeightRecordPressed() {
+      controller.addInputWeightRecord();
     }
 
-    Widget _bottomSheet(int setNum) {
-      return SetInputBottomSheet(
-        setNum: setNum,
-        onClosePressed: _onBottomSheetClosePressed,
-        onCompletePressed: _onBottomSheetCompletePressed,
-        onWeightChanged: _onInputSetWeightChanged,
-        onRepsChanged: _onInputSetRepsChanged,
-        weightController: controller.getWeightController(setNum),
-        repsController: controller.getRepsController(setNum),
-      );
+    void _onInputSetRecordDonePressed() {
+      controller.updateInputSetRecordDone(true);
     }
 
-    void _onNumRepsTap(int setNum) {
-      Get.bottomSheet(_bottomSheet(setNum));
+    void _onCompleteSetPressed() {
+      controller.completeSet();
     }
 
-    Widget _exerciseTimeBox = Container(
-      color: mainBackgroundColor,
-      height: context.height * 0.3 - 56,
-      width: context.width,
-      child: Column(
-        children: [
-          const Text(
-            _totalExerciseTimeLabelText,
-            style: TextStyle(
-              fontSize: 18,
-              color: darkPrimaryColor,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 7, bottom: 14),
-            child: GetX<ExerciseBlockController>(
-              builder: (_) {
-                return Text(
-                  formatHHMMSS(_.totalExerciseTime.value),
-                  style: const TextStyle(
-                    color: darkPrimaryColor,
-                    fontSize: 48,
-                    letterSpacing: -2,
+    void _endExercise() {
+      Get.back(closeOverlays: true);
+      controller.endExercise();
+    }
+
+    void _onSlidableButtonPositionChanged(SlidableButtonPosition position) {
+      if (position == SlidableButtonPosition.left) {
+        controller.startExerciseSetRecord();
+      } else if (position == SlidableButtonPosition.right) {
+        _onCompleteSetRecordPressed();
+      }
+    }
+
+    void _onSubtractTotalRestPressed() {
+      controller.subtractRestTime();
+    }
+
+    void _onAddTotalRestPressed() {
+      controller.addRestTime();
+    }
+
+    void _onEndRestPressed() {
+      controller.endRest();
+      controller.startNextSet();
+    }
+
+    Widget _inputSetRecordDialog = Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Align(
+        alignment: Alignment.bottomCenter,
+        child: GetBuilder<ExerciseBlockController>(
+          builder: (_) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  width: context.width - 40,
+                  constraints: const BoxConstraints(minHeight: 400),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  margin: const EdgeInsets.only(bottom: 80),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 60,
+                        child: DecoratedBox(
+                          decoration: const BoxDecoration(
+                              color: brightPrimaryColor,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                              )),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 15, 20, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  controller.currentSet.toString() +
+                                      '세트 기록 수정하기',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const Expanded(
+                                  child: SizedBox.shrink(),
+                                ),
+                                TextActionButton(
+                                  height: 45,
+                                  isUnderlined: false,
+                                  textColor: Colors.white,
+                                  fontSize: 16,
+                                  buttonText: '닫기',
+                                  onPressed: () => Get.back(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      verticalSpacer(30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          4 + 3,
+                          (index) => index % 2 == 1
+                              ? horizontalSpacer(10)
+                              : SizedBox(
+                                  height: 38,
+                                  width: 62,
+                                  child: ElevatedActionButton(
+                                    buttonText: getCleanTextFromDouble(
+                                        inputWeightChangeValueList[index ~/ 2]),
+                                    onPressed: () =>
+                                        _updateWeightChangeValue(index ~/ 2),
+                                    backgroundColor: _.inputWeightChangeValue ==
+                                            inputWeightChangeValueList[
+                                                index ~/ 2]
+                                        ? brightPrimaryColor
+                                        : const Color(0xffE1F4F8),
+                                    textStyle: TextStyle(
+                                      color: _.inputWeightChangeValue ==
+                                              inputWeightChangeValueList[
+                                                  index ~/ 2]
+                                          ? Colors.white
+                                          : brightPrimaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Manrope',
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 30),
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                icon: const SubtractIcon(),
+                                splashRadius: 20,
+                                onPressed: _onSubtractWeightRecordPressed,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  children: [
+                                    NumberInputField(
+                                      controller: _.inputSetValues![0],
+                                      onChanged: _onWeightRecordInputChanged,
+                                      hintText: '0.0',
+                                    ),
+                                    const Text(
+                                      'kg',
+                                      style: TextStyle(
+                                        fontSize: 26,
+                                        color: brightPrimaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Mandrope',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                icon: const AddIcon(),
+                                splashRadius: 20,
+                                onPressed: _onAddWeightRecordPressed,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(
+                        color: Color(0xffE1F4F8),
+                        thickness: 4,
+                        height: 4,
+                      ),
+                      () {
+                        List<Widget> children = _.inputTargetRepsList.map((e) {
+                          if (e == int.parse(_.inputSetValues![1].text)) {
+                            return Center(
+                              child: RotatedBox(
+                                quarterTurns: 1,
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: e.toString(),
+                                    style: const TextStyle(
+                                      color: brightPrimaryColor,
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Manrope',
+                                      height: 1.0,
+                                    ),
+                                    children: const [
+                                      TextSpan(
+                                        text: '회',
+                                        style: TextStyle(
+                                          color: brightPrimaryColor,
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Manrope',
+                                          height: 1.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return RotatedBox(
+                              quarterTurns: 1,
+                              child: Center(
+                                child: Text(
+                                  e.toString(),
+                                  style: const TextStyle(
+                                    color: brightPrimaryColor,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Manrope',
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        }).toList();
+
+                        _.recordRepsScrollController =
+                            FixedExtentScrollController(
+                                initialItem:
+                                    int.parse(_.inputSetValues![1].text) - 1);
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 50),
+                          child: SizedBox(
+                            height: 50,
+                            width: context.width,
+                            child: RotatedBox(
+                              quarterTurns: -1,
+                              child: CupertinoPicker(
+                                scrollController: _.recordRepsScrollController,
+                                itemExtent: 90,
+                                selectionOverlay: const DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      top: BorderSide(
+                                        color: brightPrimaryColor,
+                                        width: 0.5,
+                                      ),
+                                      bottom: BorderSide(
+                                        color: brightPrimaryColor,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                onSelectedItemChanged: _.updateInputReps,
+                                children: children,
+                              ),
+                            ),
+                          ),
+                        );
+                      }()
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 280,
+                  height: 70,
+                  child: ElevatedActionButton(
+                    backgroundColor: Colors.white,
+                    overlayColor: brightPrimaryColor.withOpacity(0.1),
+                    textStyle: const TextStyle(
+                      color: brightPrimaryColor,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Manrope',
+                    ),
+                    borderRadius: 100,
+                    buttonText: _.inputSetValues![0].text +
+                        'kg X ' +
+                        _.inputSetValues![1].text +
+                        '회',
+                    onPressed: () {},
+                    disabledColor: Colors.white,
+                    activated: false,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 55),
+                  child: TextActionButton(
+                    buttonText: '완료',
+                    onPressed: () {
+                      _onInputSetRecordDonePressed();
+                      Get.back();
+                    },
+                    textColor: Colors.white,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
-                );
-              },
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
+
+    Widget _endExerciseDialog = Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: context.width - 40,
+              height: 300,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
                   Text(
-                    controller.exerciseName ?? '',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: deepGrayColor,
+                    '운동이 현재 세트까지만 기록됩니다.\n정말 종료하시겠어요?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  GetX<ExerciseBlockController>(
-                    builder: (_) {
-                      return Text(
-                        formatHHMMSS(_.currentExerciseTime.value),
-                        style: const TextStyle(
-                          color: deepGrayColor,
-                          fontSize: 18,
-                        ),
-                      );
-                    },
+                  Padding(
+                    padding: EdgeInsets.only(top: 30),
+                    child: ExcitedCharacter(),
                   ),
                 ],
               ),
-              horizontalSpacer(100),
-              Column(
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    _totalRestTimeLabelText,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: deepGrayColor,
+                  SizedBox(
+                    width: 170,
+                    height: 65,
+                    child: ElevatedActionButton(
+                      buttonText: '계속하기',
+                      backgroundColor: Colors.white,
+                      textStyle: const TextStyle(
+                        color: darkSecondaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overlayColor: darkSecondaryColor.withOpacity(0.2),
+                      borderRadius: 20,
+                      onPressed: () => Get.back(),
                     ),
                   ),
-                  GetX<ExerciseBlockController>(
-                    builder: (_) {
+                  SizedBox(
+                    width: 170,
+                    height: 65,
+                    child: ElevatedActionButton(
+                      buttonText: '종료',
+                      backgroundColor: darkSecondaryColor,
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      borderRadius: 20,
+                      onPressed: _endExercise,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    Widget _quitExerciseDialog = Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: context.width - 40,
+                height: 300,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      '운동이 기록되지 않고 취소됩니다.\n정말 중단하시겠어요?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: clearBlackColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 30),
+                      child: TiredCharacter(),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 170,
+                      height: 65,
+                      child: ElevatedActionButton(
+                        buttonText: '계속하기',
+                        backgroundColor: Colors.white,
+                        textStyle: const TextStyle(
+                          color: darkSecondaryColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        borderRadius: 20,
+                        overlayColor: darkSecondaryColor.withOpacity(0.2),
+                        onPressed: () => Get.back(),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 170,
+                      height: 65,
+                      child: ElevatedActionButton(
+                        buttonText: '중단',
+                        backgroundColor: darkSecondaryColor,
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        borderRadius: 20,
+                        onPressed: _quitExercise,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
+
+    _onInputExerciseRecordPressed() {
+      Get.dialog(
+        _inputSetRecordDialog,
+        useSafeArea: false,
+      );
+    }
+
+    void _onEndExercisePressed() {
+      Get.dialog(
+        _endExerciseDialog,
+        // useSafeArea: false,
+      );
+    }
+
+    void _onClosePressed() {
+      Get.dialog(
+        _quitExerciseDialog,
+      );
+    }
+
+    Widget _exerciseBlockSetHeader = GetBuilder<ExerciseBlockController>(
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(30, 10, 30, 40),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  () {
+                    if (_.resting) {
                       return Text(
-                        formatHHMMSS(_.totalRestTime.value),
+                        _.currentSet.toString() + '세트 준비 중...',
                         style: const TextStyle(
-                          color: deepGrayColor,
-                          fontSize: 18,
+                          // color: darkSecondaryColor,
+                          color: brightPrimaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
                       );
-                    },
+                    }
+                    return Text(
+                      _.currentSet.toString() + '세트 진행 중...',
+                      style: const TextStyle(
+                        color: darkSecondaryColor,
+                        // color: brightPrimaryColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    );
+                  }(),
+                  Text(
+                    '총 ' + _.numSets.toString() + '세트',
+                    style: const TextStyle(
+                      color: deepGrayColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: context.width - 60,
+                height: 15,
+                margin: const EdgeInsets.only(top: 10, bottom: 20),
+                alignment: Alignment.centerLeft,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: (context.width - 60) * _.currentSet / _.numSets,
+                  height: 15,
+                  decoration: BoxDecoration(
+                    // color: brightPrimaryColor,
+                    gradient: const LinearGradient(
+                        colors: [darkSecondaryColor, brightPrimaryColor]),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      TargetMuscleLabel(
+                        text: targetMuscleIntToStr[
+                            _.exerciseData['target_muscle']]!,
+                      ),
+                      horizontalSpacer(10),
+                      ExerciseMethodLabel(
+                        text: exerciseMethodIntToStr[
+                            _.exerciseData['exercise_method']]!,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        '총 운동 시간',
+                        style: TextStyle(
+                          color: clearBlackColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                      GetX<ExerciseBlockController>(builder: (__) {
+                        return Text(
+                          formatHHMMSS(__.totalExerciseTime.value),
+                          style: const TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: darkPrimaryColor,
+                            letterSpacing: -1,
+                          ),
+                        );
+                      }),
+                    ],
                   ),
                 ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
 
-    Widget _exerciseControlButton = DecoratedBox(
+    Widget _currentExerciseTimeCounter = Container(
+      height: 260,
+      width: 260,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white,
-        border: Border.all(color: darkPrimaryColor),
-      ),
-      child: Center(
-        child: Material(
-          type: MaterialType.circle,
-          color: Colors.transparent,
-          child: IconButton(
-            color: Colors.white,
-            iconSize: 100,
-            splashRadius: 50,
-            padding: EdgeInsets.zero,
-            icon: GetBuilder<ExerciseBlockController>(
-              builder: (_) {
-                if (_.currentSet == _.numSets && !_.exercisePaused) {
-                  return const Icon(
-                    Icons.check_rounded,
-                    color: darkPrimaryColor,
-                    size: 55,
-                  );
-                } else {
-                  return Icon(
-                    _.exercisePaused
-                        ? Icons.pause_rounded
-                        : Icons.play_arrow_rounded,
-                    color: darkPrimaryColor,
-                    size: 55,
-                  );
-                }
-              },
-            ),
-            onPressed: _onCompleteSetPressed,
-          ),
+        border: Border.all(
+          width: 12,
+          color: brightPrimaryColor,
         ),
+        color: Colors.white,
       ),
-    );
-
-    Widget _exerciseStateDisplay = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.all(10),
+      constraints: BoxConstraints(
+        maxWidth: context.width - 60,
+        maxHeight: context.width - 60,
+      ),
+      alignment: Alignment.center,
       child: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          GetBuilder<ExerciseBlockController>(
-            builder: (_) {
-              return Text(
-                _.exercisePaused
-                    ? _exercisePausedLabelText
-                    : _exerciseOngoingLabelText,
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: deepGrayColor,
-                ),
-              );
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 7, bottom: 20),
-            child: GetBuilder<ExerciseBlockController>(
-              builder: (_) {
-                if (_.exercisePaused) {
-                  return Obx(
-                    () => Text(
-                      formatHHMMSS(_.totalRestTime.value),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 36,
-                        color: darkPrimaryColor,
-                      ),
-                    ),
-                  );
-                } else {
-                  return Text(
-                    _.currentSet.toString() + '세트',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 36,
-                      color: darkPrimaryColor,
-                    ),
-                  );
-                }
-              },
-            ),
-          ),
-          DecoratedBox(
-            decoration: const BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Color(0xffd6d6d6),
-                ),
-                bottom: BorderSide(
-                  color: Color(0xffd6d6d6),
-                ),
-              ),
-            ),
-            child: SizedBox(
-              width: context.width,
-              height: 180,
-              child: GetBuilder<ExerciseBlockController>(
-                builder: (_) {
-                  if (_.exercisePaused) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                const ColorBadge(
-                                  text: _recommendedRestTimeLabelText,
-                                  color: Color(0xff7b8196),
-                                  height: 37,
-                                  width: 88,
-                                  fontSize: 17,
-                                ),
-                                verticalSpacer(8),
-                                Text(
-                                  formatHHMMSS(_.recommendedRestTime!),
-                                  style: const TextStyle(
-                                    color: clearBlackColor,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            horizontalSpacer(60),
-                            Column(
-                              children: [
-                                const ColorBadge(
-                                  text: _nextExerciseSetLabelText,
-                                  color: Color(0xff7b8196),
-                                  height: 37,
-                                  width: 88,
-                                  fontSize: 17,
-                                ),
-                                verticalSpacer(8),
-                                Text(
-                                  _.exerciseName! +
-                                      '\n' +
-                                      _.currentSet.toString() +
-                                      '세트',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: clearBlackColor,
-                                    fontSize: 25,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              '목표',
-                              style: TextStyle(
-                                color: deepGrayColor,
-                                fontSize: 18,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: SizedBox(
-                                width: 70,
-                                height: 45,
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      width: 1,
-                                      color: deepGrayColor,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      controller.exercisePlan!
-                                              [controller.currentSet - 1]
-                                              ['target_weight']!
-                                          .toString(),
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Text(
-                                'kg',
-                                style: TextStyle(
-                                  color: deepGrayColor,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            const Icon(
-                              Icons.close_rounded,
-                              color: deepGrayColor,
-                              size: 25,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: SizedBox(
-                                width: 70,
-                                height: 45,
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      width: 1,
-                                      color: deepGrayColor,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      controller.exercisePlan!
-                                              [controller.currentSet - 1]
-                                              ['target_reps']!
-                                          .toString(),
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Text(
-                              '회',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              '기록',
-                              style: TextStyle(
-                                color: deepGrayColor,
-                                fontSize: 18,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: SizedBox(
-                                width: 70,
-                                height: 45,
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      width: 1,
-                                      color: deepGrayColor,
-                                    ),
-                                  ),
-                                  child: GetBuilder<ExerciseBlockController>(
-                                    builder: (_) {
-                                      return NumberInputFieldDisplay(
-                                        hintText: '0',
-                                        inputText: _.inputSetValues == null
-                                            ? ''
-                                            : _.inputSetValues![0].toString(),
-                                        onTap: () =>
-                                            _onNumRepsTap(_.currentSet),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Text(
-                                'kg',
-                                style: TextStyle(
-                                  color: deepGrayColor,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                            const Icon(
-                              Icons.close_rounded,
-                              color: deepGrayColor,
-                              size: 25,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: SizedBox(
-                                width: 70,
-                                height: 45,
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      width: 1,
-                                      color: deepGrayColor,
-                                    ),
-                                  ),
-                                  child: GetBuilder<ExerciseBlockController>(
-                                    builder: (_) {
-                                      return NumberInputFieldDisplay(
-                                        hintText: '0',
-                                        inputText: _.inputSetValues == null
-                                            ? ''
-                                            : _.inputSetValues![1].toString(),
-                                        onTap: () =>
-                                            _onNumRepsTap(_.currentSet),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Text(
-                              '회',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Header(
-            onPressed: _onBackPressed,
-            color: mainBackgroundColor,
-          ),
-          Expanded(
-            child: DisableGlowListView(
-              physics: const NeverScrollableScrollPhysics(),
+          verticalSpacer(45),
+          SizedBox(
+            width: 170,
+            child: Column(
               children: [
-                SizedBox(
-                  height: context.height,
-                  width: context.width,
-                  child: Stack(
-                    children: [
-                      Positioned(top: 0, child: _exerciseTimeBox),
-                      Positioned(
-                        top: context.height * 0.3 - 106,
-                        left: context.width * 0.5 - 50,
-                        child: _exerciseControlButton,
-                      ),
-                      Positioned(
-                        top: context.height * 0.3 - 6,
-                        child: _exerciseStateDisplay,
-                      ),
-                    ],
+                Text(
+                  controller.exerciseData['name'],
+                  overflow: TextOverflow.clip,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: darkPrimaryColor,
+                  ),
+                ),
+                verticalSpacer(3),
+                const Text(
+                  '운동시간',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: darkPrimaryColor,
                   ),
                 ),
               ],
             ),
           ),
+          GetX<ExerciseBlockController>(builder: (__) {
+            if (__.currentExerciseTime.value >= 3600) {
+              return Text(
+                formatHHMMSS(__.currentExerciseTime.value),
+                style: const TextStyle(
+                  fontFamily: 'Manrope',
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: darkPrimaryColor,
+                ),
+              );
+            } else {
+              return Text(
+                formatMMSS(__.currentExerciseTime.value),
+                style: const TextStyle(
+                  fontFamily: 'Manrope',
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                  color: darkPrimaryColor,
+                ),
+              );
+            }
+          }),
         ],
+      ),
+    );
+
+    Widget _restTimeCounter = Padding(
+      padding: const EdgeInsets.only(top: 30),
+      child: Center(
+        child: SizedBox(
+          width: 260,
+          height: 260,
+          child: GetBuilder<ExerciseBlockController>(builder: (_) {
+            return LiquidCircularProgressIndicator(
+              value: _.timerAnimationController!.value,
+              backgroundColor: Colors.white,
+              valueColor: AlwaysStoppedAnimation(
+                darkSecondaryColor.withOpacity(0.4),
+              ),
+              borderColor: darkSecondaryColor,
+              borderWidth: 12,
+              center: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    '휴식중',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: darkPrimaryColor,
+                    ),
+                  ),
+                  GetX<ExerciseBlockController>(builder: (_) {
+                    return Text(
+                      formatMMSS(_.restTime.value),
+                      style: const TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        color: darkPrimaryColor,
+                        fontFamily: 'Manrope',
+                      ),
+                    );
+                  })
+                ],
+              ),
+            );
+          }),
+        ),
+      ),
+    );
+
+    return Scaffold(
+      backgroundColor: mainBackgroundColor,
+      body: WillPopScope(
+        onWillPop: () => Future(() => false),
+        child: Column(
+          children: [
+            Header(
+              icon: const Icon(
+                Icons.close_rounded,
+                color: clearBlackColor,
+                size: 30,
+              ),
+              onPressed: _onClosePressed,
+              actions: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(right: 15, top: 10, bottom: 10),
+                  child: TextActionButton(
+                    buttonText: '운동 끝',
+                    onPressed: _onEndExercisePressed,
+                    isUnderlined: false,
+                    textColor: clearBlackColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            _exerciseBlockSetHeader,
+            Expanded(
+              child: DisableGlowListView(
+                children: [
+                  GetBuilder<ExerciseBlockController>(builder: (_) {
+                    if (_.resting) {
+                      Future.delayed(const Duration(seconds: 80),
+                          () => _.hideRestStartHint());
+                      if (_.showRestStartHint) {
+                        List<Widget> _children = [
+                          const Text(
+                            '휴식을 시작합니다',
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: clearBlackColor,
+                            ),
+                          ),
+                        ];
+
+                        // for (int i = 0; i < _.restStartHintTime % 3; i++) {
+                        //   _children.add(
+                        //     const Text(
+                        //       '.',
+                        //       style: TextStyle(
+                        //         fontSize: 30,
+                        //         color: clearBlackColor,
+                        //       ),
+                        //     ),
+                        //   );
+                        // }
+                        // _children.add(
+                        //   const Text(
+                        //     '.',
+                        //     style: TextStyle(
+                        //       fontSize: 40,
+                        //       color: clearBlackColor,
+                        //       fontWeight: FontWeight.bold,
+                        //     ),
+                        //   ),
+                        // );
+
+                        return SizedBox(
+                          height: 80,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: _children,
+                          ),
+                        );
+                      } else {
+                        return SizedBox(
+                          height: 80,
+                          child: Column(
+                            children: [
+                              const Text(
+                                '다음 세트 목표',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: clearBlackColor,
+                                ),
+                              ),
+                              Text(
+                                getCleanTextFromDouble(
+                                        _.exercisePlan![_.currentSet - 1]
+                                            ['target_weight']) +
+                                    'kg X ' +
+                                    _.exercisePlan![_.currentSet - 1]
+                                            ['target_reps']
+                                        .toString() +
+                                    '회',
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  color: clearBlackColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Manrope',
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    } else {
+                      return SizedBox(
+                        height: 80,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            children: [
+                              FittedBox(
+                                child: Text(
+                                  _.exerciseData['name'] +
+                                      ' ' +
+                                      _.currentSet.toString() +
+                                      '세트',
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    color: clearBlackColor,
+                                  ),
+                                ),
+                              ),
+                              () {
+                                if (_.inputSetRecordDone) {
+                                  return IntrinsicHeight(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '기록 ' +
+                                              getCleanTextFromDouble(
+                                                  double.parse((_
+                                                      .inputSetValues![0]
+                                                      .text))) +
+                                              'kg X ' +
+                                              _.inputSetValues![1].text +
+                                              '회',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: brightPrimaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Manrope',
+                                          ),
+                                        ),
+                                        const VerticalDivider(
+                                          color: lightGrayColor,
+                                          thickness: 3,
+                                          width: 20,
+                                          indent: 2,
+                                          endIndent: 2,
+                                        ),
+                                        Text(
+                                          '목표 ' +
+                                              getCleanTextFromDouble(
+                                                  _.exercisePlan![_.currentSet -
+                                                      1]['target_weight']) +
+                                              'kg X ' +
+                                              _.exercisePlan![_.currentSet - 1]
+                                                      ['target_reps']
+                                                  .toString() +
+                                              '회',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Color(0xffA7A7A7),
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Manrope',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                return Text(
+                                  getCleanTextFromDouble(
+                                          _.exercisePlan![_.currentSet - 1]
+                                              ['target_weight']) +
+                                      'kg X ' +
+                                      _.exercisePlan![_.currentSet - 1]
+                                              ['target_reps']
+                                          .toString() +
+                                      '회',
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    color: clearBlackColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Manrope',
+                                  ),
+                                );
+                              }(),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                  }),
+                  GetBuilder<ExerciseBlockController>(builder: (_) {
+                    if (_.resting) {
+                      return _restTimeCounter;
+                    } else {
+                      return _currentExerciseTimeCounter;
+                    }
+                  }),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 70,
+              width: 280,
+              child: GetBuilder<ExerciseBlockController>(builder: (_) {
+                if (!_.exercisePaused) {
+                  return ElevatedActionButton(
+                    buttonText: _.currentSet.toString() + '세트 완료',
+                    onPressed: _onCompleteSetPressed,
+                    textStyle: const TextStyle(
+                      color: mainBackgroundColor,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    borderRadius: 100,
+                  );
+                } else if (_.recordingExerciseSet) {
+                  return _.inputSetRecordDone
+                      ? ElevatedActionButton(
+                          buttonText: '기록 완료',
+                          textStyle: const TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                            color: mainBackgroundColor,
+                          ),
+                          borderRadius: 100,
+                          onPressed: _onCompleteSetRecordPressed,
+                        )
+                      : Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            SizedBox(
+                              height: 70,
+                              width: 280,
+                              child: ElevatedActionButton(
+                                borderRadius: 100,
+                                backgroundColor: Colors.white,
+                                overlayColor:
+                                    brightPrimaryColor.withOpacity(0.1),
+                                textStyle: const TextStyle(
+                                  color: brightPrimaryColor,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Manrope',
+                                ),
+                                buttonText: _.inputSetValues![0].text +
+                                    'kg X ' +
+                                    _.inputSetValues![1].text +
+                                    '회',
+                                onPressed: _onInputExerciseRecordPressed,
+                              ),
+                            ),
+                            const Positioned(
+                              right: 20,
+                              child: Icon(
+                                Icons.edit_rounded,
+                                color: brightPrimaryColor,
+                              ),
+                            ),
+                          ],
+                        );
+                } else if (_.resting) {
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.white,
+                    ),
+                    child: Material(
+                      type: MaterialType.transparency,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed: _onSubtractTotalRestPressed,
+                              highlightColor:
+                                  darkSecondaryColor.withOpacity(0.2),
+                              splashColor: darkSecondaryColor.withOpacity(0.2),
+                              icon: const SubtractIcon(
+                                color: darkSecondaryColor,
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                            const Text(
+                              '10초',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: darkSecondaryColor,
+                                fontSize: 26,
+                                fontFamily: 'Manrope',
+                              ),
+                            ),
+                            IconButton(
+                              highlightColor:
+                                  darkSecondaryColor.withOpacity(0.2),
+                              splashColor: darkSecondaryColor.withOpacity(0.2),
+                              onPressed: _onAddTotalRestPressed,
+                              icon: const AddIcon(
+                                color: darkSecondaryColor,
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return SlidableButton(
+                    width: 280,
+                    height: 70,
+                    color: Colors.white,
+                    buttonColor: brightPrimaryColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(100),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          XIcon(),
+                          CheckIcon(),
+                        ],
+                      ),
+                    ),
+                    buttonWidth: 50,
+                    buttonHeight: 50,
+                    onChanged: _onSlidableButtonPositionChanged,
+                  );
+                }
+              }),
+            ),
+            GetBuilder<ExerciseBlockController>(builder: (_) {
+              if (_.exercisePaused &&
+                  _.recordingExerciseSet &&
+                  !_.inputSetRecordDone) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 55),
+                  child: TextActionButton(
+                    buttonText: '완료',
+                    onPressed: _onInputSetRecordDonePressed,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    textColor: brightPrimaryColor,
+                  ),
+                );
+              } else if (_.resting) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 55),
+                  child: TextActionButton(
+                    buttonText: '건너뛰기',
+                    onPressed: _onEndRestPressed,
+                  ),
+                );
+              } else {
+                return verticalSpacer(100);
+              }
+            }),
+          ],
+        ),
       ),
     );
   }

@@ -12,8 +12,6 @@ class PostCategoryPage extends GetView<CommunityController> {
 
   @override
   Widget build(BuildContext context) {
-    const Color _searchIconColor = darkPrimaryColor;
-    const String _postCategoryLabelText = '주제별 게시판';
     const String _expandPostViewButtonText = '더보기 >';
 
     void _onCategoryButtonPressed(int index) {
@@ -23,7 +21,7 @@ class PostCategoryPage extends GetView<CommunityController> {
 
     void _onExpandPostViewPressed() {
       Get.toNamed('/community/post/list');
-      controller.postListPageCallback(controller.postListPage.value);
+      controller.postListPageCallback(controller.postListStartIndex.value);
     }
 
     return Column(
@@ -31,26 +29,14 @@ class PostCategoryPage extends GetView<CommunityController> {
         Container(
           color: Colors.white,
           width: context.width,
-          height: 170,
-          padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+          height: 130,
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  _postCategoryLabelText,
-                  style: TextStyle(
-                    color: darkPrimaryColor,
-                    fontSize: 18,
-                    letterSpacing: -2,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
               Expanded(
                 child: ListView.separated(
-                  itemCount: 5,
+                  itemCount: 3,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (context, index) => horizontalSpacer(10),
@@ -154,7 +140,8 @@ class PostCategoryPage extends GetView<CommunityController> {
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return PostContentPreviewBuilder(data: _.postContentList[index]);
+                          return PostContentPreviewBuilder(
+                              data: _.postContentList[index]);
                         },
                         separatorBuilder: (context, index) => const Divider(
                           color: lightGrayColor,

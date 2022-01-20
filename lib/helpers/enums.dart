@@ -1,0 +1,1 @@
+enum SlidableButtonPosition {left, center, right}

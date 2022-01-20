@@ -32,6 +32,8 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
       FocusScope.of(context).requestFocus(controller.commentTextFieldFocus);
     }
 
+    void _onMenuPressed() {}
+
     void _onSendPressed() {
       if (controller.commentId != null) {
         controller.postQnaCommentReply(
@@ -50,7 +52,7 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
         children: [
           CommentsHeader(
             onPressed: _onBackPressed,
-            numComments: 13,
+            numComments: controller.answerNumComments!,
           ),
           const Divider(
             indent: 6,
@@ -113,12 +115,13 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                           if (_.qnaAnswerCommentList[index]
                                                       ['comment']['user_data']
                                                   ['username'] ==
-                                              (_.qnaAnswerList.where(
-                                                      (element) =>
+                                              (_.qnaAnswerList
+                                                      .where((element) =>
                                                           element['answer_data']
                                                               ['id'] ==
-                                                          _.answerId).toList()[0])[
-                                                  'user_data']['username'])
+                                                          _.answerId)
+                                                      .toList()[0])['user_data']
+                                                  ['username'])
                                             const CommentBadge(text: '답변자'),
                                         ],
                                       ),
@@ -202,11 +205,63 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                                   ['comment']
                                                               ['comment_data']
                                                           ['id']),
+                                                  child: SizedBox(
+                                                    height: 30,
+                                                    width: 30,
+                                                    child: GetBuilder<
+                                                            CommunityController>(
+                                                        builder: (_) {
+                                                      return Center(
+                                                        child: CommentIcon(
+                                                          color: (_.commentId ==
+                                                                      _.qnaAnswerCommentList[index]['comment']
+                                                                              [
+                                                                              'comment_data']
+                                                                          [
+                                                                          'id'] &&
+                                                                  _.commentTextFieldFocus!
+                                                                      .hasFocus)
+                                                              ? brightPrimaryColor
+                                                              : unselectedIconColor,
+                                                        ),
+                                                      );
+                                                    }),
+                                                  ),
+                                                ),
+                                              ),
+                                              const VerticalDivider(
+                                                thickness: 1,
+                                                width: 2,
+                                                indent: 8,
+                                                endIndent: 8,
+                                                color: unselectedIconColor,
+                                              ),
+                                              Material(
+                                                type: MaterialType.transparency,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(6)),
+                                                child: InkWell(
+                                                  splashColor: deepGrayColor,
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  borderRadius:
+                                                      const BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(6),
+                                                    bottomRight:
+                                                        Radius.circular(6),
+                                                  ),
+                                                  onTap: () => _onMenuPressed(),
                                                   child: const SizedBox(
                                                     height: 30,
                                                     width: 30,
                                                     child: Center(
-                                                      child: CommentIcon(),
+                                                      child: Icon(
+                                                        Icons.more_vert_rounded,
+                                                        color: lightGrayColor,
+                                                        size: 15,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -236,7 +291,7 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                         formatDateTimeRawString(
                                           _.qnaAnswerCommentList[index]
                                                   ['comment']['comment_data']
-                                              ['creation_date'],
+                                              ['created_at'],
                                         ),
                                         style: const TextStyle(
                                           fontSize: 11,
@@ -315,7 +370,8 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                               ),
                                             ),
                                             (() {
-                                              if (_.qnaAnswerCommentList[index]['comment']
+                                              if (_.qnaAnswerCommentList[index]
+                                                              ['comment']
                                                           ['user_data']
                                                       ['username'] ==
                                                   _.qnaAnswerList
@@ -328,7 +384,8 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                 return const CommentBadge(
                                                     text: '답변자');
                                               } else if (_.qnaAnswerCommentList[
-                                                          index]['comment']['user_data']
+                                                              index]['comment']
+                                                          ['user_data']
                                                       ['username'] ==
                                                   _.qnaContent['user_data']
                                                       ['username']) {
@@ -423,11 +480,64 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                                     ['comment']
                                                                 ['comment_data']
                                                             ['id']),
+                                                    child: SizedBox(
+                                                      height: 30,
+                                                      width: 30,
+                                                      child: GetBuilder<
+                                                              CommunityController>(
+                                                          builder: (_) {
+                                                        return Center(
+                                                          child: CommentIcon(
+                                                            color: (_.commentId ==
+                                                                        _.qnaAnswerCommentList[index]['comment']['comment_data']
+                                                                            [
+                                                                            'id'] &&
+                                                                    _.commentTextFieldFocus!
+                                                                        .hasFocus)
+                                                                ? brightPrimaryColor
+                                                                : unselectedIconColor,
+                                                          ),
+                                                        );
+                                                      }),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const VerticalDivider(
+                                                  thickness: 1,
+                                                  width: 2,
+                                                  indent: 8,
+                                                  endIndent: 8,
+                                                  color: unselectedIconColor,
+                                                ),
+                                                Material(
+                                                  type:
+                                                      MaterialType.transparency,
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(6)),
+                                                  child: InkWell(
+                                                    splashColor: deepGrayColor,
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                      topRight:
+                                                          Radius.circular(6),
+                                                      bottomRight:
+                                                          Radius.circular(6),
+                                                    ),
+                                                    onTap: () =>
+                                                        _onMenuPressed(),
                                                     child: const SizedBox(
                                                       height: 30,
                                                       width: 30,
                                                       child: Center(
-                                                        child: CommentIcon(),
+                                                        child: Icon(
+                                                          Icons
+                                                              .more_vert_rounded,
+                                                          color: lightGrayColor,
+                                                          size: 15,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -457,7 +567,7 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                           formatDateTimeRawString(
                                             _.qnaAnswerCommentList[index]
                                                     ['comment']['comment_data']
-                                                ['creation_date'],
+                                                ['created_at'],
                                           ),
                                           style: const TextStyle(
                                             fontSize: 11,
@@ -524,6 +634,8 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   const Padding(
                                                     padding: EdgeInsets.only(
@@ -569,8 +681,48 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                       return horizontalSpacer(
                                                           0);
                                                     }
-                                                  })()
+                                                  })(),
                                                 ],
+                                              ),
+                                              DecoratedBox(
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(6),
+                                                  ),
+                                                ),
+                                                child: Material(
+                                                  type:
+                                                      MaterialType.transparency,
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                    Radius.circular(6),
+                                                  ),
+                                                  child: InkWell(
+                                                    splashColor: deepGrayColor,
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                      Radius.circular(6),
+                                                    ),
+                                                    onTap: () =>
+                                                        _onMenuPressed(),
+                                                    child: const SizedBox(
+                                                      height: 30,
+                                                      width: 30,
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .more_vert_rounded,
+                                                          color: lightGrayColor,
+                                                          size: 15,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -591,7 +743,7 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                               Text(
                                                 formatDateTimeRawString(
                                                   reply['reply_data']
-                                                      ['creation_date'],
+                                                      ['created_at'],
                                                 ),
                                                 style: const TextStyle(
                                                   fontSize: 11,

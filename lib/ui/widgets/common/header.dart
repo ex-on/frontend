@@ -1,4 +1,5 @@
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +10,7 @@ class Header extends StatelessWidget {
   final Color? color;
   final String? title;
   final List<Widget>? actions;
+  final Widget? icon;
 
   const Header({
     Key? key,
@@ -16,27 +18,32 @@ class Header extends StatelessWidget {
     this.color = Colors.transparent,
     this.title,
     this.actions,
+    this.icon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return title == null
         ? AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_rounded, color: Colors.black),
-              onPressed: onPressed,
-              splashRadius: 20,
-            ),
+            leading: 
+                IconButton(
+                  icon:
+                      icon ??const Icon(Icons.arrow_back_rounded, color: Colors.black),
+                  onPressed: onPressed,
+                  splashRadius: 20,
+                ),
             elevation: 0,
             backgroundColor: color,
             actions: actions,
           )
         : AppBar(
-            leading: IconButton(
-              splashRadius: 20,
-              icon: const Icon(Icons.arrow_back_rounded, color: Colors.black),
-              onPressed: onPressed,
-            ),
+            leading: 
+                IconButton(
+                  splashRadius: 20,
+                  icon:
+                      icon ??const Icon(Icons.arrow_back_rounded, color: Colors.black),
+                  onPressed: onPressed,
+                ),
             title: Text(
               title!,
               style: const TextStyle(
@@ -76,40 +83,112 @@ class ProfileHeader extends StatelessWidget {
   }
 }
 
-class SearchHeader extends StatelessWidget {
-  final Function() onPressed;
+class SearchHeader extends StatefulWidget {
+  final Widget? leading;
   final Color? backgroundColor;
-  final PreferredSizeWidget? bottom;
   final TextEditingController searchController;
+  final Function() onSearchPressed;
+  final Function() onCancelPressed;
+  final FocusNode? focusNode;
   const SearchHeader({
     Key? key,
-    required this.onPressed,
     required this.searchController,
+    required this.onSearchPressed,
+    required this.onCancelPressed,
+    this.leading,
+    this.focusNode,
     this.backgroundColor = Colors.transparent,
-    this.bottom,
   }) : super(key: key);
 
   @override
+  State<SearchHeader> createState() => _SearchHeaderState();
+}
+
+class _SearchHeaderState extends State<SearchHeader> {
+  bool searchOpen = false;
+
+  @override
   Widget build(BuildContext context) {
-    return AppBar(
-      actions: [
-        IconButton(
-          splashRadius: 20,
-          icon: const Icon(Icons.search_rounded,
-              color: darkPrimaryColor, size: 30),
-          onPressed: onPressed,
+    return SizedBox(
+      height: 56,
+      width: context.width,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              width: 0.5,
+              color: lightGrayColor,
+            ),
+          ),
         ),
-      ],
-      title: InputTextField(
-        label: '',
-        controller: searchController,
-        autofocus: false,
-        backgroundColor: Colors.transparent,
+        child: Stack(
+          alignment: Alignment.centerLeft,
+          children: [
+            SizedBox(
+              width: searchOpen ? 0 : null,
+              child: widget.leading,
+            ),
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeIn,
+              left: searchOpen ? 50 : context.width,
+              child: SizedBox(
+                width: 300,
+                height: 56,
+                child: SearchInputField(
+                  controller: widget.searchController,
+                  focusNode: widget.focusNode,
+                ),
+              ),
+            ),
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeIn,
+              right: searchOpen ? context.width - 50 : 10,
+              child: Material(
+                type: MaterialType.transparency,
+                child: searchOpen
+                    ? const Icon(
+                        Icons.search_rounded,
+                        color: brightPrimaryColor,
+                        size: 30,
+                      )
+                    : IconButton(
+                        splashRadius: 20,
+                        icon: const Icon(
+                          Icons.search_rounded,
+                          color: darkPrimaryColor,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            searchOpen = !searchOpen;
+                          });
+                          widget.onSearchPressed();
+                        },
+                      ),
+              ),
+            ),
+            searchOpen
+                ? Positioned(
+                    right: 10,
+                    child: TextActionButton(
+                      isUnderlined: false,
+                      textColor: deepGrayColor,
+                      buttonText: '취소',
+                      onPressed: () {
+                        setState(() {
+                          searchOpen = !searchOpen;
+                        });
+                        widget.onCancelPressed();
+                      },
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ],
+        ),
       ),
-      centerTitle: false,
-      elevation: 0,
-      backgroundColor: backgroundColor,
-      bottom: bottom,
     );
   }
 }
@@ -173,6 +252,34 @@ class StatsHeader extends StatelessWidget {
       elevation: 0,
       backgroundColor: backgroundColor,
       bottom: bottom,
+    );
+  }
+}
+
+class CustomLeadingHeader extends StatelessWidget {
+  final Widget leading;
+  const CustomLeadingHeader({
+    Key? key,
+    required this.leading,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 56,
+      width: context.width,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              width: 0.5,
+              color: lightGrayColor,
+            ),
+          ),
+        ),
+        child: leading,
+      ),
     );
   }
 }

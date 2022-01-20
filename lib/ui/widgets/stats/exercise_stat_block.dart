@@ -124,7 +124,7 @@ class ExcerciseStatBlock extends StatelessWidget {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        excerciseMethodIntToStr[exerciseMethod] ?? '',
+                        exerciseMethodIntToStr[exerciseMethod] ?? '',
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,

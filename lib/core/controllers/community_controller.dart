@@ -5,9 +5,16 @@ import 'package:get/get.dart';
 class CommunityController extends GetxController
     with SingleGetTickerProviderMixin {
   static CommunityController to = Get.find();
-  TextEditingController searchPostController = TextEditingController();
+  TextEditingController searchPostTextController = TextEditingController();
   TextEditingController commentTextController = TextEditingController();
+  TextEditingController postTitleTextController = TextEditingController();
+  TextEditingController postContentTextController = TextEditingController();
+  TextEditingController qnaTitleTextController = TextEditingController();
+  TextEditingController qnaContentTextController = TextEditingController();
+  TextEditingController qnaAnswerContentTextController =
+      TextEditingController();
   FocusNode? commentTextFieldFocus;
+  FocusNode? searchFieldFocus;
   TabController? communityMainTabController;
   ScrollController postListScrollController = ScrollController();
   ScrollController postScrollController = ScrollController();
@@ -17,12 +24,14 @@ class CommunityController extends GetxController
   int? postId;
   int? qnaId;
   int? answerId;
+  int? answerNumComments;
   int? postType;
   int? qnaType;
-  RxInt postCategory = 0.obs; //0: 전체, 1: HOT, 2: 자유, 3: 정보, 4: 운동인증
-  RxInt qnaCategory = 0.obs; // 0: HOT, 1: 전체, 2: 미해결, 3: 해결
-  RxInt postListPage = 1.obs;
-  RxInt qnaListPage = 1.obs;
+  RxInt postCategory = 0.obs; //0: HOT, 1: 자유, 2: 정보
+  RxInt qnaCategory = 0.obs; // 0: HOT, 1: 미해결, 2: 해결
+  RxInt postListStartIndex = 0.obs;
+  RxInt qnaListStartIndex = 0.obs;
+  bool searchOpen = false;
   bool loading = false;
   bool listPageLoading = false;
   bool contentLoading = false;
@@ -44,44 +53,35 @@ class CommunityController extends GetxController
 
   dynamic postListCallback(int postCategory) {
     if (postCategory == 0) {
-      Future.delayed(Duration.zero, () => getPostPreview(5, postCategory));
-    } else if (postCategory == 1) {
       Future.delayed(Duration.zero, () => getHotPostPreview(5));
-    } else if (postCategory == 2 || postCategory == 3) {
-      Future.delayed(Duration.zero, () => getPostPreview(5, postCategory - 1));
+    } else {
+      Future.delayed(Duration.zero, () => getPostPreview(5, postCategory));
     }
   }
 
   dynamic qnaListCallback(int qnaCategory) {
     if (qnaCategory == 0) {
       Future.delayed(Duration.zero, () => getHotQnaPreview(5));
-    } else if (qnaCategory == 1) {
-      Future.delayed(Duration.zero, () => getQnaPreview(5, 0));
     } else {
-      Future.delayed(Duration.zero, () => getQnaPreview(5, qnaCategory - 1));
+      Future.delayed(Duration.zero, () => getQnaPreview(5, qnaCategory));
     }
   }
 
   dynamic postListPageCallback(int listPage) {
     if (postCategory.value == 0) {
+      Future.delayed(Duration.zero, () => getHotPostPreview(null));
+    } else {
       Future.delayed(
           Duration.zero, () => getPostPreview(null, postCategory.value));
-    } else if (postCategory.value == 1) {
-      Future.delayed(Duration.zero, () => getHotPostPreview(null));
-    } else if (postCategory.value == 2 || postCategory.value == 3) {
-      Future.delayed(
-          Duration.zero, () => getPostPreview(null, postCategory.value - 1));
     }
   }
 
   dynamic qnaListPageCallback(int listPage) {
     if (qnaCategory.value == 0) {
       Future.delayed(Duration.zero, () => getHotQnaPreview(null));
-    } else if (qnaCategory.value == 1) {
-      Future.delayed(Duration.zero, () => getQnaPreview(null, 0));
     } else {
       Future.delayed(
-          Duration.zero, () => getQnaPreview(null, qnaCategory.value - 1));
+          Duration.zero, () => getQnaPreview(null, qnaCategory.value));
     }
   }
 
@@ -97,9 +97,10 @@ class CommunityController extends GetxController
     qnaCategory.listen((val) {
       qnaListCallback(val);
     });
-    postListScrollController.addListener(onScroll);
-
+    postListScrollController.addListener(onPostListScroll);
+    qnaListScrollController.addListener(onQnaListScroll);
     commentTextFieldFocus = FocusNode();
+    searchFieldFocus = FocusNode();
   }
 
   @override
@@ -107,10 +108,15 @@ class CommunityController extends GetxController
     if (communityMainTabController != null) {
       communityMainTabController!.dispose();
     }
-    postListScrollController.removeListener(onScroll);
+    postListScrollController.removeListener(onPostListScroll);
     postListScrollController.dispose();
+    qnaListScrollController.removeListener(onQnaListScroll);
+    qnaListScrollController.dispose();
     if (commentTextFieldFocus != null) {
       commentTextFieldFocus!.dispose();
+    }
+    if (searchFieldFocus != null) {
+      searchFieldFocus!.dispose();
     }
     super.onClose();
   }
@@ -121,11 +127,23 @@ class CommunityController extends GetxController
     update();
   }
 
-  void onScroll() {
+  void onPostListScroll() {
     if (postListScrollController.position.extentAfter < 300 &&
         !listPageLoading) {
-      postListPage++;
+      postListStartIndex.value = postContentList.length;
     }
+  }
+
+  void onQnaListScroll() {
+    if (qnaListScrollController.position.extentAfter < 300 &&
+        !listPageLoading) {
+      qnaListStartIndex.value = qnaContentList.length;
+    }
+  }
+
+  void setSearchOpen(bool val) {
+    searchOpen = val;
+    update();
   }
 
   void setLoading(bool val) {
@@ -173,6 +191,11 @@ class CommunityController extends GetxController
     update();
   }
 
+  void updateAnswerNumComments(int? val) {
+    answerNumComments = val;
+    update();
+  }
+
   void updatePostType(int? val) {
     postType = val;
     update();
@@ -184,19 +207,27 @@ class CommunityController extends GetxController
   }
 
   void resetContent() {
-    postListPage.value = 1;
+    postListStartIndex.value = 0;
     postContentList = [];
     update();
   }
 
+  void resetQnaWrite() {
+    qnaTitleTextController.clear();
+    qnaContentTextController.clear();
+  }
+  void resetQnaAnswerWrite() {
+    qnaAnswerContentTextController.clear();
+  }
+
   void addListPage() {
-    postListPage++;
+    postListStartIndex++;
   }
 
   Future<void> getPostPreview(int? indexNum, int type) async {
     if (indexNum != null) {
       setLoading(true);
-      var res = await CommunityApiService.getPostPreview(indexNum, 1, type);
+      var res = await CommunityApiService.getPostPreview(indexNum, 0, type);
       try {
         postContentList = res;
       } catch (e) {}
@@ -205,13 +236,13 @@ class CommunityController extends GetxController
     } else {
       setListPageLoading(true);
       var res = await CommunityApiService.getPostPreview(
-          20, postListPage.value, type);
-      if (postListPage.value == 1) {
+          20, postListStartIndex.value, type);
+      if (postListStartIndex.value == 0) {
         postContentList.clear();
       }
       print(res);
       if (res == false) {
-        postListPage--;
+        // postListStartIndex--;
       } else {
         postContentList.addAll(res);
       }
@@ -223,21 +254,21 @@ class CommunityController extends GetxController
   Future<void> getQnaPreview(int? indexNum, int type) async {
     if (indexNum != null) {
       setLoading(true);
-      var res = await CommunityApiService.getQnaPreview(indexNum, 1, type);
+      var res = await CommunityApiService.getQnaPreview(indexNum, 0, type);
       qnaContentList = res;
       print(qnaContentList);
       update();
       setLoading(false);
     } else {
       setListPageLoading(true);
-      var res =
-          await CommunityApiService.getQnaPreview(20, qnaListPage.value, type);
-      if (qnaListPage.value == 1) {
+      var res = await CommunityApiService.getQnaPreview(
+          20, qnaListStartIndex.value, type);
+      if (qnaListStartIndex.value == 0) {
         qnaContentList.clear();
       }
       print(res);
       if (res == false) {
-        qnaListPage--;
+        // qnaListStartIndex--;
       } else {
         qnaContentList.addAll(res);
       }
@@ -249,15 +280,15 @@ class CommunityController extends GetxController
   Future<void> getHotPostPreview(int? indexNum) async {
     if (indexNum != null) {
       setLoading(true);
-      var res = await CommunityApiService.getHotPostPreview(indexNum, 1);
+      var res = await CommunityApiService.getHotPostPreview(indexNum, 0);
       postContentList = res;
       update();
       setLoading(false);
     } else {
       setListPageLoading(true);
-      var res =
-          await CommunityApiService.getHotPostPreview(20, postListPage.value);
-      if (postListPage.value == 1) {
+      var res = await CommunityApiService.getHotPostPreview(
+          20, postListStartIndex.value);
+      if (postListStartIndex.value == 0) {
         postContentList.clear();
       }
       print(res.length);
@@ -270,7 +301,7 @@ class CommunityController extends GetxController
   Future<void> getHotQnaPreview(int? indexNum) async {
     if (indexNum != null) {
       setLoading(true);
-      var res = await CommunityApiService.getHotQnaPreview(indexNum, 1);
+      var res = await CommunityApiService.getHotQnaPreview(indexNum, 0);
       try {
         qnaContentList = res;
       } catch (e) {}
@@ -278,9 +309,9 @@ class CommunityController extends GetxController
       setLoading(false);
     } else {
       setListPageLoading(true);
-      var res =
-          await CommunityApiService.getHotQnaPreview(20, qnaListPage.value);
-      if (qnaListPage.value == 1) {
+      var res = await CommunityApiService.getHotQnaPreview(
+          20, qnaListStartIndex.value);
+      if (qnaListStartIndex.value == 0) {
         qnaContentList.clear();
       }
       print(res.length);
@@ -332,6 +363,16 @@ class CommunityController extends GetxController
 
   Future<void> updatePostCount() async {}
 
+  Future<void> postPost() async {
+    if (postTitleTextController.text != '' &&
+        postContentTextController.text != '') {
+      setApiPostLoading(true);
+      var res = await CommunityApiService.postPost(postTitleTextController.text,
+          postContentTextController.text, postCategory.value);
+      setApiPostLoading(false);
+    }
+  }
+
   Future<void> postPostComment(String content) async {
     if (content != '') {
       setApiPostLoading(true);
@@ -356,6 +397,25 @@ class CommunityController extends GetxController
         postCommentList = res;
         update();
       }
+      setApiPostLoading(false);
+    }
+  }
+
+  Future<void> postQna() async {
+    if (qnaTitleTextController.text != '' &&
+        qnaContentTextController.text != '') {
+      setApiPostLoading(true);
+      var res = await CommunityApiService.postQna(
+          qnaTitleTextController.text, qnaContentTextController.text, 1);
+      setApiPostLoading(false);
+    }
+  }
+
+  Future<void> postQnaAnswer() async {
+    if (qnaAnswerContentTextController.text != '') {
+      setApiPostLoading(true);
+      var res = await CommunityApiService.postQnaAnswer(
+          qnaAnswerContentTextController.text, qnaId!);
       setApiPostLoading(false);
     }
   }

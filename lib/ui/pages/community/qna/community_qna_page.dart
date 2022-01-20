@@ -36,15 +36,18 @@ class CommunityQnaPage extends GetView<CommunityController> {
       controller.updateQnaAnswerCountLikes(index);
     }
 
-    void _onAnswerCommentPressed(int answerId) {
+    void _onAnswerCommentPressed(int answerId, int numComments) {
       controller.getQnaAnswerComments(answerId);
       controller.updateAnswerId(answerId);
+      controller.updateAnswerNumComments(numComments);
       Get.toNamed('/community/qna/answer_comments');
     }
 
     void _onAnswerPressed() {
       Get.toNamed('community/qna/answer/write');
     }
+
+    void _onMenuPressed() {}
 
     Widget _qnaContent = SizedBox(
       width: context.width,
@@ -91,7 +94,7 @@ class CommunityQnaPage extends GetView<CommunityController> {
                               ),
                               Text(
                                 formatDateTimeRawString(
-                                    _.qnaContent['qna']['creation_date']),
+                                    _.qnaContent['qna']['created_at']),
                                 style: const TextStyle(
                                   fontSize: 10,
                                   color: lightGrayColor,
@@ -338,13 +341,49 @@ class CommunityQnaPage extends GetView<CommunityController> {
                                   topRight: Radius.circular(6),
                                   bottomRight: Radius.circular(6),
                                 ),
-                                onTap: () => _onAnswerCommentPressed(controller
-                                    .qnaAnswerList[index]['answer_data']['id']),
+                                onTap: () => _onAnswerCommentPressed(
+                                    controller.qnaAnswerList[index]
+                                        ['answer_data']['id'],
+                                    controller.qnaAnswerList[index]
+                                        ['answer_count']['count_comments']),
                                 child: const SizedBox(
                                   height: 30,
                                   width: 30,
                                   child: Center(
-                                    child: CommentIcon(),
+                                    child:
+                                        CommentIcon(color: unselectedIconColor),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const VerticalDivider(
+                              thickness: 1,
+                              width: 2,
+                              indent: 8,
+                              endIndent: 8,
+                              color: unselectedIconColor,
+                            ),
+                            Material(
+                              type: MaterialType.transparency,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(6)),
+                              child: InkWell(
+                                splashColor: deepGrayColor,
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(6),
+                                  bottomRight: Radius.circular(6),
+                                ),
+                                onTap: () => _onMenuPressed(),
+                                child: const SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.more_vert_rounded,
+                                      color: lightGrayColor,
+                                      size: 15,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -362,7 +401,7 @@ class CommunityQnaPage extends GetView<CommunityController> {
                     style: const TextStyle(
                       fontSize: 12,
                       height: 1.3,
-                      color: darkPrimaryColor,
+                      color: clearBlackColor,
                     ),
                   ),
                 ),
@@ -371,7 +410,7 @@ class CommunityQnaPage extends GetView<CommunityController> {
                     Text(
                       formatDateTimeRawString(
                         controller.qnaAnswerList[index]['answer_data']
-                            ['creation_date'],
+                            ['created_at'],
                       ),
                       style: const TextStyle(
                         fontSize: 11,
@@ -390,6 +429,26 @@ class CommunityQnaPage extends GetView<CommunityController> {
                         Text(
                           controller.qnaAnswerList[index]['answer_count']
                                   ['count_likes']
+                              .toString(),
+                          style: const TextStyle(
+                            color: darkPrimaryColor,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10, right: 5),
+                          child: CommentIcon(
+                            width: 8,
+                            height: 8,
+                          ),
+                        ),
+                        Text(
+                          controller.qnaAnswerList[index]['answer_count']
+                                  ['count_comments']
                               .toString(),
                           style: const TextStyle(
                             color: darkPrimaryColor,
@@ -512,7 +571,7 @@ class CommunityQnaPage extends GetView<CommunityController> {
             Header(
               onPressed: _onBackPressed,
               title:
-                  (qnaCategoryIntToStr[controller.qnaType! + 1] ?? '') + ' Q&A',
+                  (qnaCategoryIntToStr[controller.qnaCategory] ?? '') + ' Q&A',
             ),
             Expanded(
               child: DisableGlowListView(

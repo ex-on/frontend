@@ -60,10 +60,9 @@ class CumulativeStatsExercisePage extends GetView<StatsController> {
     }
 
     return ListView(
-      padding: const EdgeInsets.symmetric(vertical: 30),
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(30, 0, 30, 15),
+          padding: const EdgeInsets.fromLTRB(30, 30, 30, 15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

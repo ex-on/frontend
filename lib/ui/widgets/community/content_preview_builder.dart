@@ -49,7 +49,7 @@ class PostContentPreviewBuilder extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          data['post_data']['creation_date'],
+                          data['post_data']['created_at'],
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
@@ -177,7 +177,7 @@ class QnaContentPreviewBuilder extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          data['qna_data']['creation_date'],
+                          data['qna_data']['created_at'],
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,

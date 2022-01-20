@@ -37,15 +37,6 @@ class AuthController extends GetxController {
   Map<String, dynamic> userInfo = {};
   bool loading = false;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // WidgetsFlutterBinding.ensureInitialized();
-    // WidgetsBinding.instance!.addPostFrameCallback((_) async {
-    //   await _asyncMethod();
-    // });
-  }
-
   void setLoading(bool val) {
     loading = val;
     update();
@@ -79,24 +70,23 @@ class AuthController extends GetxController {
 
   Future<void> getUserInfo() async {
     bool userInfoStored = await storage.containsKey(key: 'username') &&
-        await storage.containsKey(key: 'profile_icon') &&
+        await storage.containsKey(key: 'activity_level') &&
         await storage.containsKey(key: 'created_at');
-    print(userInfo);
     if (userInfoStored) {
       Map<String, dynamic> storedUserInfo = {
         'username': await storage.read(key: 'username'),
-        'profile_icon': await storage.read(key: 'profile_icon'),
+        'activity_level': await storage.read(key: 'activity_level'),
         'created_at': await storage.read(key: 'created_at'),
       };
       if (storedUserInfo['username'] != null &&
-          storedUserInfo['profile_icon'] != null &&
+          storedUserInfo['activity_level'] != null &&
           storedUserInfo['created_at'] != null) {
         userInfo = storedUserInfo;
         update();
         return;
       } else {
         storage.delete(key: 'username');
-        storage.delete(key: 'profile_icon');
+        storage.delete(key: 'activity_level');
         storage.delete(key: 'created_at');
       }
     }
@@ -107,7 +97,7 @@ class AuthController extends GetxController {
     update();
     await storage.write(key: 'username', value: userInfo['username']);
     await storage.write(
-        key: 'profile_icon', value: userInfo['profile_icon'].toString());
+        key: 'activity_level', value: userInfo['activity_level'].toString());
     await storage.write(key: 'created_at', value: userInfo['created_at']);
   }
 }

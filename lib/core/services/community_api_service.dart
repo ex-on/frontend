@@ -2,12 +2,13 @@ import 'package:exon_app/core/services/api_service.dart';
 
 class CommunityApiService extends ApiService {
   static Future<dynamic> getPostPreview(
-      int indexNum, int pageNum, int type) async {
+      int indexNum, int startIndex, int type) async {
     String path = '/community/post_list';
 
     Map<String, dynamic> parameters = {
       'index_num': indexNum,
-      'page_num': pageNum,
+      // 'page_num': pageNum,
+      'start_index': startIndex,
       'type': type,
     };
 
@@ -22,12 +23,12 @@ class CommunityApiService extends ApiService {
     }
   }
 
-  static Future<dynamic> getHotPostPreview(int indexNum, int pageNum) async {
+  static Future<dynamic> getHotPostPreview(int indexNum, int startIndex) async {
     String path = '/community/post_list/hot';
 
     Map<String, dynamic> parameters = {
       'index_num': indexNum,
-      'page_num': pageNum,
+      'start_index': startIndex,
     };
 
     try {
@@ -122,6 +123,25 @@ class CommunityApiService extends ApiService {
     }
   }
 
+  static Future<dynamic> postPost(
+      String title, String content, int type) async {
+    String path = '/community/post';
+
+    Map<String, dynamic> data = {
+      'title': title,
+      'content': content,
+      'type': type,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   static Future<dynamic> postPostComment(int postId, String content) async {
     String path = '/community/postcomment';
 
@@ -146,6 +166,42 @@ class CommunityApiService extends ApiService {
     Map<String, dynamic> data = {
       'post_id': postId,
       'post_comment_id': postCommentId,
+      'content': content,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<dynamic> postQna(String title, String content, int type) async {
+    String path = '/community/qna';
+
+    Map<String, dynamic> data = {
+      'title': title,
+      'content': content,
+      'type': type,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<dynamic> postQnaAnswer(
+     String content, int qnaId) async {
+    String path = '/community/qna_answer';
+
+    Map<String, dynamic> data = {
+      'qna_id': qnaId,
       'content': content,
     };
 
@@ -408,12 +464,12 @@ class CommunityApiService extends ApiService {
 
   // Qna API
   static Future<dynamic> getQnaPreview(
-      int indexNum, int pageNum, int type) async {
+      int indexNum, int startIndex, int type) async {
     String path = '/community/qna_list';
 
     Map<String, dynamic> parameters = {
       'index_num': indexNum,
-      'page_num': pageNum,
+      'start_index': startIndex,
       'type': type,
     };
 
@@ -426,12 +482,12 @@ class CommunityApiService extends ApiService {
     }
   }
 
-  static Future<dynamic> getHotQnaPreview(int indexNum, int pageNum) async {
+  static Future<dynamic> getHotQnaPreview(int indexNum, int startIndex) async {
     String path = '/community/qna_list/hot';
 
     Map<String, dynamic> parameters = {
       'index_num': indexNum,
-      'page_num': pageNum,
+      'start_index': startIndex,
     };
 
     try {
