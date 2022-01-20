@@ -8,11 +8,11 @@ import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ExcercisePlanBlock extends StatelessWidget {
+class ExercisePlanBlock extends StatelessWidget {
   final Map<String, dynamic> exerciseData;
   final int id;
   final int numSets;
-  const ExcercisePlanBlock({
+  const ExercisePlanBlock({
     Key? key,
     required this.exerciseData,
     required this.id,

@@ -185,7 +185,7 @@ class RankWeightPage extends GetView<RankController> {
         ),
         const Divider(thickness: 0.5, color: lightGrayColor),
         SizedBox(
-          height: 50,
+          height: 30,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: Row(

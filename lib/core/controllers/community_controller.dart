@@ -32,6 +32,7 @@ class CommunityController extends GetxController
   RxInt postListStartIndex = 0.obs;
   RxInt qnaListStartIndex = 0.obs;
   bool searchOpen = false;
+  bool showScrollToTopButton = false;
   bool loading = false;
   bool listPageLoading = false;
   bool contentLoading = false;
@@ -132,6 +133,12 @@ class CommunityController extends GetxController
         !listPageLoading) {
       postListStartIndex.value = postContentList.length;
     }
+    if (postListScrollController.offset >= 20) {
+      showScrollToTopButton = true; // show the back-to-top button
+    } else {
+      showScrollToTopButton = false; // hide the back-to-top button
+    }
+    update();
   }
 
   void onQnaListScroll() {
@@ -139,6 +146,12 @@ class CommunityController extends GetxController
         !listPageLoading) {
       qnaListStartIndex.value = qnaContentList.length;
     }
+    if (qnaListScrollController.offset >= 20) {
+      showScrollToTopButton = true; // show the back-to-top button
+    } else {
+      showScrollToTopButton = false; // hide the back-to-top button
+    }
+    update();
   }
 
   void setSearchOpen(bool val) {
@@ -216,6 +229,7 @@ class CommunityController extends GetxController
     qnaTitleTextController.clear();
     qnaContentTextController.clear();
   }
+
   void resetQnaAnswerWrite() {
     qnaAnswerContentTextController.clear();
   }

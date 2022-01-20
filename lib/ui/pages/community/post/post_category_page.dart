@@ -88,7 +88,15 @@ class PostCategoryPage extends GetView<CommunityController> {
             ],
           ),
         ),
-        verticalSpacer(15),
+        SizedBox(
+          height: 15,
+          width: context.width,
+          child: const DecoratedBox(
+            decoration: BoxDecoration(
+              color: mainBackgroundColor,
+            ),
+          ),
+        ),
         Expanded(
           child: Container(
             color: Colors.white,

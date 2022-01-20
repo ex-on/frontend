@@ -15,6 +15,7 @@ const String _xIcon = 'assets/icons/XIcon.svg';
 const String _checkIcon = 'assets/icons/checkIcon.svg';
 const String _addIcon = 'assets/icons/addIcon.svg';
 const String _subtractIcon = 'assets/icons/subtractIcon.svg';
+const String _scrollUpIcon = 'assets/icons/arrowDropUp.svg';
 
 const String _excitedCharacter = 'assets/characters/excitedCharacter.svg';
 const String _tiredCharacter = 'assets/characters/tiredCharacter.svg';
@@ -322,6 +323,28 @@ class SubtractIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _subtractIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class ScrollUpIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const ScrollUpIcon({
+    Key? key,
+    this.width = 18,
+    this.height = 18,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _scrollUpIcon,
       width: width,
       height: height,
       color: color,

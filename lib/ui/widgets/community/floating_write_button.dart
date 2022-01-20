@@ -19,6 +19,7 @@ class FloatingWriteButton extends StatelessWidget {
       width: width,
       child: FittedBox(
         child: FloatingActionButton(
+          heroTag: 'write',
           onPressed: onPressed,
           child: const Icon(
             Icons.edit_rounded, 

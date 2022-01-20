@@ -3,6 +3,7 @@ import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/floating_write_button.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,6 @@ class PostListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String _arrowDropUp = 'assets/icons/arrowDropUp.svg';
     final controller = Get.put<CommunityController>(CommunityController());
 
     controller.postListStartIndex.listen((val) {
@@ -55,7 +55,7 @@ class PostListPage extends StatelessWidget {
                           CircularProgressIndicator(color: brightPrimaryColor),
                     );
                   } else {
-                    return Stack(alignment: Alignment.center, children: [
+                    return Stack(alignment: Alignment.topCenter, children: [
                       NotificationListener<OverscrollIndicatorNotification>(
                         onNotification:
                             (OverscrollIndicatorNotification overscroll) {
@@ -91,7 +91,8 @@ class PostListPage extends StatelessWidget {
                       controller.postCategory.value != 0
                           ? Positioned(
                               child: FloatingWriteButton(
-                                  onPressed: _onWritePressed),
+                                onPressed: _onWritePressed,
+                              ),
                               bottom:
                                   35 + context.mediaQueryPadding.bottom + 88,
                               right: 35,
@@ -99,14 +100,29 @@ class PostListPage extends StatelessWidget {
                           : const SizedBox.shrink(),
                       Positioned(
                         bottom: 50,
-                        child: FloatingIconButton(
-                          backgroundColor: Colors.white,
-                          onPressed: _onScrollUpPressed,
-                          icon: SvgPicture.asset(_arrowDropUp),
+                        child: SizedBox(
                           height: 40,
                           width: 40,
+                          child: Center(
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.linearToEaseOut,
+                              alignment: Alignment.center,
+                              transformAlignment: Alignment.center,
+                              width: _.showScrollToTopButton ? 40 : 0,
+                              height: _.showScrollToTopButton ? 40 : 0,
+                              child: FloatingIconButton(
+                                heroTag: 'scroll_up',
+                                backgroundColor: Colors.white,
+                                onPressed: _onScrollUpPressed,
+                                icon: const ScrollUpIcon(),
+                                height: 40,
+                                width: 40,
+                              ),
+                            ),
+                          ),
                         ),
-                      )
+                      ),
                     ]);
                   }
                 }),

@@ -1,7 +1,9 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/floating_write_button.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,11 @@ class QnaListPage extends StatelessWidget {
 
     void _onWritePressed() {
       Get.toNamed('community/qna/write');
+    }
+
+    void _onScrollUpPressed() {
+      controller.qnaListScrollController.animateTo(0,
+          duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
     }
 
     return Scaffold(
@@ -85,11 +92,37 @@ class QnaListPage extends StatelessWidget {
                             ),
                           ),
                           Positioned(
-                            child:
-                                FloatingWriteButton(onPressed: _onWritePressed),
+                            child: FloatingWriteButton(
+                              onPressed: _onWritePressed,
+                            ),
                             bottom: 35 + context.mediaQueryPadding.bottom + 88,
                             right: 35,
                           ),
+                          Positioned(
+                            bottom: 50,
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: Center(
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.linearToEaseOut,
+                                  alignment: Alignment.center,
+                                  transformAlignment: Alignment.center,
+                                  width: _.showScrollToTopButton ? 40 : 0,
+                                  height: _.showScrollToTopButton ? 40 : 0,
+                                  child: FloatingIconButton(
+                                    heroTag: 'scroll_up',
+                                    backgroundColor: Colors.white,
+                                    onPressed: _onScrollUpPressed,
+                                    icon: const ScrollUpIcon(),
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       );
                     }

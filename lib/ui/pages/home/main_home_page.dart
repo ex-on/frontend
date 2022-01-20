@@ -3,7 +3,7 @@ import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/excercise_blocks.dart';
+import 'package:exon_app/ui/widgets/common/exercise_blocks.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
@@ -180,7 +180,7 @@ class MainHomePage extends GetView<HomeController> {
                     List<Widget> _children = List.generate(
                       _.todayExercisePlanList.length,
                       (index) {
-                        return ExcercisePlanBlock(
+                        return ExercisePlanBlock(
                           exerciseData: _.todayExercisePlanList[index]
                               ['exercise_data'],
                           id: _.todayExercisePlanList[index]['plan_data']['id'],
@@ -222,6 +222,7 @@ class MainHomePage extends GetView<HomeController> {
                   bottom: 35 + context.mediaQueryPadding.bottom,
                   right: 35,
                   child: FloatingIconButton(
+                    heroTag: 'add_exercise',
                     onPressed: _onAddPressed,
                     icon: const Icon(
                       Icons.add_rounded,

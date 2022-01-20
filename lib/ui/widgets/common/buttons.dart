@@ -195,10 +195,12 @@ class FloatingIconButton extends StatelessWidget {
   final double? width;
   final Color? backgroundColor;
   final Widget icon;
+  final String heroTag;
   const FloatingIconButton({
     Key? key,
     required this.onPressed,
     required this.icon,
+    required this.heroTag,
     this.height = 70,
     this.width = 70,
     this.backgroundColor = brightPrimaryColor,
@@ -211,6 +213,7 @@ class FloatingIconButton extends StatelessWidget {
       width: width,
       child: FittedBox(
         child: FloatingActionButton(
+          heroTag: heroTag,
           onPressed: onPressed,
           child: icon,
           backgroundColor: backgroundColor,
