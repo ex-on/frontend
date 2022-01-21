@@ -9,6 +9,7 @@ import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/comment_badge.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -47,6 +48,60 @@ class CommunityPostPage extends GetView<CommunityController> {
     void _onReplyPressed(int commentId) {
       controller.updateReplyCommentId(commentId);
       FocusScope.of(context).requestFocus(controller.commentTextFieldFocus);
+    }
+
+    void _onDeletePressed() {}
+
+    void _onReportPressed() {}
+
+    void _onMenuPressed(bool isSelf) {
+      if (isSelf) {
+        Get.bottomSheet(CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: _onDeletePressed,
+              child: const Text(
+                '삭제',
+                style: TextStyle(
+                  color: clearBlackColor,
+                ),
+              ),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Get.back(),
+            child: const Text(
+              '취소',
+              style: TextStyle(
+                color: clearBlackColor,
+              ),
+            ),
+          ),
+        ));
+      } else {
+        Get.bottomSheet(CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: _onReportPressed,
+              child: const Text(
+                '신고',
+                style: TextStyle(
+                  color: clearBlackColor,
+                ),
+              ),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Get.back(),
+            child: const Text(
+              '취소',
+              style: TextStyle(
+                color: clearBlackColor,
+              ),
+            ),
+          ),
+        ));
+      }
     }
 
     void _onSendPressed() {
@@ -399,6 +454,40 @@ class CommunityPostPage extends GetView<CommunityController> {
                                 ),
                               ),
                             ),
+                            const VerticalDivider(
+                              thickness: 1,
+                              width: 2,
+                              indent: 8,
+                              endIndent: 8,
+                              color: unselectedIconColor,
+                            ),
+                            Material(
+                              type: MaterialType.transparency,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(6)),
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(6),
+                                  bottomRight: Radius.circular(6),
+                                ),
+                                onTap: () => _onMenuPressed(controller
+                                            .postCommentList[index]['comments']
+                                        ['user_data']['username'] ==
+                                    AuthController.to.userInfo['username']),
+                                child: const SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.more_vert_rounded,
+                                      color: lightGrayColor,
+                                      size: 15,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -499,8 +588,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                             color: clearBlackColor,
                           ),
                         ),
-                        if (controller.postCommentList[index]['comments']
-                                ['user_data']['username'] ==
+                        if (replyList[index]['user_data']['username'] ==
                             AuthController.to.userInfo['username'])
                           const CommentBadge(text: '글쓴이'),
                       ],
@@ -511,39 +599,74 @@ class CommunityPostPage extends GetView<CommunityController> {
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(6)),
                       ),
-                      child: Row(
-                        children: [
-                          Material(
-                            type: MaterialType.transparency,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(6)),
-                            child: InkWell(
-                              splashColor: brightSecondaryColor,
-                              highlightColor: Colors.transparent,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                              onTap: () =>
-                                  _onReplyLikePressed(commentIndex, index),
-                              child: SizedBox(
-                                height: 30,
-                                width: 30,
-                                child: GetBuilder<CommunityController>(
-                                  builder: (_) {
-                                    return Center(
-                                      child: LikeIcon(
-                                        color: _.postCommentList[commentIndex]
-                                                ['replies'][index]['liked']
-                                            ? brightSecondaryColor
-                                            : unselectedIconColor,
-                                      ),
-                                    );
-                                  },
+                      child: IntrinsicHeight(
+                        child: Row(
+                          children: [
+                            Material(
+                              type: MaterialType.transparency,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(6)),
+                              child: InkWell(
+                                splashColor: brightSecondaryColor,
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(6),
+                                ),
+                                onTap: () =>
+                                    _onReplyLikePressed(commentIndex, index),
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: GetBuilder<CommunityController>(
+                                    builder: (_) {
+                                      return Center(
+                                        child: LikeIcon(
+                                          color: _.postCommentList[commentIndex]
+                                                  ['replies'][index]['liked']
+                                              ? brightSecondaryColor
+                                              : unselectedIconColor,
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                            const VerticalDivider(
+                              thickness: 1,
+                              width: 2,
+                              indent: 8,
+                              endIndent: 8,
+                              color: unselectedIconColor,
+                            ),
+                            Material(
+                              type: MaterialType.transparency,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(6)),
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(6),
+                                  bottomRight: Radius.circular(6),
+                                ),
+                                onTap: () => _onMenuPressed(replyList[index]
+                                        ['user_data']['username'] ==
+                                    AuthController.to.userInfo['username']),
+                                child: const SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.more_vert_rounded,
+                                      color: lightGrayColor,
+                                      size: 15,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -727,6 +850,18 @@ class CommunityPostPage extends GetView<CommunityController> {
               onPressed: _onBackPressed,
               title: (postCategoryIntToStr[controller.postCategory] ?? '') +
                   ' 게시판',
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.more_vert_rounded,
+                    color: clearBlackColor,
+                  ),
+                  splashRadius: 20,
+                  onPressed: () => _onMenuPressed(
+                      controller.qnaContent['user_data']['username'] ==
+                          AuthController.to.userInfo['username']),
+                ),
+              ],
             ),
             Expanded(
               child: DisableGlowListView(

@@ -210,7 +210,21 @@ class MainHomePage extends GetView<HomeController> {
                                 child: LoadingIndicator(icon: true),
                               )
                             : _isEmpty
-                                ? const Center(child: TiredCharacter())
+                                ? Column(
+                                    children: [
+                                      verticalSpacer(20),
+                                      const Text(
+                                        '근손실이 오고 있어요ㅠㅠ',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: lightGrayColor,
+                                        ),
+                                      ),
+                                      verticalSpacer(15),
+                                      const TiredCharacter(),
+                                    ],
+                                  )
                                 : Column(
                                     children: _children,
                                   ),

@@ -5,13 +5,12 @@ import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
-import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/comment_badge.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class CommunityQnaPage extends GetView<CommunityController> {
@@ -47,7 +46,58 @@ class CommunityQnaPage extends GetView<CommunityController> {
       Get.toNamed('community/qna/answer/write');
     }
 
-    void _onMenuPressed() {}
+    void _onDeletePressed() {}
+    void _onReportPressed() {}
+
+    void _onMenuPressed(bool isSelf) {
+      if (isSelf) {
+        Get.bottomSheet(CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: _onDeletePressed,
+              child: const Text(
+                '삭제',
+                style: TextStyle(
+                  color: clearBlackColor,
+                ),
+              ),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Get.back(),
+            child: const Text(
+              '취소',
+              style: TextStyle(
+                color: clearBlackColor,
+              ),
+            ),
+          ),
+        ));
+      } else {
+        Get.bottomSheet(CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: _onReportPressed,
+              child: const Text(
+                '신고',
+                style: TextStyle(
+                  color: clearBlackColor,
+                ),
+              ),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Get.back(),
+            child: const Text(
+              '취소',
+              style: TextStyle(
+                color: clearBlackColor,
+              ),
+            ),
+          ),
+        ));
+      }
+    }
 
     Widget _qnaContent = SizedBox(
       width: context.width,
@@ -368,13 +418,15 @@ class CommunityQnaPage extends GetView<CommunityController> {
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(6)),
                               child: InkWell(
-                                splashColor: deepGrayColor,
                                 highlightColor: Colors.transparent,
                                 borderRadius: const BorderRadius.only(
                                   topRight: Radius.circular(6),
                                   bottomRight: Radius.circular(6),
                                 ),
-                                onTap: () => _onMenuPressed(),
+                                onTap: () => _onMenuPressed(
+                                    _.qnaAnswerList[index]['user_data']
+                                            ['username'] ==
+                                        AuthController.to.userInfo['username']),
                                 child: const SizedBox(
                                   height: 30,
                                   width: 30,
@@ -572,6 +624,18 @@ class CommunityQnaPage extends GetView<CommunityController> {
               onPressed: _onBackPressed,
               title:
                   (qnaCategoryIntToStr[controller.qnaCategory] ?? '') + ' Q&A',
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.more_vert_rounded,
+                    color: clearBlackColor,
+                  ),
+                  splashRadius: 20,
+                  onPressed: () => _onMenuPressed(
+                      controller.qnaContent['user_data']['username'] ==
+                          AuthController.to.userInfo['username']),
+                ),
+              ],
             ),
             Expanded(
               child: DisableGlowListView(

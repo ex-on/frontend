@@ -274,7 +274,7 @@ class _CalendarState extends State<Calendar> {
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.symmetric(
         horizontal: 15,
@@ -350,6 +350,7 @@ class _CalendarState extends State<Calendar> {
                           onPressed: _onModeChangePressed,
                           isUnderlined: false,
                           textColor: brightPrimaryColor,
+                          fontWeight: FontWeight.bold,
                           fontSize: 13,
                         ),
                       )

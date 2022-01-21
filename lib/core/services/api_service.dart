@@ -31,6 +31,7 @@ abstract class ApiService {
         queryParameters: parameters,
       );
       if (response.statusCode == 200) {
+        log(response.toString());
         return response;
       }
     } on DioError catch (e) {

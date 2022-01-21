@@ -2,6 +2,8 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/calendar.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
+import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/exercise/exercise_stat_block.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,232 +39,444 @@ class DailyStatsPage extends GetView<StatsController> {
               },
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  '일간 운동',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: clearBlackColor,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 15, 10, 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: const [
-                          Text(
-                            '총 운동 시간',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: deepGrayColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 3),
-                            child: Text.rich(
-                              TextSpan(
-                                text: '1',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: darkPrimaryColor,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: '시간 ',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: brightPrimaryColor,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: '43',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: darkPrimaryColor,
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: '분',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: brightPrimaryColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: const [
-                          Text(
-                            '최고 1RM',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: deepGrayColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 3),
-                            child: Text.rich(
-                              TextSpan(
-                                text: '110',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: darkPrimaryColor,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: 'kg',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: brightPrimaryColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: const [
-                          Text(
-                            '총 운동 볼륨',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: deepGrayColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 3),
-                            child: Text.rich(
-                              TextSpan(
-                                text: '3800',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: darkPrimaryColor,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: 'kg',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: brightPrimaryColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: GetBuilder<StatsController>(builder: (_) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: () {
-                  List<Widget> children = [
-                    const Text(
-                      '오늘의 운동',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: clearBlackColor,
-                      ),
-                    ),
-                  ];
-                  children.add(ExerciseStatBlock());
-                  return children;
-                }(),
-              );
-            }),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: GetBuilder<StatsController>(builder: (_) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '오늘의 메모',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: clearBlackColor,
-                        ),
-                      ),
-                      Material(
-                        type: MaterialType.transparency,
-                        child: SizedBox(
-                          width: 26,
-                          height: 26,
-                          child: IconButton(
-                            onPressed: () {},
-                            splashRadius: 13,
-                            padding: EdgeInsets.zero,
-                            iconSize: 20,
-                            icon: const Icon(
-                              Icons.edit_rounded,
-                              color: deepGrayColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'EXON의 누적 가입자 수가 1만 명을 돌파했습니다!! 안녕하세요 :) 프로토타입을 출시한 지 어느덧 2달이 되어가고 있습니다 그동안... 블라블라3줄까지만 적기 ...',
+          GetBuilder<StatsController>(
+            builder: (_) {
+              if (_.loading) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: LoadingIndicator(icon: true),
+                );
+              } else if (_.dailyExerciseStatData.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    '운동 기록이 없습니다',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: clearBlackColor,
-                      fontSize: 12,
-                      height: 1.3,
+                      color: Colors.white,
                     ),
                   ),
-                ],
-              );
-            }),
+                );
+              } else {
+                return Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            '일간 운동',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: clearBlackColor,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 15, 10, 3),
+                            child: GetBuilder<StatsController>(
+                              builder: (_) {
+                                List<int> hms = splitHMS(
+                                    _.dailyExerciseStatData['stats']
+                                        ['total_exercise_time']);
+                                return SizedBox(
+                                  height: 45,
+                                  width: context.width - 72,
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    // mainAxisAlignment:
+                                    //     MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          const Text(
+                                            '총 운동 시간',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: deepGrayColor,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 3),
+                                            child: () {
+                                              if (hms[0] == 0) {
+                                                return Text.rich(
+                                                  TextSpan(
+                                                    text: hms[1].toString(),
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: darkPrimaryColor,
+                                                      fontFamily: 'Manrope',
+                                                    ),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: '분 ',
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color:
+                                                              darkPrimaryColor,
+                                                          fontFamily: 'Manrope',
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: hms[2].toString(),
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 20,
+                                                          color:
+                                                              darkPrimaryColor,
+                                                          fontFamily: 'Manrope',
+                                                        ),
+                                                      ),
+                                                      const TextSpan(
+                                                        text: '초',
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color:
+                                                              darkPrimaryColor,
+                                                          fontFamily: 'Manrope',
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              } else {
+                                                return Text.rich(
+                                                  TextSpan(
+                                                    text: hms[0].toString(),
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: darkPrimaryColor,
+                                                      fontFamily: 'Manrope',
+                                                    ),
+                                                    children: [
+                                                      const TextSpan(
+                                                        text: '시간 ',
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color:
+                                                              darkPrimaryColor,
+                                                          fontFamily: 'Manrope',
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: hms[1].toString(),
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 20,
+                                                          color:
+                                                              darkPrimaryColor,
+                                                          fontFamily: 'Manrope',
+                                                        ),
+                                                      ),
+                                                      const TextSpan(
+                                                        text: '분',
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          color:
+                                                              darkPrimaryColor,
+                                                          fontFamily: 'Manrope',
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                            }(),
+                                          ),
+                                        ],
+                                      ),
+                                      horizontalSpacer(30),
+                                      Column(
+                                        children: [
+                                          const Text(
+                                            '최고 1RM',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: deepGrayColor,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 3),
+                                            child: Text.rich(
+                                              TextSpan(
+                                                text: getCleanTextFromDouble(
+                                                    _.dailyExerciseStatData[
+                                                        'stats']['max_one_rm']),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  color: darkPrimaryColor,
+                                                  fontFamily: 'Manrope',
+                                                ),
+                                                children: const [
+                                                  TextSpan(
+                                                    text: ' kg',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: darkPrimaryColor,
+                                                      fontFamily: 'Manrope',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      horizontalSpacer(30),
+                                      Column(
+                                        children: [
+                                          const Text(
+                                            '총 운동 볼륨',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: deepGrayColor,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 3),
+                                            child: Text.rich(
+                                              TextSpan(
+                                                text: getCleanTextFromDouble(_
+                                                        .dailyExerciseStatData[
+                                                    'stats']['total_volume']),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  color: darkPrimaryColor,
+                                                  fontFamily: 'Manrope',
+                                                ),
+                                                children: const [
+                                                  TextSpan(
+                                                    text: ' kg',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: darkPrimaryColor,
+                                                      fontFamily: 'Manrope',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      horizontalSpacer(30),
+                                      Column(
+                                        children: [
+                                          const Text(
+                                            '총 세트 수',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: deepGrayColor,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 3),
+                                            child: Text.rich(
+                                              TextSpan(
+                                                text: _.dailyExerciseStatData[
+                                                        'stats']['total_sets']
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  color: darkPrimaryColor,
+                                                  fontFamily: 'Manrope',
+                                                ),
+                                                children: const [
+                                                  TextSpan(
+                                                    text: ' set',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: darkPrimaryColor,
+                                                      fontFamily: 'Manrope',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      horizontalSpacer(30),
+                                      Column(
+                                        children: [
+                                          const Text(
+                                            '주행 거리',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: deepGrayColor,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 3),
+                                            child: Text.rich(
+                                              TextSpan(
+                                                text: getCleanTextFromDouble(_
+                                                        .dailyExerciseStatData[
+                                                    'stats']['total_distance']),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  color: darkPrimaryColor,
+                                                  fontFamily: 'Manrope',
+                                                ),
+                                                children: const [
+                                                  TextSpan(
+                                                    text: ' km',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                      color: darkPrimaryColor,
+                                                      fontFamily: 'Manrope',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
+                      child: GetBuilder<StatsController>(builder: (_) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: () {
+                            List<Widget> children = [
+                              const Text(
+                                '오늘의 운동',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: clearBlackColor,
+                                ),
+                              ),
+                            ];
+                            _.dailyExerciseStatData['records'].asMap().forEach(
+                                  (index, record) => children.add(
+                                    DailyExerciseStatBlock(index: index),
+                                  ),
+                                );
+                            // children.add(ExerciseStatBlock());
+                            return children;
+                          }(),
+                        );
+                      }),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      margin: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
+                      child: GetBuilder<StatsController>(builder: (_) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '오늘의 메모',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: clearBlackColor,
+                                  ),
+                                ),
+                                Material(
+                                  type: MaterialType.transparency,
+                                  child: SizedBox(
+                                    width: 26,
+                                    height: 26,
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      splashRadius: 13,
+                                      padding: EdgeInsets.zero,
+                                      iconSize: 20,
+                                      icon: const Icon(
+                                        Icons.edit_rounded,
+                                        color: deepGrayColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              _.dailyExerciseStatData['stats']['memo'] == ""
+                                  ? '메모를 작성해 보세요'
+                                  : _.dailyExerciseStatData['stats']['memo'],
+                              style: const TextStyle(
+                                color: clearBlackColor,
+                                fontSize: 12,
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  ],
+                );
+              }
+            },
           ),
         ],
       ),

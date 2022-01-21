@@ -28,11 +28,8 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
           if (_.postLoading || _.postedExerciseRecord == null) {
             return const LoadingIndicator();
           } else {
-            DateTime _endTime = DateTime.parse(
-                _.postedExerciseRecord!['record_data']['end_time']);
-            DateTime _startTime = DateTime.parse(
-                _.postedExerciseRecord!['record_data']['start_time']);
-            int _exerciseTime = _endTime.difference(_startTime).inSeconds;
+            int _exerciseTime =
+                _.postedExerciseRecord!['record_data']['exercise_time']!;
 
             Path _drawStar(Size size) {
               // Method to convert degree to radians

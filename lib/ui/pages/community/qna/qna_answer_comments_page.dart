@@ -8,6 +8,7 @@ import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/comment_badge.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,41 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
       FocusScope.of(context).requestFocus(controller.commentTextFieldFocus);
     }
 
-    void _onMenuPressed() {}
+    void _onDeletePressed() {}
+
+    void _onReportPressed() {}
+
+    void _onMenuPressed(bool isSelf) {
+      if (isSelf) {
+        Get.bottomSheet(CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: _onDeletePressed,
+              child: const Text(
+                '삭제',
+                style: TextStyle(
+                  color: clearBlackColor,
+                ),
+              ),
+            ),
+          ],
+        ));
+      } else {
+        Get.bottomSheet(CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: _onReportPressed,
+              child: const Text(
+                '신고',
+                style: TextStyle(
+                  color: clearBlackColor,
+                ),
+              ),
+            ),
+          ],
+        ));
+      }
+    }
 
     void _onSendPressed() {
       if (controller.commentId != null) {
@@ -242,7 +277,6 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                     const BorderRadius.all(
                                                         Radius.circular(6)),
                                                 child: InkWell(
-                                                  splashColor: deepGrayColor,
                                                   highlightColor:
                                                       Colors.transparent,
                                                   borderRadius:
@@ -252,7 +286,15 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                     bottomRight:
                                                         Radius.circular(6),
                                                   ),
-                                                  onTap: () => _onMenuPressed(),
+                                                  onTap: () => _onMenuPressed(
+                                                      _.qnaAnswerCommentList[
+                                                                          index][
+                                                                      'comment']
+                                                                  ['user_data']
+                                                              ['username'] ==
+                                                          AuthController
+                                                                  .to.userInfo[
+                                                              'username']),
                                                   child: const SizedBox(
                                                     height: 30,
                                                     width: 30,
@@ -516,7 +558,6 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                       const BorderRadius.all(
                                                           Radius.circular(6)),
                                                   child: InkWell(
-                                                    splashColor: deepGrayColor,
                                                     highlightColor:
                                                         Colors.transparent,
                                                     borderRadius:
@@ -526,8 +567,17 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                       bottomRight:
                                                           Radius.circular(6),
                                                     ),
-                                                    onTap: () =>
-                                                        _onMenuPressed(),
+                                                    onTap: () => _onMenuPressed(
+                                                        _.qnaAnswerCommentList[
+                                                                            index]
+                                                                        [
+                                                                        'comment']
+                                                                    [
+                                                                    'user_data']
+                                                                ['username'] ==
+                                                            AuthController.to
+                                                                    .userInfo[
+                                                                'username']),
                                                     child: const SizedBox(
                                                       height: 30,
                                                       width: 30,
@@ -700,15 +750,18 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                     Radius.circular(6),
                                                   ),
                                                   child: InkWell(
-                                                    splashColor: deepGrayColor,
                                                     highlightColor:
                                                         Colors.transparent,
                                                     borderRadius:
                                                         const BorderRadius.all(
                                                       Radius.circular(6),
                                                     ),
-                                                    onTap: () =>
-                                                        _onMenuPressed(),
+                                                    onTap: () => _onMenuPressed(
+                                                        reply['user_data']
+                                                                ['username'] ==
+                                                            AuthController.to
+                                                                    .userInfo[
+                                                                'username']),
                                                     child: const SizedBox(
                                                       height: 30,
                                                       width: 30,

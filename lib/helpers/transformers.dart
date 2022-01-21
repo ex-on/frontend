@@ -171,6 +171,28 @@ String formatMMSS(int seconds) {
   return "$minutesStr : $secondsStr";
 }
 
+String formatTimeToText(int seconds) {
+  int hours = (seconds / 3600).truncate();
+  int sec = (seconds % 3600).truncate();
+  int minutes = (sec / 60).truncate();
+  sec = sec % 60;
+
+  if (seconds > 3600) {
+    return "$hours시간 $minutes분";
+  } else {
+    return "$minutes분 $sec초";
+  }
+}
+
+List<int> splitHMS(int seconds) {
+  int hours = (seconds / 3600).truncate();
+  int sec = (seconds % 3600).truncate();
+  int minutes = (sec / 60).truncate();
+  sec = sec % 60;
+
+  return [hours, minutes, sec];
+}
+
 Map<int, String> postCategoryIntToStr = {
   0: 'HOT',
   1: '자유',

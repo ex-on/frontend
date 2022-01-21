@@ -336,8 +336,8 @@ class ScrollUpIcon extends StatelessWidget {
   final Color? color;
   const ScrollUpIcon({
     Key? key,
-    this.width = 18,
-    this.height = 18,
+    this.width = 15,
+    this.height = 15,
     this.color,
   }) : super(key: key);
 
