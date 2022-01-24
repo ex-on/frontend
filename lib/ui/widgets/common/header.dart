@@ -1,6 +1,7 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
+import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -25,25 +26,23 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return title == null
         ? AppBar(
-            leading: 
-                IconButton(
-                  icon:
-                      icon ??const Icon(Icons.arrow_back_rounded, color: Colors.black),
-                  onPressed: onPressed,
-                  splashRadius: 20,
-                ),
+            leading: IconButton(
+              icon: icon ??
+                  const Icon(Icons.arrow_back_rounded, color: Colors.black),
+              onPressed: onPressed,
+              splashRadius: 20,
+            ),
             elevation: 0,
             backgroundColor: color,
             actions: actions,
           )
         : AppBar(
-            leading: 
-                IconButton(
-                  splashRadius: 20,
-                  icon:
-                      icon ??const Icon(Icons.arrow_back_rounded, color: Colors.black),
-                  onPressed: onPressed,
-                ),
+            leading: IconButton(
+              splashRadius: 20,
+              icon: icon ??
+                  const Icon(Icons.arrow_back_rounded, color: Colors.black),
+              onPressed: onPressed,
+            ),
             title: Text(
               title!,
               style: const TextStyle(
@@ -219,25 +218,28 @@ class StatsHeader extends StatelessWidget {
     return AppBar(
       actions: [
         IconButton(
-          splashRadius: 24,
+          splashRadius: 20,
           icon: SvgPicture.asset(
             chartIcon,
             width: 24,
             height: 24,
             color: currentIndex == 0 ? brightPrimaryColor : deepGrayColor,
           ),
+          padding: EdgeInsets.zero,
           onPressed: onCalendarPressed,
         ),
         IconButton(
-          splashRadius: 24,
+          splashRadius: 20,
           icon: SvgPicture.asset(
             calendarIcon,
             width: 24,
             height: 24,
             color: currentIndex == 1 ? brightPrimaryColor : deepGrayColor,
           ),
+          padding: EdgeInsets.zero,
           onPressed: onChartPressed,
         ),
+        horizontalSpacer(10),
       ],
       title: Text(
         title,

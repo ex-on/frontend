@@ -60,4 +60,8 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
     dailyExerciseStatData = resData;
     setLoading(false);
   }
+
+  Future<void> getMonthlyExerciseDate() async {
+    
+  }
 }

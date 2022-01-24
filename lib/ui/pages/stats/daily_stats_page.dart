@@ -22,6 +22,7 @@ class DailyStatsPage extends GetView<StatsController> {
         children: [
           Calendar(
             updateSelectedDate: controller.updateSelectedDate,
+            onMonthChanged: controller.getMonthlyExerciseDate,
           ),
           Center(
             child: GetBuilder<StatsController>(
@@ -91,8 +92,6 @@ class DailyStatsPage extends GetView<StatsController> {
                                   width: context.width - 72,
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,
-                                    // mainAxisAlignment:
-                                    //     MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [
@@ -221,7 +220,8 @@ class DailyStatsPage extends GetView<StatsController> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.only(top: 3),
+                                            padding:
+                                                const EdgeInsets.only(top: 3),
                                             child: Text.rich(
                                               TextSpan(
                                                 text: getCleanTextFromDouble(
@@ -397,7 +397,7 @@ class DailyStatsPage extends GetView<StatsController> {
                           children: () {
                             List<Widget> children = [
                               const Text(
-                                '오늘의 운동',
+                                '일간 운동 기록',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -460,7 +460,10 @@ class DailyStatsPage extends GetView<StatsController> {
                               ],
                             ),
                             Text(
-                              _.dailyExerciseStatData['stats']['memo'] == ""
+                              _.dailyExerciseStatData['stats']['memo'] == "" ||
+                                      _.dailyExerciseStatData['stats']
+                                              ['memo'] ==
+                                          null
                                   ? '메모를 작성해 보세요'
                                   : _.dailyExerciseStatData['stats']['memo'],
                               style: const TextStyle(

@@ -207,7 +207,7 @@ Map<int, String> qnaCategoryIntToStr = {
 
 String getCleanTextFromDouble(double val) {
   if (val % 1 != 0) {
-    return val.toString();
+    return val.toStringAsFixed(1);
   } else {
     return val.toInt().toString();
   }

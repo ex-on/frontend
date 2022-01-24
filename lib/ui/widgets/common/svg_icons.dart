@@ -21,6 +21,7 @@ const String _excitedCharacter = 'assets/characters/excitedCharacter.svg';
 const String _tiredCharacter = 'assets/characters/tiredCharacter.svg';
 
 const String _completeIcon = 'assets/completeIcon.svg';
+const String _incompleteIcon = 'assets/icons/incompleteIcon.svg';
 
 class LikeIcon extends StatelessWidget {
   final double width;
@@ -412,6 +413,28 @@ class CompleteIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _completeIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class IncompleteIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const IncompleteIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _incompleteIcon,
       width: width,
       height: height,
       color: color,

@@ -12,11 +12,13 @@ class ExercisePlanBlock extends StatelessWidget {
   final Map<String, dynamic> exerciseData;
   final int id;
   final int numSets;
+  final bool incomplete;
   const ExercisePlanBlock({
     Key? key,
     required this.exerciseData,
     required this.id,
     required this.numSets,
+    required this.incomplete,
   }) : super(key: key);
 
   @override
@@ -51,7 +53,9 @@ class ExercisePlanBlock extends StatelessWidget {
             ),
             child: Row(
               children: [
-                StartExerciseButton(onStartPressed: _onStartPressed),
+                incomplete
+                    ? const IncompleteIcon()
+                    : StartExerciseButton(onStartPressed: _onStartPressed),
                 horizontalSpacer(15),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,

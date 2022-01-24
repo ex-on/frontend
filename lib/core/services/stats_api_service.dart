@@ -16,4 +16,18 @@ class StatsApiService extends ApiService {
       print(e);
     }
   }
+  static Future<dynamic> getMonthlyExerciseDate(DateTime month) async {
+    String path = '/stats/monthly_date';
+
+    Map<String, dynamic> parameters = {
+      'month': DateFormat('yyyy/MM').format(month),
+    };
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
 }

@@ -23,15 +23,17 @@ const List<String> listOfMonths = [
 
 const List<String> listOfDays = ["월", "화", "수", "목", "금", "토", "일"];
 
-enum CalendarMode { monthly, weekly }
+enum CalendarDisplayMode { monthly, weekly }
 
 class Calendar extends StatefulWidget {
   // final DateTime selectedDate;
   final Function(DateTime)? updateSelectedDate;
+  final Function()? onMonthChanged;
   const Calendar({
     Key? key,
     // required this.selectedDate,
     this.updateSelectedDate,
+    this.onMonthChanged,
   }) : super(key: key);
 
   @override
@@ -44,12 +46,13 @@ class _CalendarState extends State<Calendar> {
   DateTime displayDate = DateTime(DateTime.now().year, DateTime.now().month,
       DateTime.now().day - DateTime.now().weekday + 1);
   PageController controller = PageController(initialPage: 1);
-  CalendarMode mode = CalendarMode.monthly;
+  CalendarDisplayMode mode = CalendarDisplayMode.monthly;
   ScrollController scrollController =
       ScrollController(); //To Track Scroll of ListView
 
-  void _onPreviousMonthPressed() {
-    if (mode == CalendarMode.monthly) {
+  void _onPreviousPressed() {
+    DateTime previousDate = displayDate;
+    if (mode == CalendarDisplayMode.monthly) {
       controller.jumpToPage(controller.page!.toInt() + 1);
       controller.previousPage(
           duration: const Duration(milliseconds: 300), curve: Curves.ease);
@@ -65,10 +68,14 @@ class _CalendarState extends State<Calendar> {
             DateTime(displayDate.year, displayDate.month, displayDate.day - 7);
       });
     }
+    if (previousDate.month != displayDate.month) {
+      widget.onMonthChanged!();
+    }
   }
 
-  void _onNextMonthPressed() {
-    if (mode == CalendarMode.monthly) {
+  void _onNextPressed() {
+    DateTime previousDate = displayDate;
+    if (mode == CalendarDisplayMode.monthly) {
       controller.jumpToPage(controller.page!.toInt() - 1);
       controller.nextPage(
           duration: const Duration(milliseconds: 300), curve: Curves.ease);
@@ -92,20 +99,23 @@ class _CalendarState extends State<Calendar> {
             DateTime(displayDate.year, displayDate.month, displayDate.day + 7);
       });
     }
+    if (previousDate.month != displayDate.month) {
+      widget.onMonthChanged!();
+    }
   }
 
   void _onModeChangePressed() {
     setState(() {
-      if (mode == CalendarMode.monthly) {
+      if (mode == CalendarDisplayMode.monthly) {
         if (selectedDate.year == displayDate.year &&
             selectedDate.month == displayDate.month) {
           setState(() {
             displayDate = selectedDate;
           });
         }
-        mode = CalendarMode.weekly;
+        mode = CalendarDisplayMode.weekly;
       } else {
-        mode = CalendarMode.monthly;
+        mode = CalendarDisplayMode.monthly;
       }
     });
   }
@@ -147,7 +157,8 @@ class _CalendarState extends State<Calendar> {
                 height: 40,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(20),
                     color: isSelected ? brightPrimaryColor : null,
                   ),
                   child: IconButton(
@@ -281,7 +292,7 @@ class _CalendarState extends State<Calendar> {
         vertical: 15,
       ),
       padding: const EdgeInsets.fromLTRB(20, 15, 20, 10),
-      height: mode == CalendarMode.monthly ? 350 : 150,
+      height: mode == CalendarDisplayMode.monthly ? 350 : 150,
       width: context.width - 40,
       child: Material(
         type: MaterialType.transparency,
@@ -308,7 +319,7 @@ class _CalendarState extends State<Calendar> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
-                            onPressed: _onPreviousMonthPressed,
+                            onPressed: _onPreviousPressed,
                             splashRadius: 18,
                             padding: EdgeInsets.zero,
                             iconSize: 18,
@@ -329,7 +340,7 @@ class _CalendarState extends State<Calendar> {
                           Transform.rotate(
                             angle: -Math.pi,
                             child: IconButton(
-                              onPressed: _onNextMonthPressed,
+                              onPressed: _onNextPressed,
                               padding: EdgeInsets.zero,
                               iconSize: 18,
                               splashRadius: 18,
@@ -345,8 +356,9 @@ class _CalendarState extends State<Calendar> {
                       SizedBox(
                         width: 40,
                         child: TextActionButton(
-                          buttonText:
-                              mode == CalendarMode.monthly ? '한 주' : '한 달',
+                          buttonText: mode == CalendarDisplayMode.monthly
+                              ? '한 주'
+                              : '한 달',
                           onPressed: _onModeChangePressed,
                           isUnderlined: false,
                           textColor: brightPrimaryColor,
@@ -361,7 +373,7 @@ class _CalendarState extends State<Calendar> {
                     child: GridView.count(
                       shrinkWrap: true,
                       crossAxisCount: 7,
-                      children: mode == CalendarMode.monthly
+                      children: mode == CalendarDisplayMode.monthly
                           ? _monthlyDateListBuilder(
                               displayDate.year, displayDate.month)
                           : _weeklyDateListBuilder(displayDate),

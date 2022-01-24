@@ -108,6 +108,7 @@ flutter:
     - assets/icons/helpIcon.svg
     - assets/icons/XIcon.svg
     - assets/icons/checkIcon.svg
+    - assets/icons/incompleteIcon.svg
     - assets/characters/excitedCharacter.svg
     - assets/characters/tiredCharacter.svg
   # An image asset can refer to one or more resolution-specific "variants", see
