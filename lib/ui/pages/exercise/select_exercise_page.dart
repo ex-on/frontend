@@ -1,6 +1,9 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
+import 'package:exon_app/helpers/enums.dart';
+import 'package:exon_app/helpers/utils.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
@@ -14,7 +17,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
 
   @override
   Widget build(BuildContext context) {
-    const _headerTitle = '운동 추가하기';
+    const _headerTitle = ' 운동 추가하기';
     const _searchFieldLabelText = '';
     const List<String> _targetMuscleList = [
       '전체',
@@ -23,8 +26,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       '어깨',
       '팔',
       '복근',
-      '허벅지',
-      '종아리',
+      '하체',
       '엉덩이'
     ];
 
@@ -40,6 +42,13 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       '플레이트',
       '케이블',
       '밴드',
+      '기타',
+    ];
+
+    const List<String> _cardioMethodList = [
+      '전체',
+      '맨몸',
+      '머신',
       '기타',
     ];
 
@@ -67,7 +76,11 @@ class SelectExercisePage extends GetView<AddExerciseController> {
 
     void _onExerciseMethodPressed(String method) {
       controller
-          .excerciseMethodSelectUpdate(excerciseMethodStrToInt[method] ?? 0);
+          .exerciseMethodSelectUpdate(exerciseMethodStrToInt[method] ?? 0);
+    }
+
+    void _onAerobicMethodPressed(int target) {
+      controller.exerciseMethodSelectUpdate(target);
     }
 
     void _onExerciseBlockPressed(int index) {
@@ -75,12 +88,30 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       controller.jumpToPage(1);
     }
 
-    Widget _header = Header(
-      onPressed: _onBackPressed,
-      title: _headerTitle,
+    void _onExerciseTypeChangePressed() {
+      controller.changeExerciseType();
+    }
+
+    Widget _header = GetBuilder<AddExerciseController>(
+      builder: (_) => Header(
+        onPressed: _onBackPressed,
+        title: exerciseTypeEnumToStr[_.exerciseType]! + _headerTitle,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: TextActionButton(
+              buttonText:
+                  exerciseTypeEnumToStr[getOtherExerciseType(_.exerciseType)]!,
+              onPressed: _onExerciseTypeChangePressed,
+              isUnderlined: false,
+              textColor: brightPrimaryColor,
+            ),
+          )
+        ],
+      ),
     );
 
-    Widget _excerciseSearchBar = InputTextField(
+    Widget _exerciseSearchBar = InputTextField(
       label: _searchFieldLabelText,
       controller: controller.searchExerciseController,
       height: 40,
@@ -116,7 +147,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
                           onPressed: () => _onTargetMusclePressed(
                               _targetMuscleList[(index ~/ 2)]),
                           style: ElevatedButton.styleFrom(
-                            primary: brightSecondaryColor,
+                            primary: darkSecondaryColor.withOpacity(0.35),
                             minimumSize: Size.zero,
                             padding: const EdgeInsets.fromLTRB(10, 7, 10, 7),
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -161,7 +192,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       ),
     );
 
-    Widget _excerciseMethodSelect = SizedBox(
+    Widget _exerciseMethodSelect = SizedBox(
       width: _targetSelectWidth,
       height: _excerciseMethodSelectHeight,
       child: DisableGlowListView(
@@ -230,7 +261,72 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       ),
     );
 
-    Widget _excerciseBlockList = Expanded(
+    Widget _cardioMethodSelect = SizedBox(
+      width: _targetSelectWidth,
+      height: _targetMuscleSelectHeight,
+      child: DisableGlowListView(
+        padding: const EdgeInsets.only(top: 10),
+        scrollDirection: Axis.horizontal,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(
+              _cardioMethodList.length * 2 - 1,
+              (index) {
+                if (index % 2 != 0) {
+                  return horizontalSpacer(5);
+                } else {
+                  return GetBuilder<AddExerciseController>(
+                    builder: (_) {
+                      if (_.exerciseMethod == (index ~/ 2)) {
+                        return ElevatedButton(
+                          onPressed: () => _onAerobicMethodPressed(index ~/ 2),
+                          style: ElevatedButton.styleFrom(
+                            primary: cardioColor,
+                            minimumSize: Size.zero,
+                            padding: const EdgeInsets.fromLTRB(10, 7, 10, 7),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Text(
+                            _cardioMethodList[(index ~/ 2)],
+                            style: const TextStyle(
+                              fontSize: _targetMuscleSelectFontSize,
+                              color: lightBlackColor,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return TextButton(
+                          style: TextButton.styleFrom(
+                            minimumSize: Size.zero,
+                            padding: const EdgeInsets.fromLTRB(10, 7, 10, 7),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          onPressed: () => _onAerobicMethodPressed(index ~/ 2),
+                          child: Text(
+                            _cardioMethodList[(index ~/ 2)],
+                            style: const TextStyle(
+                              fontSize: _targetMuscleSelectFontSize,
+                              color: clearBlackColor,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Widget _exerciseBlockList = Expanded(
       child: GetBuilder<AddExerciseController>(builder: (_) {
         if (_.loading) {
           return const CircularLoadingIndicator();
@@ -266,10 +362,22 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       children: [
         _header,
         verticalSpacer(20),
-        _excerciseSearchBar,
-        _targetMuscleSelect,
-        _excerciseMethodSelect,
-        _excerciseBlockList,
+        _exerciseSearchBar,
+        GetBuilder<AddExerciseController>(
+          builder: (_) {
+            if (_.exerciseType == 0) {
+              return Column(
+                children: [
+                  _targetMuscleSelect,
+                  _exerciseMethodSelect,
+                ],
+              );
+            } else {
+              return _cardioMethodSelect;
+            }
+          },
+        ),
+        _exerciseBlockList,
       ],
     );
   }

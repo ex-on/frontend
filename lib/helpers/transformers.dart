@@ -1,5 +1,11 @@
+import 'package:exon_app/constants/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+
+const Map<int, String> exerciseTypeEnumToStr = {
+  0: '근력',
+  1: '유산소',
+};
 
 const Map<String, int> targetMuscleStrToInt = {
   '전체': 0,
@@ -8,9 +14,8 @@ const Map<String, int> targetMuscleStrToInt = {
   '어깨': 3,
   '팔': 4,
   '복근': 5,
-  '허벅지': 6,
-  '종아리': 7,
-  '엉덩이': 8,
+  '하체': 6,
+  '엉덩이': 7,
 };
 
 const Map<int, String> targetMuscleIntToStr = {
@@ -20,12 +25,21 @@ const Map<int, String> targetMuscleIntToStr = {
   3: '어깨',
   4: '팔',
   5: '복근',
-  6: '허벅지',
-  7: '종아리',
-  8: '엉덩이',
+  6: '하체',
+  7: '엉덩이',
 };
 
-const Map<String, int> excerciseMethodStrToInt = {
+const Map<int, Color> targetMuscleIntToColor = {
+  1: chestMuscleColor,
+  2: backMuscleColor,
+  3: shoulderMuscleColor,
+  4: armMuscleColor,
+  5: absMuscleColor,
+  6: legMuscleColor,
+  7: hipMuscleColor,
+};
+
+const Map<String, int> exerciseMethodStrToInt = {
   '전체': 0,
   '맨몸': 1,
   '머신': 2,
@@ -55,11 +69,6 @@ const Map<int, String> exerciseMethodIntToStr = {
   11: '기타',
 };
 
-const Map<int, String> excerciseLevelIntToStr = {
-  0: '난이도 하',
-  1: '난이도 중',
-  2: '난이도 상',
-};
 
 const Map<int, String> difficultyIntToString = {
   0: '하급',

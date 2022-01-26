@@ -29,7 +29,7 @@ class _DailyExerciseStatBlockState extends State<DailyExerciseStatBlock> {
       duration: const Duration(milliseconds: 200),
       alignment: Alignment.topCenter,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           color: mainBackgroundColor,
@@ -82,8 +82,8 @@ class _DailyExerciseStatBlockState extends State<DailyExerciseStatBlock> {
                               Row(
                                 children: [
                                   TargetMuscleLabel(
-                                    text: targetMuscleIntToStr[
-                                        _exerciseData['target_muscle']]!,
+                                    targetMuscle:
+                                        _exerciseData['target_muscle'],
                                   ),
                                   horizontalSpacer(8),
                                   ExerciseMethodLabel(

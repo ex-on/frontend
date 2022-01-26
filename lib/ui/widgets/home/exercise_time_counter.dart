@@ -14,7 +14,6 @@ class ExerciseTimeCounter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const String _timerLabel = '오늘의 운동시간';
-    const String _timeCount = '00 : 00 : 00';
     Color primaryColor =
         theme == ColorTheme.day ? brightPrimaryColor : darkPrimaryColor;
 

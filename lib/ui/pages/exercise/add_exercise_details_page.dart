@@ -74,8 +74,8 @@ class AddExerciseDetailsPage extends StatelessWidget {
         Row(
           children: [
             TargetMuscleLabel(
-                text: targetMuscleIntToStr[
-                    controller.selectedExerciseInfo['target_muscle']]!),
+              targetMuscle: controller.selectedExerciseInfo['target_muscle'],
+            ),
             horizontalSpacer(10),
             ExerciseMethodLabel(
                 text: exerciseMethodIntToStr[

@@ -111,6 +111,7 @@ flutter:
     - assets/icons/incompleteIcon.svg
     - assets/characters/excitedCharacter.svg
     - assets/characters/tiredCharacter.svg
+    - assets/characters/jumpingExcitedCharacter.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

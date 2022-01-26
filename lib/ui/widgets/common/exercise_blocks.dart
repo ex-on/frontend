@@ -72,6 +72,7 @@ class ExercisePlanBlock extends StatelessWidget {
                     ),
                     verticalSpacer(10),
                     TargetMuscleLabel(
+                      targetMuscle: exerciseData['target_muscle'],
                       text:
                           '${targetMuscleIntToStr[exerciseData['target_muscle']]} / ${exerciseMethodIntToStr[exerciseData['exercise_method']]} / $numSets세트',
                     ),
@@ -141,6 +142,7 @@ class ExcerciseRecordBlock extends StatelessWidget {
                     Row(
                       children: [
                         TargetMuscleLabel(
+                          targetMuscle: exerciseData['target_muscle'],
                           text:
                               '${targetMuscleIntToStr[exerciseData['target_muscle']]}',
                           // $totalSets세트',

@@ -19,6 +19,7 @@ const String _scrollUpIcon = 'assets/icons/arrowDropUp.svg';
 
 const String _excitedCharacter = 'assets/characters/excitedCharacter.svg';
 const String _tiredCharacter = 'assets/characters/tiredCharacter.svg';
+const String _jumpingExcitedCharacter = 'assets/characters/jumpingExcitedCharacter.svg';
 
 const String _completeIcon = 'assets/completeIcon.svg';
 const String _incompleteIcon = 'assets/icons/incompleteIcon.svg';
@@ -369,6 +370,27 @@ class ExcitedCharacter extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _excitedCharacter,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+class JumpingExcitedCharacter extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const JumpingExcitedCharacter({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _jumpingExcitedCharacter,
       width: width,
       height: height,
       color: color,

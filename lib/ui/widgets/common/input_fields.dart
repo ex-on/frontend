@@ -543,6 +543,52 @@ class ContentInputField extends StatelessWidget {
   }
 }
 
+class MemoInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final Function(String)? onChanged;
+  const MemoInputField({
+    Key? key,
+    required this.controller,
+    this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      onChanged: onChanged,
+      decoration: const InputDecoration(
+        filled: true,
+        fillColor: mainBackgroundColor,
+        contentPadding: EdgeInsets.only(
+          left: 10,
+          top: 10,
+          bottom: 15,
+        ),
+        border: InputBorder.none,
+        constraints: BoxConstraints(
+          minHeight: 300,
+        ),
+        hintText: '메모를 입력해주세요',
+        hintStyle: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w300,
+          height: 1.3,
+          color: Color(0xffAEADAD),
+        ),
+      ),
+      maxLines: 9,
+      maxLength: 300,
+      style: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        height: 1.3,
+        color: clearBlackColor,
+      ),
+    );
+  }
+}
+
 class SearchInputField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;

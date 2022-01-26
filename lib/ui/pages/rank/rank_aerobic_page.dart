@@ -87,7 +87,7 @@ class RankAerobicPage extends GetView<RankController> {
                           style: TextStyle(
                             fontSize: 18,
                             height: 22 / 18,
-                            color: energyColor,
+                            color: cardioColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -114,7 +114,7 @@ class RankAerobicPage extends GetView<RankController> {
                         const Text(
                           '나의 소모 kcal',
                           style: TextStyle(
-                            color: energyColor,
+                            color: cardioColor,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),

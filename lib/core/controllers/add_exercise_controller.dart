@@ -1,5 +1,6 @@
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/core/services/exercise_api_service.dart';
+import 'package:exon_app/helpers/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ class AddExerciseController extends GetxController {
   FixedExtentScrollController targetRepsScrollController =
       FixedExtentScrollController();
   int page = 0;
+  int exerciseType = 0;
   int targetMuscle = 0;
   int exerciseMethod = 0;
   int numSets = 1;
@@ -23,7 +25,8 @@ class AddExerciseController extends GetxController {
   bool inputSetDataNotNull = false;
   Map<String, dynamic> selectedExerciseInfo = {};
   List<int> inputTargetRepsList = [];
-  List<dynamic> exerciseDataList = [];
+  List<dynamic> exerciseDataListWeight = [];
+  List<dynamic> exerciseDataListCardio = [];
   List<dynamic> selectedExerciseDataList = [];
 
   @override
@@ -50,17 +53,33 @@ class AddExerciseController extends GetxController {
     update();
   }
 
+  void changeExerciseType() {
+    if (exerciseType == 0) {
+      exerciseType = 1;
+    } else {
+      exerciseType = 0;
+    }
+    updateCurrentExerciseDataList();
+    update();
+  }
+
   void targetMuscleSelectUpdate(int target) {
     targetMuscle = target;
     update();
     updateCurrentExerciseDataList();
   }
 
-  void excerciseMethodSelectUpdate(int method) {
+  void exerciseMethodSelectUpdate(int method) {
     exerciseMethod = method;
     update();
     updateCurrentExerciseDataList();
   }
+
+  // void cardioMethodSelectUpdate(int target) {
+  //   cardioMethod = target;
+  //   update();
+  //   updateCurrentExerciseDataList();
+  // }
 
   void updateSelectedExercise(int index) {
     selectedExerciseInfo = {
@@ -196,26 +215,44 @@ class AddExerciseController extends GetxController {
   }
 
   Future<void> getExerciseList() async {
-    if (exerciseDataList.isEmpty) {
+    if (exerciseType == 0 && exerciseDataListWeight.isEmpty) {
       setLoading(true);
       var res = await ExerciseApiService.getExerciseList();
       print(res);
-      exerciseDataList = res;
+      exerciseDataListWeight = res['weight'];
+      update();
+      setLoading(false);
+    } else if (exerciseType == 1 && exerciseDataListCardio.isEmpty) {
+      setLoading(true);
+      var res = await ExerciseApiService.getExerciseList();
+      print(res);
+      exerciseDataListWeight = res['cardio'];
       update();
       setLoading(false);
     }
   }
 
   void updateCurrentExerciseDataList() {
-    List<dynamic> dataList = exerciseDataList.toList();
-    dataList.retainWhere((element) {
-      var data = element as Map;
-      return ((data['exercise_method'] == exerciseMethod) ||
-              exerciseMethod == 0) &&
-          ((data['target_muscle'] == targetMuscle) || targetMuscle == 0);
-    });
-    selectedExerciseDataList = dataList;
-    update();
+    if (exerciseType == 0) {
+      List<dynamic> dataList = exerciseDataListWeight.toList();
+      dataList.retainWhere((element) {
+        var data = element as Map;
+        return ((data['exercise_method'] == exerciseMethod) ||
+                exerciseMethod == 0) &&
+            ((data['target_muscle'] == targetMuscle) || targetMuscle == 0);
+      });
+      selectedExerciseDataList = dataList;
+      update();
+    } else {
+      List<dynamic> dataList = exerciseDataListCardio.toList();
+      dataList.retainWhere((element) {
+        var data = element as Map;
+        return ((data['exercise_method'] == exerciseMethod) ||
+            exerciseMethod == 0);
+      });
+      selectedExerciseDataList = dataList;
+      update();
+    }
   }
 
   void postExerciseWeightPlan() async {

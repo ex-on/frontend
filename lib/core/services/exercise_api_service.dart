@@ -99,4 +99,5 @@ class ExerciseApiService extends ApiService {
       print(e);
     }
   }
+
 }

@@ -74,21 +74,23 @@ class ColorBadge extends StatelessWidget {
 }
 
 class TargetMuscleLabel extends StatelessWidget {
-  final String text;
+  final int targetMuscle;
+  final String? text;
   final double? fontSize;
   const TargetMuscleLabel({
     Key? key,
-    required this.text,
+    required this.targetMuscle,
+    this.text,
     this.fontSize = 14,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           left: BorderSide(
-            color: brightSecondaryColor,
+            color: targetMuscleIntToColor[targetMuscle]!,
             width: 2,
           ),
         ),
@@ -96,7 +98,7 @@ class TargetMuscleLabel extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 6, top: 2),
         child: Text(
-          text,
+          text ?? targetMuscleIntToStr[targetMuscle]!,
           style: TextStyle(
             height: 1.0,
             fontSize: fontSize,

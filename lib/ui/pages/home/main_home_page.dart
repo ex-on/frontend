@@ -8,7 +8,7 @@ import 'package:exon_app/ui/widgets/common/exercise_blocks.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
-import 'package:exon_app/ui/widgets/home/time_counter.dart';
+import 'package:exon_app/ui/widgets/home/exercise_time_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -211,7 +211,7 @@ class MainHomePage extends GetView<HomeController> {
                     child: _titleBanner,
                   ),
                   Positioned(
-                    bottom: 20,
+                    bottom: 25,
                     left: 30,
                     child: ExerciseTimeCounter(
                       theme: _.theme,
@@ -242,6 +242,8 @@ class MainHomePage extends GetView<HomeController> {
                     builder: (_) {
                       bool _isEmpty = _.todayExercisePlanList.isEmpty &&
                           _.todayExerciseRecordList.isEmpty;
+                      print(_.selectedDay);
+                      print(_.currentDay);
                       List<Widget> _children = List.generate(
                         _.todayExercisePlanList.length,
                         (index) {
@@ -253,7 +255,7 @@ class MainHomePage extends GetView<HomeController> {
                             numSets: _.todayExercisePlanList[index]['plan_data']
                                 ['num_sets'],
                             incomplete:
-                                compareDate(_.selectedDay, _.currentDay),
+                                !compareSameDate(_.selectedDay, _.currentDay),
                           );
                         },
                       );
@@ -284,7 +286,7 @@ class MainHomePage extends GetView<HomeController> {
                                       children: [
                                         verticalSpacer(20),
                                         Text(
-                                          compareDate(
+                                          compareSameDate(
                                                   _.selectedDay, _.currentDay)
                                               ? '근손실이 오고 있어요ㅠㅠ'
                                               : '운동 기록이 없습니다',

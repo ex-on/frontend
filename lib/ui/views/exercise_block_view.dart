@@ -603,8 +603,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                   Row(
                     children: [
                       TargetMuscleLabel(
-                        text: targetMuscleIntToStr[
-                            _.exerciseData['target_muscle']]!,
+                        targetMuscle: _.exerciseData['target_muscle'],
                       ),
                       horizontalSpacer(10),
                       ExerciseMethodLabel(
