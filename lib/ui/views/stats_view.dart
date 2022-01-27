@@ -16,8 +16,8 @@ class StatsView extends GetView<StatsController> {
     const String _byPeriodStatsHeaderTitle = '기간별 통계';
 
     final List<Widget> _pages = [
-      CumulativeStatsTabView(),
-      ByPeriodStatsTabView(),
+      const CumulativeStatsTabView(),
+      const ByPeriodStatsTabView(),
     ];
 
     void _onCalendarPressed() {

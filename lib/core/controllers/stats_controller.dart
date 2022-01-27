@@ -8,13 +8,15 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   TabController? cumulativeStatsTabController;
   TabController? byPeriodStatsTabController;
   TextEditingController memoTextController = TextEditingController();
-  int page = 0;
+  int page = 1;
   int currentCumulativeExerciseIndex = 0;
+  int weeklyStatsTouchIndex = -1;
   bool loading = false;
   bool memoSubmitActivated = false;
   DateTime selectedDate = DateTime.now();
-  Map<String, dynamic> dailyExerciseStatData = {};
   Map<DateTime, dynamic> monthlyExerciseDates = {};
+  Map<String, dynamic> dailyExerciseStatData = {};
+  Map<String, dynamic> weeklyExerciseStatData = {};
 
   @override
   void onInit() {
@@ -23,6 +25,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
     byPeriodStatsTabController = TabController(length: 3, vsync: this);
     getMonthlyExerciseDates();
     getDailyExerciseStats();
+    getWeeklyExerciseStats();
   }
 
   @override
@@ -46,10 +49,21 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
     update();
   }
 
-  void updateSelectedDate(DateTime dateTime) {
+  void updateDailyStatsSelectedDate(DateTime dateTime) {
     selectedDate = dateTime;
     update();
     getDailyExerciseStats();
+  }
+
+  void updateWeeklyStatsSelectedDate(DateTime dateTime) {
+    selectedDate = dateTime;
+    update();
+    getWeeklyExerciseStats();
+  }
+
+  void updateWeeklyStatsTouchIndex(int val) {
+    weeklyStatsTouchIndex = val;
+    update();
   }
 
   void setLoading(bool val) {
@@ -88,6 +102,14 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
         update();
       }
     }
+    setLoading(false);
+  }
+
+  Future<void> getWeeklyExerciseStats() async {
+    setLoading(true);
+    var resData = await StatsApiService.getWeeklyExerciseStats(
+        selectedDate.firstDateOfWeek);
+    weeklyExerciseStatData = resData;
     setLoading(false);
   }
 

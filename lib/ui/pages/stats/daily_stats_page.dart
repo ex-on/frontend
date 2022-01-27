@@ -206,13 +206,16 @@ class DailyStatsPage extends GetView<StatsController> {
 
     return ListView(
       children: [
-        GetBuilder<StatsController>(builder: (_) {
-          return Calendar(
-            updateSelectedDate: _.updateSelectedDate,
-            onMonthChanged: _.getMonthlyExerciseDates,
-            exerciseDates: _.monthlyExerciseDates,
-          );
-        }),
+        GetBuilder<StatsController>(
+          builder: (_) {
+            return Calendar(
+              updateSelectedDate: _.updateDailyStatsSelectedDate,
+              onMonthChanged: _.getMonthlyExerciseDates,
+              exerciseDates: _.monthlyExerciseDates,
+              selectMode: CalendarSelectMode.daily,
+            );
+          },
+        ),
         GetBuilder<StatsController>(
           builder: (_) {
             return Padding(
@@ -269,7 +272,7 @@ class DailyStatsPage extends GetView<StatsController> {
                             _.dailyExerciseStatData['stats']
                                 ['total_exercise_time']);
                         return SizedBox(
-                          height: 45,
+                          height: 50,
                           width: context.width - 72,
                           child: ListView(
                             scrollDirection: Axis.horizontal,
@@ -374,7 +377,11 @@ class DailyStatsPage extends GetView<StatsController> {
                                   ),
                                 ],
                               ),
-                              horizontalSpacer(30),
+                              const VerticalDivider(
+                                color: dividerColor,
+                                thickness: 1,
+                                width: 30,
+                              ),
                               Column(
                                 children: [
                                   const Text(
@@ -414,7 +421,11 @@ class DailyStatsPage extends GetView<StatsController> {
                                   ),
                                 ],
                               ),
-                              horizontalSpacer(30),
+                              const VerticalDivider(
+                                color: dividerColor,
+                                thickness: 1,
+                                width: 30,
+                              ),
                               Column(
                                 children: [
                                   const Text(
@@ -454,7 +465,11 @@ class DailyStatsPage extends GetView<StatsController> {
                                   ),
                                 ],
                               ),
-                              horizontalSpacer(30),
+                              const VerticalDivider(
+                                color: dividerColor,
+                                thickness: 1,
+                                width: 30,
+                              ),
                               Column(
                                 children: [
                                   const Text(
@@ -494,7 +509,11 @@ class DailyStatsPage extends GetView<StatsController> {
                                   ),
                                 ],
                               ),
-                              horizontalSpacer(30),
+                              const VerticalDivider(
+                                color: dividerColor,
+                                thickness: 1,
+                                width: 30,
+                              ),
                               Column(
                                 children: [
                                   const Text(
@@ -545,14 +564,9 @@ class DailyStatsPage extends GetView<StatsController> {
                     thickness: 10,
                     height: 10,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    margin: const EdgeInsets.all(16),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 25),
                     child: GetBuilder<StatsController>(
                       builder: (_) {
                         return Column(

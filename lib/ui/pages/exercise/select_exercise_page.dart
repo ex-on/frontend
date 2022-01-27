@@ -4,6 +4,7 @@ import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/enums.dart';
 import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
+import 'package:exon_app/ui/widgets/common/color_badge.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
@@ -472,53 +473,11 @@ class _ExerciseBlock extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              DecoratedBox(
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    left: BorderSide(
-                                      color: brightSecondaryColor,
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 6, top: 2),
-                                  child: Text(
-                                    targetMuscleIntToStr[targetMuscle]!,
-                                    style: const TextStyle(
-                                      height: 1.0,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: clearBlackColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              TargetMuscleLabel(targetMuscle: targetMuscle),
                               horizontalSpacer(10),
-                              DecoratedBox(
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    left: BorderSide(
-                                      color: lightGrayColor,
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 6, top: 2),
-                                  child: Text(
-                                    exerciseMethodIntToStr[exerciseMethod]!,
-                                    style: const TextStyle(
-                                      height: 1.0,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: clearBlackColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              ExerciseMethodLabel(
+                                  text:
+                                      exerciseMethodIntToStr[exerciseMethod]!),
                               const Expanded(
                                 child: SizedBox(
                                   height: 0,
