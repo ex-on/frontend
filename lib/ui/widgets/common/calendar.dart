@@ -227,6 +227,7 @@ class _CalendarState extends State<Calendar> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: () {
                       List<Widget> children = [];
                       if (children.length < 2) {
@@ -238,7 +239,7 @@ class _CalendarState extends State<Calendar> {
                                 width: 8,
                                 height: 8,
                                 margin: const EdgeInsets.only(
-                                    top: 5, left: 2, right: 2),
+                                    top: 0, left: 2, right: 2),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: targetMuscleIntToColor[targetMuscle],
@@ -336,6 +337,7 @@ class _CalendarState extends State<Calendar> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: () {
                       List<Widget> children = [];
                       if (children.length < 2) {
@@ -347,7 +349,7 @@ class _CalendarState extends State<Calendar> {
                                 width: 8,
                                 height: 8,
                                 margin: const EdgeInsets.only(
-                                    top: 5, left: 2, right: 2),
+                                    top: 0, left: 2, right: 2),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: targetMuscleIntToColor[targetMuscle],
@@ -509,6 +511,7 @@ class _CalendarState extends State<Calendar> {
                               i * 7 + index - firstWeekdayOfMonth + 2);
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: () {
                               List<Widget> children = [];
                               if (children.length < 2) {
@@ -520,7 +523,7 @@ class _CalendarState extends State<Calendar> {
                                         width: 8,
                                         height: 8,
                                         margin: const EdgeInsets.only(
-                                            top: 5, left: 2, right: 2),
+                                            top: 0, left: 2, right: 2),
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: targetMuscleIntToColor[
@@ -643,6 +646,7 @@ class _CalendarState extends State<Calendar> {
                             firstDateOfWeek.add(Duration(days: index));
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: () {
                             List<Widget> children = [];
                             if (children.length < 2) {
@@ -654,7 +658,7 @@ class _CalendarState extends State<Calendar> {
                                       width: 8,
                                       height: 8,
                                       margin: const EdgeInsets.only(
-                                          top: 5, left: 2, right: 2),
+                                          top: 0, left: 2, right: 2),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: targetMuscleIntToColor[

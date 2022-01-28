@@ -9,7 +9,6 @@ import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
-import 'package:exon_app/ui/widgets/exercise/set_input_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -67,6 +66,9 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
 
     void _endExercise() {
       Get.back(closeOverlays: true);
+      if (!controller.exercisePaused) {
+        controller.completeSet();
+      }
       controller.endExercise();
     }
 
@@ -402,14 +404,14 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                     width: 170,
                     height: 65,
                     child: ElevatedActionButton(
-                      buttonText: '계속하기',
+                      buttonText: '돌아가기',
                       backgroundColor: Colors.white,
                       textStyle: const TextStyle(
-                        color: darkSecondaryColor,
+                        color: clearBlackColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
-                      overlayColor: darkSecondaryColor.withOpacity(0.2),
+                      overlayColor: clearBlackColor.withOpacity(0.2),
                       borderRadius: 20,
                       onPressed: () => Get.back(),
                     ),
@@ -419,7 +421,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                     height: 65,
                     child: ElevatedActionButton(
                       buttonText: '종료',
-                      backgroundColor: darkSecondaryColor,
+                      backgroundColor: clearBlackColor,
                       textStyle: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -480,15 +482,15 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                       width: 170,
                       height: 65,
                       child: ElevatedActionButton(
-                        buttonText: '계속하기',
+                        buttonText: '돌아가기',
                         backgroundColor: Colors.white,
                         textStyle: const TextStyle(
-                          color: darkSecondaryColor,
+                          color: clearBlackColor,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                         borderRadius: 20,
-                        overlayColor: darkSecondaryColor.withOpacity(0.2),
+                        overlayColor: clearBlackColor.withOpacity(0.2),
                         onPressed: () => Get.back(),
                       ),
                     ),
@@ -497,7 +499,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                       height: 65,
                       child: ElevatedActionButton(
                         buttonText: '중단',
-                        backgroundColor: darkSecondaryColor,
+                        backgroundColor: cancelRedColor,
                         textStyle: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const endPointUrl = 'http://d49a-221-139-39-186.ngrok.io';
+const endPointUrl = 'http://e584-221-150-78-79.ngrok.io';
 // Colors
 const Color splashViewBackgroundColor = Colors.white;
 const Color mainBackgroundColor = Color(0xffF4F3F8);
@@ -30,6 +30,8 @@ const Color softBlackColor = Color(0xff6F6F6F);
 const Color clearBlackColor = Color(0xff292E3C);
 
 const Color softRedColor = Color(0xffD63E6C);
+const Color softBlueColor = Color(0xff0D92DD);
+const Color cancelRedColor = Color(0xffD9433A);
 
 const Color communityTitleTextColor = Color(0xff263238);
 const Color unselectedIconColor = Color(0xffD9D9D9);

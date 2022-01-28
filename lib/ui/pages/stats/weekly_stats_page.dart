@@ -73,8 +73,8 @@ class WeeklyStatsPage extends StatelessWidget {
                     ),
                   );
                 } else {
-                  List<int> hms =
-                      splitHMS(_.weeklyExerciseStatData['avg_exercise_time']);
+                  List<int> hms = splitHMS(
+                      _.weeklyExerciseStatData['avg_exercise_time']['current']);
                   BarChartGroupData makeGroupData(
                     int x,
                     double y, {
@@ -114,13 +114,74 @@ class WeeklyStatsPage extends StatelessWidget {
                       _.weeklyExerciseStatData['total_exercise_time_compared']
                           [0];
 
+                  Widget diffIndicatorBuilder(dynamic val, String unit) {
+                    String text;
+                    Color color;
+                    IconData? icon;
+                    if (val < 0) {
+                      color = softRedColor;
+                      icon = Icons.arrow_drop_down;
+                      val = -val;
+                    } else if (val == 0) {
+                      color = deepGrayColor;
+                      // icon = Icons.remove;
+                    } else {
+                      color = softBlueColor;
+                      icon = Icons.arrow_drop_up;
+                    }
+
+                    switch (unit) {
+                      case 'day':
+                        text = val.toString() + '일';
+                        break;
+                      case 'time':
+                        text = formatTimeToText(val);
+                        break;
+                      case 'kg':
+                        text = getCleanTextFromDouble(val) + 'kg';
+                        break;
+                      case 'km':
+                        text = getCleanTextFromDouble(val) + 'km';
+                        break;
+                      default:
+                        text = '';
+                        break;
+                    }
+
+                    return SizedBox(
+                      height: 20,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            text,
+                            style: TextStyle(
+                              color: color,
+                              fontSize: 12,
+                            ),
+                          ),
+                          val == 0
+                              ? Text(' -',
+                                  style: TextStyle(
+                                    color: color,
+                                    fontSize: 12,
+                                  ))
+                              : Icon(
+                                  icon,
+                                  color: color,
+                                ),
+                        ],
+                      ),
+                    );
+                  }
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
                         child: SizedBox(
-                          height: 50,
+                          height: 70,
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: [
@@ -139,7 +200,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                     child: Text.rich(
                                       TextSpan(
                                         text: _.weeklyExerciseStatData[
-                                                'exercise_days']
+                                                'exercise_days']['current']
                                             .toString(),
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -161,12 +222,18 @@ class WeeklyStatsPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                                  diffIndicatorBuilder(
+                                    _.weeklyExerciseStatData['exercise_days']
+                                        ['diff'],
+                                    'day',
+                                  ),
                                 ],
                               ),
                               const VerticalDivider(
                                 color: dividerColor,
                                 thickness: 1,
                                 width: 30,
+                                endIndent: 20,
                               ),
                               Column(
                                 children: [
@@ -266,12 +333,18 @@ class WeeklyStatsPage extends StatelessWidget {
                                       }
                                     }(),
                                   ),
+                                  diffIndicatorBuilder(
+                                    _.weeklyExerciseStatData[
+                                        'avg_exercise_time']['diff'],
+                                    'time',
+                                  ),
                                 ],
                               ),
                               const VerticalDivider(
                                 color: dividerColor,
                                 thickness: 1,
                                 width: 30,
+                                endIndent: 20,
                               ),
                               Column(
                                 children: [
@@ -287,9 +360,9 @@ class WeeklyStatsPage extends StatelessWidget {
                                     padding: EdgeInsets.only(top: 3),
                                     child: Text.rich(
                                       TextSpan(
-                                        text: getCleanTextFromDouble(
-                                            _.weeklyExerciseStatData[
-                                                'avg_exercise_volume']),
+                                        text: getCleanTextFromDouble(_
+                                                .weeklyExerciseStatData[
+                                            'avg_exercise_volume']['current']),
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
@@ -310,12 +383,18 @@ class WeeklyStatsPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                                  diffIndicatorBuilder(
+                                    _.weeklyExerciseStatData[
+                                        'avg_exercise_volume']['diff'],
+                                    'kg',
+                                  ),
                                 ],
                               ),
                               const VerticalDivider(
                                 color: dividerColor,
                                 thickness: 1,
                                 width: 30,
+                                endIndent: 20,
                               ),
                               Column(
                                 children: [
@@ -333,7 +412,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                       TextSpan(
                                         text: getCleanTextFromDouble(
                                             _.weeklyExerciseStatData[
-                                                'max_one_rm']),
+                                                'max_one_rm']['current']),
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
@@ -354,12 +433,18 @@ class WeeklyStatsPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                                  diffIndicatorBuilder(
+                                    _.weeklyExerciseStatData['max_one_rm']
+                                        ['diff'],
+                                    'kg',
+                                  ),
                                 ],
                               ),
                               const VerticalDivider(
                                 color: dividerColor,
                                 thickness: 1,
                                 width: 30,
+                                endIndent: 20,
                               ),
                               Column(
                                 children: [
@@ -377,7 +462,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                       TextSpan(
                                         text: getCleanTextFromDouble(
                                             _.weeklyExerciseStatData[
-                                                'avg_distance']),
+                                                'avg_distance']['current']),
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
@@ -397,6 +482,11 @@ class WeeklyStatsPage extends StatelessWidget {
                                         ],
                                       ),
                                     ),
+                                  ),
+                                  diffIndicatorBuilder(
+                                    _.weeklyExerciseStatData['avg_distance']
+                                        ['diff'],
+                                    'km',
                                   ),
                                 ],
                               ),
@@ -677,6 +767,7 @@ class WeeklyStatsPage extends StatelessWidget {
                               ),
                               TextSpan(
                                 text: _.weeklyExerciseStatData['exercise_days']
+                                            ['current']
                                         .toString() +
                                     '일',
                                 style: const TextStyle(

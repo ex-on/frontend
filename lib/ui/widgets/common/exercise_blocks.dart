@@ -43,7 +43,7 @@ class ExercisePlanBlock extends StatelessWidget {
         type: MaterialType.transparency,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: _onPressed,
+          onTap: incomplete ? null : _onPressed,
           child: Padding(
             padding: const EdgeInsets.only(
               top: 15,
@@ -113,7 +113,7 @@ class ExcerciseRecordBlock extends StatelessWidget {
         type: MaterialType.transparency,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: _onPressed,
+          // onTap: _onPressed,
           child: Padding(
             padding: const EdgeInsets.only(
               top: 15,

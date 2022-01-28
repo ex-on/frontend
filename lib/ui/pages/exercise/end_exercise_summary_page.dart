@@ -310,7 +310,7 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
                     maxBlastForce: 5, // set a lower max blast force
                     minBlastForce: 2, // set a lower min blast force
                     emissionFrequency: 0.05,
-                    numberOfParticles: 10, // a lot of particles at once
+                    numberOfParticles: 5, // a lot of particles at once
                     gravity: 0.1,
                     shouldLoop: false,
                     createParticlePath: _drawStar,
@@ -331,7 +331,7 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
                     maxBlastForce: 5, // set a lower max blast force
                     minBlastForce: 2, // set a lower min blast force
                     emissionFrequency: 0.05,
-                    numberOfParticles: 10, // a lot of particles at once
+                    numberOfParticles: 5, // a lot of particles at once
                     gravity: 0.1,
                     shouldLoop: false,
                     createParticlePath: _drawStar,

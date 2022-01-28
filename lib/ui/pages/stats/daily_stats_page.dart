@@ -22,6 +22,12 @@ class DailyStatsPage extends GetView<StatsController> {
       Get.back();
     }
 
+    void _onMemoClosePressed() {
+      Get.back();
+      Future.delayed(const Duration(milliseconds: 500),
+          () => controller.memoTextController.clear());
+    }
+
     void _onMemoInputChanged(String val) {
       controller.update();
     }
@@ -87,7 +93,7 @@ class DailyStatsPage extends GetView<StatsController> {
                                   ),
                                   splashRadius: 20,
                                   padding: EdgeInsets.zero,
-                                  onPressed: () => Get.back(),
+                                  onPressed: _onMemoClosePressed,
                                 ),
                               ),
                             ),
