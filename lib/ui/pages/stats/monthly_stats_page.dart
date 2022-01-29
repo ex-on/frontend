@@ -1,31 +1,41 @@
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/calendar.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:exon_app/helpers/utils.dart';
-import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
-class WeeklyStatsPage extends StatelessWidget {
-  const WeeklyStatsPage({Key? key}) : super(key: key);
+class MonthlyStatsPage extends GetView<StatsController> {
+  const MonthlyStatsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    void _onCalendarMonthChanged(DateTime month) {
+      controller.getMonthlyStatsMonthlyExerciseDates(month);
+      controller.getMonthlyExerciseStats();
+    }
+
+    _onMonthlyStatsCategoryButtonPressed(int val) {
+      controller.updateMonthlyStatsByWeekCategory(val);
+    }
+
     return ListView(
       children: [
         GetBuilder<StatsController>(
           builder: (_) {
             return Calendar(
-              updateSelectedDate: _.updateWeeklyStatsSelectedDate,
-              onMonthChanged: _.getWeeklyStatsMonthlyExerciseDates,
-              exerciseDates: _.weeklyStatsMonthlyExerciseDates,
-              selectMode: CalendarSelectMode.weekly,
+              updateSelectedDate: _.updateMonthlyStatsSelectedDate,
+              onMonthChanged: _onCalendarMonthChanged,
+              exerciseDates: _.monthlyStatsMonthlyExerciseDates,
+              selectMode: CalendarSelectMode.monthly,
             );
           },
         ),
@@ -38,7 +48,7 @@ class WeeklyStatsPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${_.weeklyStatsSelectedDate.month}월 ${_.weeklyStatsSelectedDate.weekOfMonth}주차 (${_.weeklyStatsSelectedDate.firstDateOfWeek.day}일 ~ ${_.weeklyStatsSelectedDate.lastDateOfWeek.day}일)',
+                    '${_.monthlyStatsSelectedDate.year}년 ${_.monthlyStatsSelectedDate.month}월',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -46,7 +56,7 @@ class WeeklyStatsPage extends StatelessWidget {
                     ),
                   ),
                   const Text(
-                    '(전주 대비)',
+                    '(전월 대비)',
                     style: TextStyle(
                       fontSize: 10,
                       color: deepGrayColor,
@@ -64,7 +74,7 @@ class WeeklyStatsPage extends StatelessWidget {
                 padding: EdgeInsets.only(top: 30),
                 child: LoadingIndicator(icon: true),
               );
-            } else if (_.weeklyExerciseStatData.isEmpty) {
+            } else if (_.monthlyExerciseStatData.isEmpty) {
               return const Padding(
                 padding: EdgeInsets.symmetric(vertical: 50),
                 child: Text(
@@ -77,43 +87,7 @@ class WeeklyStatsPage extends StatelessWidget {
               );
             } else {
               List<int> hms = splitHMS(
-                  _.weeklyExerciseStatData['avg_exercise_time']['current']);
-              BarChartGroupData makeGroupData(
-                int x,
-                double y, {
-                bool isTouched = false,
-                // Color barColor = Colors.white,
-                double width = 15,
-                List<int> showTooltips = const [],
-              }) {
-                return BarChartGroupData(
-                  x: x,
-                  barRods: [
-                    BarChartRodData(
-                      y: isTouched ? y + 1 : y,
-                      colors: isTouched
-                          ? [brightPrimaryColor]
-                          : [lightBrightPrimaryColor],
-                      width: width,
-                      backDrawRodData: BackgroundBarChartRodData(
-                        show: true,
-                        y: 20,
-                        colors: [const Color(0xffEAE9EF)],
-                      ),
-                    ),
-                  ],
-                  showingTooltipIndicators: showTooltips,
-                );
-              }
-
-              int _largerExerciseTime = max(
-                  _.weeklyExerciseStatData['total_exercise_time_compared'][0],
-                  _.weeklyExerciseStatData['total_exercise_time_compared'][1]);
-
-              int _exerciseTimeDiff =
-                  _.weeklyExerciseStatData['total_exercise_time_compared'][1] -
-                      _.weeklyExerciseStatData['total_exercise_time_compared']
-                          [0];
+                  _.monthlyExerciseStatData['avg_exercise_time']['current']);
 
               Widget diffIndicatorBuilder(dynamic val, String unit) {
                 String text;
@@ -176,6 +150,160 @@ class WeeklyStatsPage extends StatelessWidget {
                 );
               }
 
+              var weeklyList = _.monthlyExerciseStatData['weekly_list'];
+              var previousWeeklyList =
+                  _.monthlyExerciseStatData['previous_weekly_list'];
+
+              List weeklyData = [];
+              weeklyList.asMap().forEach((index, val) {
+                weeklyData.add([
+                  (index + 1).toString() + '주',
+                  weeklyList[index][monthlyStatsCategoryIntToStrEng[
+                      _.monthlyStatsByWeekCategory]]
+                ]);
+              });
+              List previousWeeklyData = [];
+              previousWeeklyList.asMap().forEach((index, val) {
+                previousWeeklyData.add([
+                  (index + 1).toString() + '주',
+                  previousWeeklyList[index][monthlyStatsCategoryIntToStrEng[
+                      _.monthlyStatsByWeekCategory]]
+                ]);
+              });
+
+              int piChartValuesLength = 0;
+              int piChartValuesSum = 0; // Total exercise time
+              List<int> targetMuscleList = [];
+              List<int> piChartValuesList = []; // Exercise time list
+
+              if (_.monthlyExerciseStatData['category_stats']['weight'] !=
+                  null) {
+                _.monthlyExerciseStatData['category_stats']['weight']
+                    .forEach((key, val) {
+                  piChartValuesLength += 1;
+                  targetMuscleList.add(int.parse(key));
+                  piChartValuesSum += val as int;
+                  piChartValuesList.add(val);
+                });
+              }
+              if (_.monthlyExerciseStatData['category_stats']['cardio'] !=
+                  null) {
+                piChartValuesLength += 1;
+                piChartValuesSum += _.monthlyExerciseStatData['category_stats']
+                    ['cardio'] as int;
+                piChartValuesList.add(
+                    _.monthlyExerciseStatData['category_stats']['cardio']
+                        as int);
+              }
+
+              List<PieChartSectionData> _generatePiChartData() {
+                return List.generate(
+                  piChartValuesLength,
+                  (i) {
+                    bool isTouched = i == _.monthlyStatsPiTouchIndex;
+                    double fontSize = isTouched
+                        ? (20 +
+                            (piChartValuesList[i].toDouble() /
+                                piChartValuesSum *
+                                45))
+                        : (15 +
+                            (piChartValuesList[i].toDouble() /
+                                piChartValuesSum *
+                                45));
+                    double radius = isTouched ? 120.0 : 110.0;
+                    if (piChartValuesLength != targetMuscleList.length &&
+                        i == piChartValuesLength - 1) {
+                      return PieChartSectionData(
+                        color: cardioColor,
+                        value: piChartValuesList[i].toDouble(),
+                        title: '유산소',
+                        radius: radius,
+                        titleStyle: TextStyle(
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xffffffff),
+                        ),
+                      );
+                    }
+                    print(targetMuscleIntToStr[targetMuscleList[i]]);
+                    print(piChartValuesList[i]);
+                    return PieChartSectionData(
+                      color: targetMuscleIntToColor[targetMuscleList[i]],
+                      value: piChartValuesList[i].toDouble(),
+                      title: targetMuscleIntToStr[targetMuscleList[i]],
+                      radius: radius,
+                      titleStyle: TextStyle(
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xffffffff),
+                      ),
+                    );
+                  },
+                );
+              }
+
+              _generatePiChartLabel(context, index) {
+                bool isSelected = index == _.monthlyStatsPiTouchIndex;
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: isSelected ? 12 : 9,
+                          height: isSelected ? 12 : 9,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: targetMuscleIntToColor[
+                                  targetMuscleList[index]],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            targetMuscleIntToStr[targetMuscleList[index]]!,
+                            style: TextStyle(
+                              fontSize: isSelected ? 15 : 12,
+                              color: clearBlackColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3),
+                      child: Text(
+                        // getCleanTextFromDouble(piChartValuesList[index] /
+                        //         piChartValuesSum *
+                        //         100) +
+                        //     '%',
+                        formatMMSS(piChartValuesList[index]),
+                        style: TextStyle(
+                          color: clearBlackColor,
+                          fontSize: isSelected ? 25 : 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Manrope',
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3),
+                      child: Text(
+                        getCleanTextFromDouble(piChartValuesList[index] /
+                                piChartValuesSum *
+                                100) +
+                            '%',
+                        style: TextStyle(
+                          color: deepGrayColor,
+                          fontSize: isSelected ? 15 : 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -200,9 +328,8 @@ class WeeklyStatsPage extends StatelessWidget {
                                 padding: const EdgeInsets.only(top: 3),
                                 child: Text.rich(
                                   TextSpan(
-                                    text: _
-                                        .weeklyExerciseStatData['exercise_days']
-                                            ['current']
+                                    text: _.monthlyExerciseStatData[
+                                            'exercise_days']['current']
                                         .toString(),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -225,7 +352,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                 ),
                               ),
                               diffIndicatorBuilder(
-                                _.weeklyExerciseStatData['exercise_days']
+                                _.monthlyExerciseStatData['exercise_days']
                                     ['diff'],
                                 'day',
                               ),
@@ -336,7 +463,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                 }(),
                               ),
                               diffIndicatorBuilder(
-                                _.weeklyExerciseStatData['avg_exercise_time']
+                                _.monthlyExerciseStatData['avg_exercise_time']
                                     ['diff'],
                                 'time',
                               ),
@@ -363,7 +490,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                 child: Text.rich(
                                   TextSpan(
                                     text: getCleanTextFromDouble(
-                                        _.weeklyExerciseStatData[
+                                        _.monthlyExerciseStatData[
                                             'avg_exercise_volume']['current']),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -386,7 +513,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                 ),
                               ),
                               diffIndicatorBuilder(
-                                _.weeklyExerciseStatData['avg_exercise_volume']
+                                _.monthlyExerciseStatData['avg_exercise_volume']
                                     ['diff'],
                                 'kg',
                               ),
@@ -413,7 +540,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                 child: Text.rich(
                                   TextSpan(
                                     text: getCleanTextFromDouble(
-                                        _.weeklyExerciseStatData['max_one_rm']
+                                        _.monthlyExerciseStatData['max_one_rm']
                                             ['current']),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -436,7 +563,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                 ),
                               ),
                               diffIndicatorBuilder(
-                                _.weeklyExerciseStatData['max_one_rm']['diff'],
+                                _.monthlyExerciseStatData['max_one_rm']['diff'],
                                 'kg',
                               ),
                             ],
@@ -462,8 +589,8 @@ class WeeklyStatsPage extends StatelessWidget {
                                 child: Text.rich(
                                   TextSpan(
                                     text: getCleanTextFromDouble(
-                                        _.weeklyExerciseStatData['avg_distance']
-                                            ['current']),
+                                        _.monthlyExerciseStatData[
+                                            'avg_distance']['current']),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
@@ -485,7 +612,7 @@ class WeeklyStatsPage extends StatelessWidget {
                                 ),
                               ),
                               diffIndicatorBuilder(
-                                _.weeklyExerciseStatData['avg_distance']
+                                _.monthlyExerciseStatData['avg_distance']
                                     ['diff'],
                                 'km',
                               ),
@@ -500,10 +627,165 @@ class WeeklyStatsPage extends StatelessWidget {
                     thickness: 10,
                     height: 10,
                   ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 25, 30, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          '주별 통계',
+                          style: TextStyle(
+                            fontSize: statsLabelFontSize,
+                            fontWeight: FontWeight.bold,
+                            color: clearBlackColor,
+                          ),
+                        ),
+                        Row(
+                          children: const [
+                            SizedBox(
+                              width: 6,
+                              height: 6,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: brightPrimaryColor,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 3, right: 8),
+                              child: Text(
+                                '이번달',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: clearBlackColor,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 6,
+                              height: 6,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: lightGrayColor,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 3),
+                              child: Text(
+                                '지난달',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: clearBlackColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: SizedBox(
+                      height: 30,
+                      child: ListView(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.zero,
+                        children: List.generate(9, (index) {
+                          if (index % 2 == 0) {
+                            int idx = index ~/ 2;
+                            if (idx == _.monthlyStatsByWeekCategory) {
+                              return ElevatedButton(
+                                onPressed: () =>
+                                    _onMonthlyStatsCategoryButtonPressed(idx),
+                                style: ElevatedButton.styleFrom(
+                                  primary: selectLabelColor,
+                                  minimumSize: Size.zero,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 7, 10, 7),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: Text(
+                                  monthlyStatsCategoryIntToStr[idx]!,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: deepGrayColor,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return TextActionButton(
+                                height: 23,
+                                buttonText: monthlyStatsCategoryIntToStr[idx]!,
+                                onPressed: () =>
+                                    _onMonthlyStatsCategoryButtonPressed(idx),
+                                fontSize: 11,
+                                isUnderlined: false,
+                                fontWeight: FontWeight.w500,
+                                textColor: deepGrayColor,
+                                overlayColor: selectLabelColor.withOpacity(0.7),
+                              );
+                            }
+                          } else {
+                            return horizontalSpacer(10);
+                          }
+                        }),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 15, 30, 25),
+                    child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(),
+                      trackballBehavior: _.monthlyStatsTrackballBehavior,
+                      series: <ChartSeries>[
+                        StackedLineSeries<dynamic, String>(
+                          dataSource: weeklyData,
+                          color: brightPrimaryColor,
+                          width: 3,
+                          markerSettings: const MarkerSettings(
+                            isVisible: true,
+                          ),
+                          xValueMapper: (dynamic data, _) => data[0],
+                          yValueMapper: (dynamic data, _) {
+                            log(data[1].toString());
+                            return data[1];
+                          },
+                        ),
+                        StackedLineSeries<dynamic, String>(
+                          dataSource: previousWeeklyData,
+                          color: lightGrayColor,
+                          width: 3,
+                          markerSettings: const MarkerSettings(
+                            isVisible: true,
+                          ),
+                          xValueMapper: (dynamic data, _) => data[0],
+                          yValueMapper: (dynamic data, _) {
+                            log(data[1].toString());
+                            return data[1];
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    color: mainBackgroundColor,
+                    thickness: 10,
+                    height: 10,
+                  ),
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 25),
+                    padding: EdgeInsets.fromLTRB(30, 25, 30, 15),
                     child: Text(
-                      '요일별 운동시간',
+                      '운동 부위별 통계',
                       style: TextStyle(
                         fontSize: statsLabelFontSize,
                         fontWeight: FontWeight.bold,
@@ -512,276 +794,67 @@ class WeeklyStatsPage extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 0, 30, 25),
-                    child: SizedBox(
-                      height: 200,
-                      width: context.width - 60,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: mainBackgroundColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: BarChart(
-                            BarChartData(
-                              barTouchData: BarTouchData(
-                                touchTooltipData: BarTouchTooltipData(
-                                    tooltipPadding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 5),
-                                    tooltipBgColor: const Color(0xff7C8C97),
-                                    getTooltipItem:
-                                        (group, groupIndex, rod, rodIndex) {
-                                      DateTime indexDate = _
-                                          .weeklyStatsSelectedDate
-                                          .firstDateOfWeek
-                                          .add(Duration(days: group.x.toInt()));
-                                      String weekDay =
-                                          weekdayIntToStr[group.x.toInt() + 1]!;
-                                      return BarTooltipItem(
-                                        DateFormat('MM월 dd일\n')
-                                            .format(indexDate),
-                                        const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: formatTimeToText(
-                                                _.weeklyExerciseStatData[
-                                                        'weekly_exercise_time_list']
-                                                    [group.x.toInt()]),
-                                            style: const TextStyle(
-                                              color: lightBrightPrimaryColor,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              height: 1.3,
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    }),
-                                touchCallback:
-                                    (FlTouchEvent event, barTouchResponse) {
-                                  if (!event.isInterestedForInteractions ||
-                                      barTouchResponse == null ||
-                                      barTouchResponse.spot == null) {
-                                    _.updateWeeklyStatsTouchIndex(-1);
-                                    return;
-                                  }
-                                  _.updateWeeklyStatsTouchIndex(barTouchResponse
-                                      .spot!.touchedBarGroupIndex);
-                                },
-                              ),
-                              titlesData: FlTitlesData(
-                                show: true,
-                                rightTitles: SideTitles(showTitles: false),
-                                topTitles: SideTitles(showTitles: false),
-                                bottomTitles: SideTitles(
-                                  showTitles: true,
-                                  getTextStyles: (context, value) => TextStyle(
-                                    color: value == 6
-                                        ? softRedColor
-                                        : deepGrayColor,
-                                    fontSize: 13,
-                                  ),
-                                  margin: 16,
-                                  getTitles: (double value) =>
-                                      weekdayIntToStr[value.toInt() + 1]!,
-                                ),
-                                leftTitles: SideTitles(
-                                  showTitles: false,
-                                ),
-                              ),
+                    padding:
+                        const EdgeInsets.only(left: 30, right: 30, bottom: 10),
+                    child: Text(
+                      AuthController.to.userInfo['username'] + '님, ',
+                      style: const TextStyle(
+                        fontSize: statsLabelFontSize,
+                        fontWeight: FontWeight.w500,
+                        color: clearBlackColor,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 40),
+                      child: SizedBox(
+                        width: 220,
+                        height: 220,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: PieChart(
+                            PieChartData(
+                              pieTouchData: PieTouchData(touchCallback:
+                                  (FlTouchEvent event, pieTouchResponse) {
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null ||
+                                    pieTouchResponse.touchedSection == null) {
+                                  _.updateMonthlyStatsPiTouchIndex(-1);
+                                  return;
+                                }
+                                _.updateMonthlyStatsPiTouchIndex(
+                                    pieTouchResponse
+                                        .touchedSection!.touchedSectionIndex);
+                              }),
                               borderData: FlBorderData(
                                 show: false,
                               ),
-                              barGroups: List.generate(7, (index) {
-                                return makeGroupData(
-                                    index,
-                                    (20 *
-                                        _.weeklyExerciseStatData[
-                                            'weekly_exercise_time_list'][index] /
-                                        5400),
-                                    isTouched:
-                                        index == _.weeklyStatsTouchIndex);
-                              }),
-                              gridData: FlGridData(show: false),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 0,
+                              sections: _generatePiChartData(),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const Divider(
-                    color: mainBackgroundColor,
-                    thickness: 10,
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 25, 30, 10),
-                    child: Row(
-                      children: [
-                        const Text(
-                          '이번주 총 운동시간',
-                          style: TextStyle(
-                            fontSize: statsLabelFontSize,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  SizedBox(
+                    height: 100,
+                    child: Center(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.fromLTRB(30, 0, 30, 15),
+                        itemBuilder: _generatePiChartLabel,
+                        separatorBuilder: (context, index) =>
+                            const VerticalDivider(
+                          color: dividerColor,
+                          width: 30,
+                          thickness: 1,
+                          endIndent: 30,
                         ),
-                        horizontalSpacer(10),
-                        Text(
-                          formatTimeToText(_.weeklyExerciseStatData[
-                              'total_exercise_time_compared'][1]),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: brightPrimaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30),
-                    child: Row(
-                      children: [
-                        const Text(
-                          '이번주',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: brightPrimaryColor,
-                          ),
-                        ),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          decoration: BoxDecoration(
-                            color: brightPrimaryColor,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          margin: const EdgeInsets.only(
-                            left: 20,
-                          ),
-                          padding: const EdgeInsets.only(right: 10),
-                          width: 250 *
-                              _.weeklyExerciseStatData[
-                                  'total_exercise_time_compared'][1] /
-                              _largerExerciseTime /
-                              1.4,
-                          height: 20,
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            formatTimeToText(_.weeklyExerciseStatData[
-                                'total_exercise_time_compared'][1]),
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 30, top: 7),
-                    child: Row(
-                      children: [
-                        const Text(
-                          '지난주',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: deepGrayColor,
-                          ),
-                        ),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          decoration: BoxDecoration(
-                            color: mainBackgroundColor,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          margin: const EdgeInsets.only(
-                            left: 20,
-                          ),
-                          padding: const EdgeInsets.only(right: 10),
-                          width: 250 *
-                              _.weeklyExerciseStatData[
-                                  'total_exercise_time_compared'][0] /
-                              _largerExerciseTime /
-                              1.4,
-                          height: 20,
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            formatTimeToText(_.weeklyExerciseStatData[
-                                'total_exercise_time_compared'][0]),
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: deepGrayColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 20, 30, 25),
-                    child: Text.rich(
-                      TextSpan(
-                        text: '지난주보다 운동 시간이 ',
-                        style: const TextStyle(
-                          fontSize: 17,
-                          color: clearBlackColor,
-                          height: 25 / 17,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: formatTimeToText(_exerciseTimeDiff) +
-                                ((_exerciseTimeDiff < 0) ? ' 감소' : ' 증가'),
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: brightPrimaryColor,
-                              height: 25 / 17,
-                            ),
-                          ),
-                          const TextSpan(
-                            text: '했어요\n',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: clearBlackColor,
-                              height: 25 / 17,
-                            ),
-                          ),
-                          const TextSpan(
-                            text: '이번주는 ',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: clearBlackColor,
-                              height: 25 / 17,
-                            ),
-                          ),
-                          TextSpan(
-                            text: _.weeklyExerciseStatData['exercise_days']
-                                        ['current']
-                                    .toString() +
-                                '일',
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: brightPrimaryColor,
-                              height: 25 / 17,
-                            ),
-                          ),
-                          const TextSpan(
-                            text: ' 운동하셨네요',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: clearBlackColor,
-                              height: 25 / 17,
-                            ),
-                          ),
-                        ],
+                        itemCount: piChartValuesList.length,
                       ),
                     ),
                   ),

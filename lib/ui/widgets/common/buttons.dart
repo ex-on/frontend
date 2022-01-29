@@ -63,6 +63,7 @@ class TextActionButton extends StatelessWidget {
   final void Function() onPressed;
   final double? fontSize;
   final Color? textColor;
+  final Color? overlayColor;
   final bool? isUnderlined;
   final Widget? leading;
   final double? width;
@@ -75,6 +76,7 @@ class TextActionButton extends StatelessWidget {
     required this.onPressed,
     this.fontSize = 14,
     this.textColor = Colors.black,
+    this.overlayColor,
     this.isUnderlined = true,
     this.leading,
     this.width,
@@ -84,9 +86,10 @@ class TextActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle style = TextButton.styleFrom(
-      minimumSize: Size.zero,
-      padding: const EdgeInsets.all(5),
+    final ButtonStyle style = ButtonStyle(
+      overlayColor: MaterialStateProperty.all(overlayColor),
+      minimumSize: MaterialStateProperty.all(Size.zero),
+      padding: MaterialStateProperty.all(const EdgeInsets.all(5)),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
 
@@ -181,10 +184,14 @@ class ElevatedActionButton extends StatelessWidget {
       elevation: MaterialStateProperty.all(0),
     );
 
-    return ElevatedButton(
-      child: Text(buttonText, style: textStyle),
-      onPressed: activated == null || activated! ? onPressed : null,
-      style: style,
+    return SizedBox(
+      width: width,
+      height: height,
+      child: ElevatedButton(
+        child: Text(buttonText, style: textStyle),
+        onPressed: activated == null || activated! ? onPressed : null,
+        style: style,
+      ),
     );
   }
 }

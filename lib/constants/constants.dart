@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const endPointUrl = 'http://e584-221-150-78-79.ngrok.io';
+const String endPointUrl = 'http://f268-123-214-62-216.ngrok.io';
 // Colors
 const Color splashViewBackgroundColor = Colors.white;
 const Color mainBackgroundColor = Color(0xffF4F3F8);
@@ -36,6 +36,7 @@ const Color cancelRedColor = Color(0xffD9433A);
 const Color communityTitleTextColor = Color(0xff263238);
 const Color unselectedIconColor = Color(0xffD9D9D9);
 const Color dividerColor = Color(0xffCCD2E3);
+const Color selectLabelColor = Color(0xffEBEBEB);
 
 const Color chestMuscleColor = Color(0xffF9CE37);
 const Color backMuscleColor = Color(0xff478ECC);
@@ -46,6 +47,8 @@ const Color hipMuscleColor = Color(0xffFF6E91);
 const Color legMuscleColor = Color(0xff00B9E4);
 
 const Color cardioColor = Color(0xff47DDD0);
+
+const double statsLabelFontSize = 16.52;
 
 // Amplify
 const cognitoClientId = '6mf91uqnj2jj25et5hsrdbg8ur';

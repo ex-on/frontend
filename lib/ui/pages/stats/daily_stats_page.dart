@@ -158,7 +158,7 @@ class DailyStatsPage extends GetView<StatsController> {
                     '메모',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: statsLabelFontSize,
                       fontWeight: FontWeight.bold,
                       color: clearBlackColor,
                     ),
@@ -216,8 +216,8 @@ class DailyStatsPage extends GetView<StatsController> {
           builder: (_) {
             return Calendar(
               updateSelectedDate: _.updateDailyStatsSelectedDate,
-              onMonthChanged: _.getMonthlyExerciseDates,
-              exerciseDates: _.monthlyExerciseDates,
+              onMonthChanged: _.getDailyStatsMonthlyExerciseDates,
+              exerciseDates: _.dailyStatsMonthlyExerciseDates,
               selectMode: CalendarSelectMode.daily,
             );
           },
@@ -228,7 +228,7 @@ class DailyStatsPage extends GetView<StatsController> {
               padding: const EdgeInsets.only(left: 30, top: 10),
               child: Text(
                 DateFormat('MM월 dd일 (E)', 'ko-KR')
-                    .format(_.selectedDate)
+                    .format(_.dailyStatsSelectedDate)
                     .toString(),
                 style: const TextStyle(
                   fontSize: 18,
@@ -584,7 +584,7 @@ class DailyStatsPage extends GetView<StatsController> {
                                 child: Text(
                                   '일간 운동 기록',
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: statsLabelFontSize,
                                     fontWeight: FontWeight.bold,
                                     color: clearBlackColor,
                                   ),

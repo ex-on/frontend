@@ -29,7 +29,7 @@ enum CalendarSelectMode { monthly, weekly, daily }
 
 class Calendar extends StatefulWidget {
   final Function(DateTime)? updateSelectedDate;
-  final Function()? onMonthChanged;
+  final Function(DateTime)? onMonthChanged;
   final Map<DateTime, dynamic> exerciseDates;
   final CalendarSelectMode selectMode;
   const Calendar({
@@ -62,6 +62,11 @@ class _CalendarState extends State<Calendar> {
           duration: const Duration(milliseconds: 300), curve: Curves.ease);
       setState(() {
         displayDate = DateTime(displayDate.year, displayDate.month - 1);
+        if (widget.selectMode == CalendarSelectMode.monthly) {
+          if (widget.updateSelectedDate != null) {
+            widget.updateSelectedDate!(displayDate);
+          }
+        }
       });
     } else {
       controller.jumpToPage(controller.page!.toInt() + 1);
@@ -73,7 +78,7 @@ class _CalendarState extends State<Calendar> {
       });
     }
     if (previousDate.month != displayDate.month) {
-      widget.onMonthChanged!();
+      widget.onMonthChanged!(displayDate);
     }
   }
 
@@ -89,10 +94,20 @@ class _CalendarState extends State<Calendar> {
           displayDate =
               DateTime(displayDate.year, displayDate.month + 1, displayDate.day)
                   .firstDateOfWeek;
+          if (widget.selectMode == CalendarSelectMode.monthly) {
+            if (widget.updateSelectedDate != null) {
+              widget.updateSelectedDate!(displayDate);
+            }
+          }
         });
       } else {
         setState(() {
           displayDate = DateTime(displayDate.year, displayDate.month + 1, 1);
+          if (widget.selectMode == CalendarSelectMode.monthly) {
+            if (widget.updateSelectedDate != null) {
+              widget.updateSelectedDate!(displayDate);
+            }
+          }
         });
       }
     } else {
@@ -105,7 +120,7 @@ class _CalendarState extends State<Calendar> {
       });
     }
     if (previousDate.month != displayDate.month) {
-      widget.onMonthChanged!();
+      widget.onMonthChanged!(displayDate);
     }
   }
 
@@ -688,6 +703,110 @@ class _CalendarState extends State<Calendar> {
       );
     }
 
+    Widget _monthlySelectCalendarBuilder(DateTime dateTime) {
+      int year = dateTime.year;
+      int month = dateTime.month;
+      var firstWeekdayOfMonth = DateTime(year, month, 1).weekday;
+      DateTime firstDateOfWeek = dateTime.firstDateOfWeek;
+      int numWeeks = DateTime(year, month + 1, 0).weekOfMonth;
+      List<Widget> _children = [];
+
+      _children = List.generate(
+        7 * (numWeeks + 1),
+        (index) {
+          if (index < 7) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 5),
+              child: SizedBox(
+                width: 25,
+                height: 25,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    listOfDays[index],
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: deepGrayColor,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            int diff = index - 7 - (firstWeekdayOfMonth - 1);
+            DateTime indexDate = DateTime(year, month, 1 + diff);
+            bool isOtherMonth = indexDate.month != month;
+
+            return Column(
+              children: [
+                SizedBox(
+                  width: 40,
+                  height: 30,
+                  child: Center(
+                    child: Text(
+                      indexDate.day.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize:
+                            indexDate == DateTime(now.year, now.month, now.day)
+                                ? 18
+                                : 14,
+                        color: () {
+                          if (indexDate ==
+                              DateTime(now.year, now.month, now.day)) {
+                            return brightPrimaryColor;
+                          } else if (isOtherMonth) {
+                            return lightGrayColor;
+                          } else {
+                            return deepGrayColor;
+                          }
+                        }(),
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: () {
+                    List<Widget> children = [];
+                    if (children.length < 2) {
+                      if (widget.exerciseDates[indexDate] != null) {
+                        for (int targetMuscle
+                            in widget.exerciseDates[indexDate]) {
+                          children.add(
+                            Container(
+                              width: 8,
+                              height: 8,
+                              margin: const EdgeInsets.only(
+                                  top: 0, left: 2, right: 2),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: targetMuscleIntToColor[targetMuscle],
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    }
+
+                    return children;
+                  }(),
+                ),
+              ],
+            );
+          }
+        },
+      );
+
+      return GridView.count(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 7,
+        children: _children,
+      );
+    }
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
@@ -764,16 +883,18 @@ class _CalendarState extends State<Calendar> {
                       ),
                       SizedBox(
                         width: 40,
-                        child: TextActionButton(
-                          buttonText: mode == CalendarDisplayMode.monthly
-                              ? '한 주'
-                              : '한 달',
-                          onPressed: _onModeChangePressed,
-                          isUnderlined: false,
-                          textColor: brightPrimaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
+                        child: widget.selectMode == CalendarSelectMode.monthly
+                            ? null
+                            : TextActionButton(
+                                buttonText: mode == CalendarDisplayMode.monthly
+                                    ? '한 주'
+                                    : '한 달',
+                                onPressed: _onModeChangePressed,
+                                isUnderlined: false,
+                                textColor: brightPrimaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
                       )
                     ],
                   ),
@@ -786,7 +907,7 @@ class _CalendarState extends State<Calendar> {
                         case CalendarSelectMode.weekly:
                           return _weeklySelectCalendarBuilder(displayDate);
                         case CalendarSelectMode.monthly:
-                          return _weeklySelectCalendarBuilder(displayDate);
+                          return _monthlySelectCalendarBuilder(displayDate);
                       }
                     }(),
                   ),

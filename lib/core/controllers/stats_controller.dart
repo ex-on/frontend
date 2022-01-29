@@ -2,6 +2,7 @@ import 'package:exon_app/core/services/stats_api_service.dart';
 import 'package:exon_app/helpers/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatsController extends GetxController with SingleGetTickerProviderMixin {
   static StatsController to = Get.find<StatsController>();
@@ -11,21 +12,40 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   int page = 1;
   int currentCumulativeExerciseIndex = 0;
   int weeklyStatsTouchIndex = -1;
+  int monthlyStatsPiTouchIndex = -1;
+  int monthlyStatsByWeekCategory = 0;
   bool loading = false;
   bool memoSubmitActivated = false;
-  DateTime selectedDate = DateTime.now();
-  Map<DateTime, dynamic> monthlyExerciseDates = {};
+  DateTime dailyStatsSelectedDate = DateTime.now();
+  DateTime weeklyStatsSelectedDate = DateTime.now();
+  DateTime monthlyStatsSelectedDate = DateTime.now();
+  Map<DateTime, dynamic> dailyStatsMonthlyExerciseDates = {};
+  Map<DateTime, dynamic> weeklyStatsMonthlyExerciseDates = {};
+  Map<DateTime, dynamic> monthlyStatsMonthlyExerciseDates = {};
   Map<String, dynamic> dailyExerciseStatData = {};
   Map<String, dynamic> weeklyExerciseStatData = {};
+  Map<String, dynamic> monthlyExerciseStatData = {};
+  late TrackballBehavior monthlyStatsTrackballBehavior;
 
   @override
   void onInit() {
     super.onInit();
     cumulativeStatsTabController = TabController(length: 2, vsync: this);
     byPeriodStatsTabController = TabController(length: 3, vsync: this);
-    getMonthlyExerciseDates();
+    monthlyStatsTrackballBehavior = TrackballBehavior(
+      activationMode: ActivationMode.singleTap,
+      enable: true,
+      tooltipSettings: const InteractiveTooltip(
+        enable: true,
+        color: Color(0xff7C8C97),
+      ),
+    );
+    getDailyStatsMonthlyExerciseDates(dailyStatsSelectedDate);
+    getWeeklyStatsMonthlyExerciseDates(weeklyStatsSelectedDate);
+    getMonthlyStatsMonthlyExerciseDates(monthlyStatsSelectedDate);
     getDailyExerciseStats();
     getWeeklyExerciseStats();
+    getMonthlyExerciseStats();
   }
 
   @override
@@ -50,19 +70,34 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void updateDailyStatsSelectedDate(DateTime dateTime) {
-    selectedDate = dateTime;
+    dailyStatsSelectedDate = dateTime;
     update();
     getDailyExerciseStats();
   }
 
   void updateWeeklyStatsSelectedDate(DateTime dateTime) {
-    selectedDate = dateTime;
+    weeklyStatsSelectedDate = dateTime;
     update();
     getWeeklyExerciseStats();
   }
 
+  void updateMonthlyStatsSelectedDate(DateTime dateTime) {
+    monthlyStatsSelectedDate = dateTime;
+    update();
+  }
+
+  void updateMonthlyStatsByWeekCategory(int val) {
+    monthlyStatsByWeekCategory = val;
+    update();
+  }
+
   void updateWeeklyStatsTouchIndex(int val) {
     weeklyStatsTouchIndex = val;
+    update();
+  }
+
+  void updateMonthlyStatsPiTouchIndex(int val) {
+    monthlyStatsPiTouchIndex = val;
     update();
   }
 
@@ -71,30 +106,70 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
     update();
   }
 
-  Future<void> getMonthlyExerciseDates() async {
-    setLoading(true);
-    var resData = await StatsApiService.getMonthlyExerciseDates(selectedDate);
+  Future<void> getDailyStatsMonthlyExerciseDates(DateTime month) async {
+    var resData = await StatsApiService.getMonthlyExerciseDates(month);
     for (var data in resData) {
-      if (monthlyExerciseDates[dateTimeToDate(DateTime.parse(data[0]))] ==
+      if (dailyStatsMonthlyExerciseDates[
+              dateTimeToDate(DateTime.parse(data[0]))] ==
           null) {
-        monthlyExerciseDates[dateTimeToDate(DateTime.parse(data[0]))] = [
-          data[1]
-        ];
+        dailyStatsMonthlyExerciseDates[
+            dateTimeToDate(DateTime.parse(data[0]))] = [data[1]];
       } else {
-        if (!monthlyExerciseDates[dateTimeToDate(DateTime.parse(data[0]))]
+        if (!dailyStatsMonthlyExerciseDates[
+                dateTimeToDate(DateTime.parse(data[0]))]
             .contains(data[1])) {
-          monthlyExerciseDates[dateTimeToDate(DateTime.parse(data[0]))]
+          dailyStatsMonthlyExerciseDates[
+                  dateTimeToDate(DateTime.parse(data[0]))]
               .add(data[1]);
         }
       }
     }
-    print(monthlyExerciseDates);
-    setLoading(false);
+  }
+
+  Future<void> getWeeklyStatsMonthlyExerciseDates(DateTime month) async {
+    var resData = await StatsApiService.getMonthlyExerciseDates(month);
+    for (var data in resData) {
+      if (weeklyStatsMonthlyExerciseDates[
+              dateTimeToDate(DateTime.parse(data[0]))] ==
+          null) {
+        weeklyStatsMonthlyExerciseDates[
+            dateTimeToDate(DateTime.parse(data[0]))] = [data[1]];
+      } else {
+        if (!weeklyStatsMonthlyExerciseDates[
+                dateTimeToDate(DateTime.parse(data[0]))]
+            .contains(data[1])) {
+          weeklyStatsMonthlyExerciseDates[
+                  dateTimeToDate(DateTime.parse(data[0]))]
+              .add(data[1]);
+        }
+      }
+    }
+  }
+
+  Future<void> getMonthlyStatsMonthlyExerciseDates(DateTime month) async {
+    var resData = await StatsApiService.getMonthlyExerciseDates(month);
+    for (var data in resData) {
+      if (monthlyStatsMonthlyExerciseDates[
+              dateTimeToDate(DateTime.parse(data[0]))] ==
+          null) {
+        monthlyStatsMonthlyExerciseDates[
+            dateTimeToDate(DateTime.parse(data[0]))] = [data[1]];
+      } else {
+        if (!monthlyStatsMonthlyExerciseDates[
+                dateTimeToDate(DateTime.parse(data[0]))]
+            .contains(data[1])) {
+          monthlyStatsMonthlyExerciseDates[
+                  dateTimeToDate(DateTime.parse(data[0]))]
+              .add(data[1]);
+        }
+      }
+    }
   }
 
   Future<void> getDailyExerciseStats() async {
     setLoading(true);
-    var resData = await StatsApiService.getDailyExerciseStats(selectedDate);
+    var resData =
+        await StatsApiService.getDailyExerciseStats(dailyStatsSelectedDate);
     dailyExerciseStatData = resData;
     if (dailyExerciseStatData.isNotEmpty) {
       if (dailyExerciseStatData['stats']['memo'] != '') {
@@ -108,8 +183,23 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   Future<void> getWeeklyExerciseStats() async {
     setLoading(true);
     var resData = await StatsApiService.getWeeklyExerciseStats(
-        selectedDate.firstDateOfWeek);
+        weeklyStatsSelectedDate.firstDateOfWeek);
     weeklyExerciseStatData = resData;
+    setLoading(false);
+  }
+
+  Future<void> getMonthlyExerciseStats() async {
+    setLoading(true);
+    DateTime previousMonthDate = DateTime(
+        monthlyStatsSelectedDate.year, monthlyStatsSelectedDate.month - 1, 1);
+    var resData = await StatsApiService.getMonthlyExerciseStats(
+      monthlyStatsSelectedDate,
+      previousMonthDate.numWeeksInMonth,
+      previousMonthDate.firstDateOfWeek,
+      monthlyStatsSelectedDate.numWeeksInMonth,
+      monthlyStatsSelectedDate.firstDateOfMonth.firstDateOfWeek,
+    );
+    monthlyExerciseStatData = resData;
     setLoading(false);
   }
 
@@ -117,7 +207,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
     setLoading(true);
     if (memoTextController.text != '') {
       var resData = await StatsApiService.postDailyStatsMemo(
-          memoTextController.text, selectedDate);
+          memoTextController.text, dailyStatsSelectedDate);
       memoTextController.clear();
     }
     getDailyExerciseStats();

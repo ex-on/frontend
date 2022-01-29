@@ -69,7 +69,6 @@ const Map<int, String> exerciseMethodIntToStr = {
   11: '기타',
 };
 
-
 const Map<int, String> difficultyIntToString = {
   0: '하급',
   1: '중급',
@@ -228,3 +227,19 @@ Map<int, String> userActivityLevelIntToStr = {
   2: '헬린이',
   3: '걸어다니는 헬스장',
 };
+
+Map<int, String> monthlyStatsCategoryIntToStr = {
+  0: '운동 일수',
+  1: '평균 운동 시간',
+  2: '평균 운동 볼륨',
+  3: '최고 1RM',
+  4: '총 주행 거리',
+};
+Map<int, String> monthlyStatsCategoryIntToStrEng = {
+  0: 'exercise_days',
+  1: 'avg_exercise_time',
+  2: 'avg_exercise_volume',
+  3: 'max_one_rm',
+  4: 'total_distance',
+};
+

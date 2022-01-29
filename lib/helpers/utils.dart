@@ -32,9 +32,15 @@ extension DateTimeExtension on DateTime {
     var date = this;
     return date.subtract(Duration(days: date.weekday - 1));
   }
+
   DateTime get lastDateOfWeek {
     var date = this;
     return date.add(Duration(days: 7 - date.weekday));
+  }
+
+  DateTime get firstDateOfMonth {
+    var date = this;
+    return DateTime(date.year, date.month, 1);
   }
 
   DateTime get lastDateOfMonth {
