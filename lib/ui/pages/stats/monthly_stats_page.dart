@@ -186,8 +186,7 @@ class MonthlyStatsPage extends GetView<StatsController> {
                   piChartValuesList.add(val);
                 });
               }
-              if (_.monthlyExerciseStatData['category_stats']['cardio'] !=
-                  null) {
+              if (_.monthlyExerciseStatData['category_stats']['cardio'] > 0) {
                 piChartValuesLength += 1;
                 piChartValuesSum += _.monthlyExerciseStatData['category_stats']
                     ['cardio'] as int;
@@ -254,15 +253,20 @@ class MonthlyStatsPage extends GetView<StatsController> {
                           child: DecoratedBox(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: targetMuscleIntToColor[
-                                  targetMuscleList[index]],
+                              color: index == targetMuscleList.length
+                                  ? cardioColor
+                                  : targetMuscleIntToColor[
+                                      targetMuscleList[index]],
                             ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
-                            targetMuscleIntToStr[targetMuscleList[index]]!,
+                            index == targetMuscleList.length
+                                ? '유산소'
+                                : targetMuscleIntToStr[
+                                    targetMuscleList[index]]!,
                             style: TextStyle(
                               fontSize: isSelected ? 15 : 12,
                               color: clearBlackColor,
@@ -274,10 +278,6 @@ class MonthlyStatsPage extends GetView<StatsController> {
                     Padding(
                       padding: const EdgeInsets.only(top: 3),
                       child: Text(
-                        // getCleanTextFromDouble(piChartValuesList[index] /
-                        //         piChartValuesSum *
-                        //         100) +
-                        //     '%',
                         formatMMSS(piChartValuesList[index]),
                         style: TextStyle(
                           color: clearBlackColor,
@@ -745,7 +745,23 @@ class MonthlyStatsPage extends GetView<StatsController> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(30, 15, 30, 25),
                     child: SfCartesianChart(
-                      primaryXAxis: CategoryAxis(),
+                      primaryXAxis: CategoryAxis(
+                        majorGridLines: const MajorGridLines(width: 0),
+                        majorTickLines: const MajorTickLines(size: 0),
+                        axisLine: const AxisLine(
+                            // color: deepGrayColor,
+                            ),
+                      ),
+                      primaryYAxis: NumericAxis(
+                        majorGridLines: const MajorGridLines(
+                            // width: 1,
+                            // dashArray: [3, 3],
+                            // color: lightGrayColor,
+                            ),
+                        majorTickLines: const MajorTickLines(size: 0),
+                        axisLine: const AxisLine(width: 0),
+                      ),
+                      plotAreaBorderWidth: 0,
                       trackballBehavior: _.monthlyStatsTrackballBehavior,
                       series: <ChartSeries>[
                         StackedLineSeries<dynamic, String>(
@@ -797,7 +813,9 @@ class MonthlyStatsPage extends GetView<StatsController> {
                     padding:
                         const EdgeInsets.only(left: 30, right: 30, bottom: 10),
                     child: Text(
-                      AuthController.to.userInfo['username'] + '님, ',
+                      AuthController.to.userInfo['username'] +
+                          '님, ' +
+                          _.monthlyExerciseStatData['category_stats']['copy'],
                       style: const TextStyle(
                         fontSize: statsLabelFontSize,
                         fontWeight: FontWeight.w500,
