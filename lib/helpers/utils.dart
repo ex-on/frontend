@@ -16,6 +16,25 @@ int getOtherExerciseType(int type) {
   }
 }
 
+int getLevelRequiredProtein(int level) {
+  switch (level) {
+    case 1:
+      return 100;
+    case 2:
+      return 1000;
+    case 3:
+      return 10000;
+    case 4:
+      return 50000;
+    case 5:
+      return 100000;
+    case 6:
+      return 200000;
+    default:
+      return 0;
+  }
+}
+
 extension DateTimeExtension on DateTime {
   int get firstWeekdayOfMonth {
     var date = this;

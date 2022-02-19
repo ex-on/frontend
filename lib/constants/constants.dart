@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const String endPointUrl = 'http://f268-123-214-62-216.ngrok.io';
+const String endPointUrl = 'http://754a-221-139-39-186.ngrok.io';
 // Colors
 const Color splashViewBackgroundColor = Colors.white;
 const Color mainBackgroundColor = Color(0xffF4F3F8);
@@ -38,7 +38,8 @@ const Color unselectedIconColor = Color(0xffD9D9D9);
 const Color dividerColor = Color(0xffCCD2E3);
 const Color selectLabelColor = Color(0xffEBEBEB);
 
-const Color chestMuscleColor = Color(0xffF9CE37);
+const Color chestMuscleColor = Color(0xffFFC700);
+// const Color chestMuscleColor = Color(0xffF9CE37);
 const Color backMuscleColor = Color(0xff478ECC);
 const Color shoulderMuscleColor = Color(0xff849AA9);
 const Color armMuscleColor = Color(0xff5350FC);
@@ -60,3 +61,5 @@ const redirectUri = 'exon://register_info';
 const kakaoClientId = '9289c2192aae86a9837cf14e90664ffd';
 
 const List<double> inputWeightChangeValueList = [1, 2.5, 5, 10];
+
+const List<double> inputDistanceChangeValueList = [0.5, 1, 2.5, 5];

@@ -1,5 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
+import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,6 @@ class PostContentPreviewBuilder extends StatelessWidget {
               _.getPostComments(data['post_data']['id']);
               _.updatePostId(data['post_data']['id']);
               _.updatePostType(data['post_data']['type']);
-              print('data:');
-              print(data['post_data']);
               Get.toNamed('/community/post');
             },
             child: SizedBox(
@@ -61,36 +60,34 @@ class PostContentPreviewBuilder extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Text(
-                        data['post_data']['content'],
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: deepGrayColor,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxHeight: 30,
+                        ),
+                        child: Text(
+                          data['post_data']['content'],
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: deepGrayColor,
+                          ),
                         ),
                       ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            const CircleAvatar(
-                              backgroundColor: deepGrayColor,
-                              radius: 8,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Text(
-                                data['user_data']['username'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  letterSpacing: -1,
-                                ),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          activityLevelIntToStr[data['user_data']
+                                  ['activity_level']]! +
+                              ' ' +
+                              data['user_data']['username'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            letterSpacing: -1,
+                          ),
                         ),
                         Row(
                           children: [
@@ -189,36 +186,34 @@ class QnaContentPreviewBuilder extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Text(
-                        data['qna_data']['content'],
-                        textAlign: TextAlign.start,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: deepGrayColor,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxHeight: 30,
+                        ),
+                        child: Text(
+                          data['qna_data']['content'],
+                          textAlign: TextAlign.start,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: deepGrayColor,
+                          ),
                         ),
                       ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            const CircleAvatar(
-                              backgroundColor: deepGrayColor,
-                              radius: 8,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Text(
-                                data['user_data']['username'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  letterSpacing: -1,
-                                ),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          activityLevelIntToStr[data['user_data']
+                                  ['activity_level']]! +
+                              ' ' +
+                              data['user_data']['username'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            letterSpacing: -1,
+                          ),
                         ),
                         Row(
                           children: [

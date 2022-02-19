@@ -14,7 +14,7 @@ class UserApiService extends ApiService {
     };
 
     try {
-      var res = await ApiService.get(path, parameters);
+      var res = await ApiService.getWithoutToken(path, parameters);
       return res.data;
     } catch (e) {
       print(e);
@@ -29,7 +29,7 @@ class UserApiService extends ApiService {
     };
 
     try {
-      var res = await ApiService.get(path, parameters);
+      var res = await ApiService.getWithoutToken(path, parameters);
       return res.data;
     } catch (e) {
       print(e);
@@ -112,6 +112,19 @@ class UserApiService extends ApiService {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  static Future<dynamic> getProfileStats() async {
+    String path = '/user/stats';
+
+    Map<String, dynamic> parameters = {};
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
     }
   }
 }

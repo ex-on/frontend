@@ -1,5 +1,4 @@
 import 'package:exon_app/core/controllers/register_controller.dart';
-import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
@@ -10,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class RegisterEmailPage extends StatelessWidget {
+class RegisterEmailPage extends GetView<RegisterController> {
   const RegisterEmailPage({Key? key}) : super(key: key);
 
   @override
@@ -20,7 +19,6 @@ class RegisterEmailPage extends StatelessWidget {
     const String _textFieldLabelText = '이메일';
     const String _nextButtonText = '다음';
     final double _height = Get.height;
-    final controller = Get.put<RegisterController>(RegisterController());
 
     void _onBackPressed() {
       Get.back();

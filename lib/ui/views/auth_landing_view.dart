@@ -3,8 +3,6 @@ import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/core/services/kakao_service.dart';
 import 'package:exon_app/helpers/url_launcher.dart';
-import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
-import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/constants/constants.dart';

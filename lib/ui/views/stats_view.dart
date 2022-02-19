@@ -3,7 +3,6 @@ import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/ui/views/by_period_stats_tab_view.dart';
 import 'package:exon_app/ui/views/cumulative_stats_tab_view.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
-import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,39 +37,21 @@ class StatsView extends GetView<StatsController> {
       ],
     );
 
-    TabBar _byPeriodStatsTabBar = TabBar(
-      controller: controller.byPeriodStatsTabController,
-      indicatorColor: darkPrimaryColor,
-      labelColor: darkPrimaryColor,
-      tabs: const <Widget>[
-        Tab(child: Text('일간')),
-        Tab(child: Text('주간')),
-        Tab(child: Text('월간')),
-      ],
-    );
-
-    Widget _header = SizedBox(
-      height: 100,
-      child: GetBuilder<StatsController>(
-        builder: (_) {
-          return AnimatedSwitcher(
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return ScaleTransition(scale: animation, child: child);
-            },
-            duration: const Duration(milliseconds: 500),
-            child: StatsHeader(
-              onCalendarPressed: _onCalendarPressed,
-              onChartPressed: _onChartPressed,
-              currentIndex: _.page,
-              bottom:
-                  _.page == 0 ? _cumulativeStatsTabBar : _byPeriodStatsTabBar,
-              title: _.page == 0
-                  ? _cumulativeStatsHeaderTitle
-                  : _byPeriodStatsHeaderTitle,
-            ),
-          );
-        },
-      ),
+    Widget _header = GetBuilder<StatsController>(
+      builder: (_) {
+        return SizedBox(
+          height: _.page == 0 ? 100 : null,
+          child: StatsHeader(
+            onByPeriodPressed: _onCalendarPressed,
+            onCumulativePressed: _onChartPressed,
+            currentIndex: _.page,
+            bottom: _.page == 0 ? _cumulativeStatsTabBar : null,
+            title: _.page == 0
+                ? _cumulativeStatsHeaderTitle
+                : _byPeriodStatsHeaderTitle,
+          ),
+        );
+      },
     );
 
     return DecoratedBox(

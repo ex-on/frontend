@@ -262,7 +262,6 @@ class RegisterInfoController extends GetxController {
     // todo: implement onInit
     reset();
     super.onInit();
-    log('register info controller init');
   }
 
   @override

@@ -3,9 +3,6 @@ import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:get/get.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 bool _initialLinkIsHandled = false;
 

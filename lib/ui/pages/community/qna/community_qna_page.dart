@@ -121,36 +121,27 @@ class CommunityQnaPage extends GetView<CommunityController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 8),
-                            child: CircleAvatar(
-                              radius: 17,
-                              backgroundColor: lightGrayColor,
+                          Text(
+                            activityLevelIntToStr[_.qnaContent['user_data']
+                                    ['activity_level']]! +
+                                ' ' +
+                                _.qnaContent['user_data']['username'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: clearBlackColor,
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _.qnaContent['user_data']['username'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  letterSpacing: -2,
-                                  color: clearBlackColor,
-                                ),
-                              ),
-                              Text(
-                                formatDateTimeRawString(
-                                    _.qnaContent['qna']['created_at']),
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  color: lightGrayColor,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            formatDateTimeRawString(
+                                _.qnaContent['qna']['created_at']),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: lightGrayColor,
+                            ),
                           ),
                         ],
                       ),
@@ -314,20 +305,15 @@ class CommunityQnaPage extends GetView<CommunityController> {
                   children: [
                     Row(
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: CircleAvatar(
-                            backgroundColor: lightGrayColor,
-                            radius: 10,
-                          ),
-                        ),
                         Text(
-                          controller.qnaAnswerList[index]['user_data']
-                              ['username'],
+                          activityLevelIntToStr[controller.qnaAnswerList[index]
+                                  ['user_data']['activity_level']]! +
+                              ' ' +
+                              controller.qnaAnswerList[index]['user_data']
+                                  ['username'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            letterSpacing: -2,
                             color: clearBlackColor,
                           ),
                         ),

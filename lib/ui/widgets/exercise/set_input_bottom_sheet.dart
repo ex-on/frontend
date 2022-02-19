@@ -3,8 +3,8 @@ import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -186,21 +186,17 @@ class SetInputBottomSheet extends StatelessWidget {
 }
 
 class WeightSetInputSection extends GetView<AddExerciseController> {
+  final bool bodyWeight;
   const WeightSetInputSection({
     Key? key,
+    required this.bodyWeight,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const String _addIcon = 'assets/icons/addIcon.svg';
-    const String _subtractIcon = 'assets/icons/subtractIcon.svg';
 
     void _onCompletePressed() {
       controller.updateInputSetNum(null);
-    }
-
-    void _updateWeightType(int type) {
-      controller.updateInputWeightType(type);
     }
 
     void _updateWeightChangeValue(int index) {
@@ -221,7 +217,7 @@ class WeightSetInputSection extends GetView<AddExerciseController> {
     }
 
     return Container(
-      height: 240,
+      height: bodyWeight ? 150 : 240,
       width: context.width,
       color: Colors.white,
       child: GetBuilder<AddExerciseController>(
@@ -236,81 +232,6 @@ class WeightSetInputSection extends GetView<AddExerciseController> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // DecoratedBox(
-                    //   decoration: const BoxDecoration(
-                    //     color: mainBackgroundColor,
-                    //     borderRadius: BorderRadius.all(Radius.circular(6)),
-                    //   ),
-                    //   child: IntrinsicHeight(
-                    //     child: Row(
-                    //       children: [
-                    //         Material(
-                    //           type: MaterialType.transparency,
-                    //           borderRadius:
-                    //               const BorderRadius.all(Radius.circular(6)),
-                    //           child: InkWell(
-                    //             splashColor: brightPrimaryColor,
-                    //             highlightColor: Colors.transparent,
-                    //             borderRadius: const BorderRadius.only(
-                    //               topLeft: Radius.circular(6),
-                    //               bottomLeft: Radius.circular(6),
-                    //             ),
-                    //             onTap: () => _updateWeightType(0),
-                    //             child: SizedBox(
-                    //               height: 35,
-                    //               width: 35,
-                    //               child: Center(
-                    //                 child: Text(
-                    //                   'kg',
-                    //                   style: TextStyle(
-                    //                     color: _.inputWeightType == 0
-                    //                         ? brightPrimaryColor
-                    //                         : unselectedIconColor,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         const VerticalDivider(
-                    //           thickness: 0.5,
-                    //           width: 1,
-                    //           indent: 8,
-                    //           endIndent: 8,
-                    //           color: unselectedIconColor,
-                    //         ),
-                    //         Material(
-                    //           type: MaterialType.transparency,
-                    //           borderRadius:
-                    //               const BorderRadius.all(Radius.circular(6)),
-                    //           child: InkWell(
-                    //             splashColor: brightPrimaryColor,
-                    //             highlightColor: Colors.transparent,
-                    //             borderRadius: const BorderRadius.only(
-                    //               topRight: Radius.circular(6),
-                    //               bottomRight: Radius.circular(6),
-                    //             ),
-                    //             onTap: () => _updateWeightType(1),
-                    //             child: SizedBox(
-                    //               height: 35,
-                    //               width: 35,
-                    //               child: Center(
-                    //                 child: Text(
-                    //                   'lb',
-                    //                   style: TextStyle(
-                    //                     color: _.inputWeightType == 1
-                    //                         ? brightPrimaryColor
-                    //                         : unselectedIconColor,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
                     Text(
                       _.inputSetNum.toString() + '세트',
                       style: const TextStyle(
@@ -318,35 +239,41 @@ class WeightSetInputSection extends GetView<AddExerciseController> {
                         fontSize: 16,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        4 + 3,
-                        (index) => index % 2 == 1
-                            ? horizontalSpacer(10)
-                            : SizedBox(
-                                height: 31,
-                                width: 52,
-                                child: ElevatedActionButton(
-                                  buttonText: getCleanTextFromDouble(
-                                      inputWeightChangeValueList[index ~/ 2]),
-                                  onPressed: () =>
-                                      _updateWeightChangeValue(index ~/ 2),
-                                  backgroundColor: _.inputWeightChangeValue ==
-                                          inputWeightChangeValueList[index ~/ 2]
-                                      ? const Color(0xff007590)
-                                      : const Color(0xff40CCEC),
-                                  textStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Manrope',
-                                    fontSize: 13,
-                                    overflow: TextOverflow.visible,
-                                  ),
-                                ),
-                              ),
-                      ),
-                    ),
+                    bodyWeight
+                        ? const SizedBox.shrink()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              4 + 3,
+                              (index) => index % 2 == 1
+                                  ? horizontalSpacer(10)
+                                  : SizedBox(
+                                      height: 31,
+                                      width: 53,
+                                      child: ElevatedActionButton(
+                                        buttonText: getCleanTextFromDouble(
+                                            inputWeightChangeValueList[
+                                                index ~/ 2]),
+                                        onPressed: () =>
+                                            _updateWeightChangeValue(
+                                                index ~/ 2),
+                                        backgroundColor:
+                                            _.inputWeightChangeValue ==
+                                                    inputWeightChangeValueList[
+                                                        index ~/ 2]
+                                                ? const Color(0xff007590)
+                                                : const Color(0xff40CCEC),
+                                        textStyle: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Manrope',
+                                          fontSize: 13,
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                          ),
                     TextActionButton(
                         isUnderlined: false,
                         textColor: Colors.white,
@@ -356,64 +283,74 @@ class WeightSetInputSection extends GetView<AddExerciseController> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5, bottom: 5),
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: SvgPicture.asset(
-                          _subtractIcon,
-                          color: brightPrimaryColor,
-                        ),
-                        splashRadius: 20,
-                        onPressed: _onSubtractWeightPressed,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+              bodyWeight
+                  ? const SizedBox.shrink()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Material(
+                        type: MaterialType.transparency,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            NumberInputField(
-                              controller:
-                                  _.inputSetControllerList[_.inputSetNum! - 1]
-                                      [0],
-                              onChanged: _onWeightInputChanged,
-                              hintText: '0.0',
-                              fontSize: 30,
-                            ),
-                            const Text(
-                              'kg',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: brightPrimaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Mandrope',
+                            IconButton(
+                              icon: const SubtractIcon(
+                                width: null,
+                                height: null,
                               ),
+                              splashRadius: 20,
+                              splashColor: brightPrimaryColor.withOpacity(0.1),
+                              highlightColor:
+                                  brightPrimaryColor.withOpacity(0.1),
+                              onPressed: _onSubtractWeightPressed,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                children: [
+                                  NumberInputField(
+                                    controller: _.inputSetControllerList[
+                                        _.inputSetNum! - 1][0],
+                                    onChanged: _onWeightInputChanged,
+                                    hintText: '0.0',
+                                    fontSize: 30,
+                                  ),
+                                  const Text(
+                                    'kg',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: brightPrimaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Mandrope',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              icon: const AddIcon(
+                                width: null,
+                                height: null,
+                              ),
+                              splashRadius: 20,
+                              splashColor: brightPrimaryColor.withOpacity(0.1),
+                              highlightColor:
+                                  brightPrimaryColor.withOpacity(0.1),
+                              onPressed: _onAddWeightPressed,
                             ),
                           ],
                         ),
                       ),
-                      IconButton(
-                        icon: SvgPicture.asset(
-                          _addIcon,
-                          color: brightPrimaryColor,
-                        ),
-                        splashRadius: 20,
-                        onPressed: _onAddWeightPressed,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const Divider(
-                color: Color(0xffE1F4F8),
-                thickness: 4,
-                height: 4,
-              ),
+                    ),
+              bodyWeight
+                  ? const SizedBox.shrink()
+                  : const Divider(
+                      color: Color(0xffE1F4F8),
+                      thickness: 4,
+                      height: 4,
+                    ),
               () {
-                List<Widget> children = _.inputTargetRepsList.map((e) {
+                List<Widget> _children = _.inputTargetRepsList.map((e) {
                   if (e == int.parse(_.getCurrentSetInputReps())) {
                     return Center(
                       child: RotatedBox(
@@ -493,7 +430,7 @@ class WeightSetInputSection extends GetView<AddExerciseController> {
                           ),
                         ),
                         onSelectedItemChanged: _.updateInputReps,
-                        children: children,
+                        children: _children,
                       ),
                     ),
                   ),

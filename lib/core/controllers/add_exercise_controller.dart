@@ -1,18 +1,22 @@
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/core/services/exercise_api_service.dart';
-import 'package:exon_app/helpers/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AddExerciseController extends GetxController {
+class AddExerciseController extends GetxController
+    with SingleGetTickerProviderMixin {
   static AddExerciseController to = Get.find();
   TextEditingController searchExerciseController = TextEditingController();
+  late TabController cardioPlanInputTabController;
   List<List<TextEditingController>> inputSetControllerList = [
     [TextEditingController(text: '0.0'), TextEditingController(text: '0')]
   ];
-  FixedExtentScrollController targetRepsScrollController =
-      FixedExtentScrollController();
+  TextEditingController targetDistanceTextController =
+      TextEditingController(text: '0.0');
+  late FixedExtentScrollController targetRepsScrollController;
+  late FixedExtentScrollController targetHourScrollController;
+  late FixedExtentScrollController targetMinScrollController;
   int page = 0;
   int exerciseType = 0;
   int targetMuscle = 0;
@@ -21,6 +25,9 @@ class AddExerciseController extends GetxController {
   int? inputSetNum;
   int inputWeightType = 0;
   double inputWeightChangeValue = 1;
+  int inputCardioHour = 0;
+  int inputCardioMin = 0;
+  double inputDistanceChangeValue = 1;
   bool loading = false;
   bool inputSetDataNotNull = false;
   Map<String, dynamic> selectedExerciseInfo = {};
@@ -35,11 +42,21 @@ class AddExerciseController extends GetxController {
     for (int i = 1; i <= 100; i++) {
       inputTargetRepsList.add(i);
     }
+    cardioPlanInputTabController = TabController(length: 2, vsync: this);
+    cardioPlanInputTabController.addListener(() {
+      update();
+    });
+    targetRepsScrollController = FixedExtentScrollController();
+    targetHourScrollController = FixedExtentScrollController();
+    targetMinScrollController = FixedExtentScrollController();
   }
 
   @override
   void onClose() {
+    cardioPlanInputTabController.dispose();
     targetRepsScrollController.dispose();
+    targetHourScrollController.dispose();
+    targetMinScrollController.dispose();
     super.dispose();
   }
 
@@ -72,14 +89,9 @@ class AddExerciseController extends GetxController {
   void exerciseMethodSelectUpdate(int method) {
     exerciseMethod = method;
     update();
+    print(exerciseMethod);
     updateCurrentExerciseDataList();
   }
-
-  // void cardioMethodSelectUpdate(int target) {
-  //   cardioMethod = target;
-  //   update();
-  //   updateCurrentExerciseDataList();
-  // }
 
   void updateSelectedExercise(int index) {
     selectedExerciseInfo = {
@@ -186,6 +198,56 @@ class AddExerciseController extends GetxController {
     }
   }
 
+  void updateInputCardioHour(int hour) {
+    inputCardioHour = hour;
+    update();
+  }
+
+  void updateInputCardioMin(int min) {
+    inputCardioMin = min;
+    update();
+  }
+
+  void updateInputDistanceChangeValue(double val) {
+    inputDistanceChangeValue = val;
+    update();
+  }
+
+  void onDistanceInputChanged(String value) {
+    String val = (value == '') ? '0.0' : value;
+    if (double.parse(val) > 50) {
+      targetDistanceTextController.text = '49';
+    } else {
+      targetDistanceTextController.text = value;
+      targetDistanceTextController.selection = TextSelection.fromPosition(
+          TextPosition(offset: targetDistanceTextController.text.length));
+    }
+    update();
+  }
+
+  void subtractDistance() {
+    if (double.parse(targetDistanceTextController.text) >=
+        inputDistanceChangeValue) {
+      targetDistanceTextController.text =
+          (double.parse(targetDistanceTextController.text) -
+                  inputDistanceChangeValue)
+              .toString();
+    }
+    update();
+  }
+
+  void addDistance() {
+    if (targetDistanceTextController.text.isEmpty) {
+      targetDistanceTextController.text = inputDistanceChangeValue.toString();
+    } else {
+      targetDistanceTextController.text =
+          (double.parse(targetDistanceTextController.text) +
+                  inputDistanceChangeValue)
+              .toString();
+    }
+    update();
+  }
+
   dynamic getCurrentSetInputWeight() {
     if (inputSetNum != null) {
       return inputSetControllerList[inputSetNum! - 1][0].text;
@@ -215,18 +277,11 @@ class AddExerciseController extends GetxController {
   }
 
   Future<void> getExerciseList() async {
-    if (exerciseType == 0 && exerciseDataListWeight.isEmpty) {
+    if (exerciseDataListWeight.isEmpty) {
       setLoading(true);
       var res = await ExerciseApiService.getExerciseList();
-      print(res);
       exerciseDataListWeight = res['weight'];
-      update();
-      setLoading(false);
-    } else if (exerciseType == 1 && exerciseDataListCardio.isEmpty) {
-      setLoading(true);
-      var res = await ExerciseApiService.getExerciseList();
-      print(res);
-      exerciseDataListWeight = res['cardio'];
+      exerciseDataListCardio = res['cardio'];
       update();
       setLoading(false);
     }
@@ -259,5 +314,21 @@ class AddExerciseController extends GetxController {
     await ExerciseApiService.postExercisePlanWeight(
         selectedExerciseInfo['id'], inputSetControllerList);
     HomeController.to.getTodayExerciseStatus();
+  }
+
+  void postExerciseCardioPlan() async {
+    double? _targetDistance;
+    int? _targetDuration;
+    if (targetDistanceTextController.text.isNotEmpty
+        ? double.parse(targetDistanceTextController.text) > 0
+        : false) {
+      _targetDistance = double.parse(targetDistanceTextController.text);
+    }
+    if (inputCardioHour != 0 || inputCardioMin != 0) {
+      _targetDuration = inputCardioHour * 3600 + inputCardioMin * 60;
+      await ExerciseApiService.postExercisePlanCardio(
+          selectedExerciseInfo['id'], _targetDistance, _targetDuration);
+      HomeController.to.getTodayExerciseStatus();
+    }
   }
 }

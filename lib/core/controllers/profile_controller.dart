@@ -1,31 +1,22 @@
-import 'package:exon_app/core/services/community_api_service.dart';
-import 'package:flutter/material.dart';
+import 'package:exon_app/core/services/user_api_service.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ProfileController extends GetxController
     with SingleGetTickerProviderMixin {
   static ProfileController to = Get.find();
-  TabController? profileTabController;
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
   bool loading = false;
   int? totalQnaAnswerNum;
   int? totalPostNum;
   int currentPostIndex = 0;
   int currentQnaIndex = 0;
-  List<dynamic> recentQnaList = [];
-  List<dynamic> recentPostList = [];
+  Map<String, dynamic> profileData = {};
 
-  @override
-  void onInit() {
-    super.onInit();
-    profileTabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void onClose() {
-    if (profileTabController != null) {
-      profileTabController!.dispose();
-    }
-    super.onClose();
+  void onRefresh() async {
+    await getProfileStats();
+    refreshController.refreshCompleted();
   }
 
   void updateCurrentQnaIndex(int index) {
@@ -43,15 +34,12 @@ class ProfileController extends GetxController
     update();
   }
 
-  Future<void> getUserRecentCommunityData() async {
+  Future<void> getProfileStats() async {
     setLoading(true);
-    var data = await CommunityApiService.getUserRecentCommunityData();
-    totalQnaAnswerNum = data['answer_num'];
-    totalPostNum = data['post_num'];
-    recentQnaList = data['qna_data'];
-    recentPostList = data['post_data'];
-    update();
+    var resData = await UserApiService.getProfileStats();
+    if (resData != null) {
+      profileData = resData;
+    }
     setLoading(false);
-    print(recentQnaList);
   }
 }

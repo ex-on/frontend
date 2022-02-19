@@ -31,12 +31,14 @@ class Calendar extends StatefulWidget {
   final Function(DateTime)? updateSelectedDate;
   final Function(DateTime)? onMonthChanged;
   final Map<DateTime, dynamic> exerciseDates;
+  // final CalendarDisplayMode displayMode;
   final CalendarSelectMode selectMode;
   const Calendar({
     Key? key,
     this.updateSelectedDate,
     this.onMonthChanged,
     required this.exerciseDates,
+    // required this.displayMode,
     required this.selectMode,
   }) : super(key: key);
 
@@ -190,85 +192,97 @@ class _CalendarState extends State<Calendar> {
               bool isSelected = selectedDate == indexDate;
               bool isOtherMonth = indexDate.month != month;
 
-              return Column(
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 30,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(20),
-                        color: isSelected
-                            ? brightPrimaryColor.withOpacity(0.5)
-                            : null,
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            selectedDate = indexDate;
-                            displayDate = indexDate;
-                          });
-                          if (widget.updateSelectedDate != null) {
-                            widget.updateSelectedDate!(selectedDate);
-                          }
-                        },
-                        padding: EdgeInsets.zero,
-                        splashRadius: 20,
-                        icon: Text(
-                          indexDate.day.toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: indexDate ==
-                                    DateTime(now.year, now.month, now.day)
-                                ? 18
-                                : 14,
-                            color: () {
-                              if (isSelected) {
-                                return Colors.white;
-                              } else if (indexDate ==
-                                  DateTime(now.year, now.month, now.day)) {
-                                return brightPrimaryColor;
-                              } else if (isOtherMonth) {
-                                return lightGrayColor;
-                              } else {
-                                return deepGrayColor;
-                              }
-                            }(),
+              return SizedBox(
+                width: 40,
+                height: 40,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color:
+                          isSelected ? brightPrimaryColor : Colors.transparent,
+                    ),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Positioned.fill(
+                        child: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedDate = indexDate;
+                              displayDate = indexDate;
+                            });
+                            if (widget.updateSelectedDate != null) {
+                              widget.updateSelectedDate!(selectedDate);
+                            }
+                          },
+                          padding: EdgeInsets.zero,
+                          splashRadius: 22,
+                          splashColor: brightPrimaryColor.withOpacity(0.2),
+                          highlightColor: brightPrimaryColor.withOpacity(0.2),
+                          icon: Text(
+                            indexDate.day.toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: indexDate ==
+                                      DateTime(now.year, now.month, now.day)
+                                  ? 18
+                                  : 14,
+                              color: () {
+                                // if (isSelected) {
+                                //   return Colors.white;
+                                // } else
+                                if (indexDate ==
+                                    DateTime(now.year, now.month, now.day)) {
+                                  return brightPrimaryColor;
+                                } else if (isOtherMonth) {
+                                  return lightGrayColor;
+                                } else {
+                                  return deepGrayColor;
+                                }
+                              }(),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: () {
-                      List<Widget> children = [];
-                      if (children.length < 2) {
-                        if (widget.exerciseDates[indexDate] != null) {
-                          for (int targetMuscle
-                              in widget.exerciseDates[indexDate]) {
-                            children.add(
-                              Container(
-                                width: 8,
-                                height: 8,
-                                margin: const EdgeInsets.only(
-                                    top: 0, left: 2, right: 2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: targetMuscleIntToColor[targetMuscle],
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      }
+                      Positioned(
+                        bottom: 5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: () {
+                            List<Widget> children = [];
+                            if (children.length < 2) {
+                              if (widget.exerciseDates[indexDate] != null) {
+                                for (int targetMuscle
+                                    in widget.exerciseDates[indexDate]) {
+                                  children.add(
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      margin: const EdgeInsets.only(
+                                          top: 0, left: 2, right: 2),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: targetMuscle == 0
+                                            ? cardioColor
+                                            : targetMuscleIntToColor[
+                                                targetMuscle],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            }
 
-                      return children;
-                    }(),
+                            return children;
+                          }(),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               );
             }
           },
@@ -300,20 +314,23 @@ class _CalendarState extends State<Calendar> {
                   firstDateOfWeek.add(Duration(days: index - 7));
               bool isSelected = selectedDate == indexDate;
               bool isOtherMonth = indexDate.month != dateTime.month;
-              return Column(
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 30,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(20),
-                        color: isSelected
-                            ? brightPrimaryColor.withOpacity(0.5)
-                            : null,
-                      ),
-                      child: IconButton(
+              return SizedBox(
+                width: 40,
+                height: 40,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    // color:
+                    //     isSelected ? brightPrimaryColor.withOpacity(0.5) : null,
+                    border: Border.all(
+                      color:
+                          isSelected ? brightPrimaryColor : Colors.transparent,
+                    ),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      IconButton(
                         onPressed: () {
                           setState(() {
                             selectedDate = indexDate;
@@ -324,7 +341,9 @@ class _CalendarState extends State<Calendar> {
                           }
                         },
                         padding: EdgeInsets.zero,
-                        splashRadius: 20,
+                        splashRadius: 22,
+                        splashColor: brightPrimaryColor.withOpacity(0.2),
+                        highlightColor: brightPrimaryColor.withOpacity(0.2),
                         icon: Text(
                           indexDate.day.toString(),
                           style: TextStyle(
@@ -334,9 +353,10 @@ class _CalendarState extends State<Calendar> {
                                 ? 18
                                 : 14,
                             color: () {
-                              if (isSelected) {
-                                return Colors.white;
-                              } else if (indexDate ==
+                              // if (isSelected) {
+                              //   return Colors.white;
+                              // } else
+                              if (indexDate ==
                                   DateTime(now.year, now.month, now.day)) {
                                 return brightPrimaryColor;
                               } else if (isOtherMonth) {
@@ -348,37 +368,43 @@ class _CalendarState extends State<Calendar> {
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: () {
-                      List<Widget> children = [];
-                      if (children.length < 2) {
-                        if (widget.exerciseDates[indexDate] != null) {
-                          for (int targetMuscle
-                              in widget.exerciseDates[indexDate]) {
-                            children.add(
-                              Container(
-                                width: 8,
-                                height: 8,
-                                margin: const EdgeInsets.only(
-                                    top: 0, left: 2, right: 2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: targetMuscleIntToColor[targetMuscle],
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      }
+                      Positioned(
+                        bottom: 5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: () {
+                            List<Widget> children = [];
+                            if (children.length < 2) {
+                              if (widget.exerciseDates[indexDate] != null) {
+                                for (int targetMuscle
+                                    in widget.exerciseDates[indexDate]) {
+                                  children.add(
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      margin: const EdgeInsets.only(
+                                          bottom: 2, left: 2, right: 2),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: targetMuscle == 0
+                                            ? cardioColor
+                                            : targetMuscleIntToColor[
+                                                targetMuscle],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
+                            }
 
-                      return children;
-                    }(),
+                            return children;
+                          }(),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               );
             }
           },
@@ -388,6 +414,7 @@ class _CalendarState extends State<Calendar> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 7,
+        childAspectRatio: (context.width - 70) / 7 / 50,
         children: _children,
       );
     }
@@ -476,7 +503,7 @@ class _CalendarState extends State<Calendar> {
 
                               return SizedBox(
                                 width: 40,
-                                height: 30,
+                                height: 40,
                                 child: Center(
                                   child: Text(
                                     indexDate.day.toString(),
@@ -603,7 +630,7 @@ class _CalendarState extends State<Calendar> {
                       child: GridView.count(
                         shrinkWrap: true,
                         crossAxisCount: 7,
-                        childAspectRatio: (context.width - 40) / (7 * 30),
+                        childAspectRatio: (context.width - 40) / (7 * 30) * 1.1,
                         children: List.generate(
                           7,
                           (index) {
@@ -613,7 +640,7 @@ class _CalendarState extends State<Calendar> {
 
                             return SizedBox(
                               width: 40,
-                              height: 30,
+                              height: 40,
                               child: Center(
                                 child: Text(
                                   indexDate.day.toString(),
@@ -819,8 +846,8 @@ class _CalendarState extends State<Calendar> {
       ),
       padding: const EdgeInsets.fromLTRB(20, 15, 20, 10),
       height: mode == CalendarDisplayMode.monthly
-          ? (displayDate.numWeeksInMonth * 45.5 + 110)
-          : 150,
+          ? (displayDate.numWeeksInMonth * 50 + 110)
+          : (50 + 110),
       width: context.width - 40,
       child: Material(
         type: MaterialType.transparency,
@@ -841,7 +868,7 @@ class _CalendarState extends State<Calendar> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const SizedBox(
-                        width: 40,
+                        width: 50,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -882,7 +909,7 @@ class _CalendarState extends State<Calendar> {
                         ],
                       ),
                       SizedBox(
-                        width: 40,
+                        width: 50,
                         child: widget.selectMode == CalendarSelectMode.monthly
                             ? null
                             : TextActionButton(

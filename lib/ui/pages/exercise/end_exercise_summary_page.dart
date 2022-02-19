@@ -28,8 +28,13 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
           if (_.postLoading || _.postedExerciseRecord == null) {
             return const LoadingIndicator();
           } else {
-            int _exerciseTime =
-                _.postedExerciseRecord!['record_data']['exercise_time']!;
+            bool _isCardio =
+                _.postedExerciseRecord!['record_data']['exercise_time'] == null;
+            bool _isBodyWeight =
+                _.postedExerciseRecord!['record_data']['total_reps'] != null;
+            int _exerciseTime = _isCardio
+                ? _.postedExerciseRecord!['record_data']['record_duration']
+                : _.postedExerciseRecord!['record_data']['exercise_time']!;
 
             Path _drawStar(Size size) {
               // Method to convert degree to radians
@@ -66,7 +71,7 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
 
             void _onGoHomePressed() {
               HomeController.to.getTodayExerciseStatus();
-              Get.back();
+              Get.offAllNamed('/home');
             }
 
             return Stack(
@@ -83,7 +88,7 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
                       padding: const EdgeInsets.all(40),
                       alignment: Alignment.center,
                       child: Text(
-                        userActivityLevelIntToStr[int.parse(AuthController
+                        activityLevelIntToStr[int.parse(AuthController
                                 .to.userInfo['activity_level'])]! +
                             ' ' +
                             AuthController.to.userInfo['username'] +
@@ -137,106 +142,248 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
                         endIndent: 30,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
+                    () {
+                      if (_isCardio) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
-                              '최고 1RM',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: clearBlackColor,
-                              ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                text: getCleanTextFromDouble(
-                                    _.postedExerciseRecord!['record_data']
-                                        ['max_one_rm']),
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: darkPrimaryColor,
-                                ),
-                                children: const [
-                                  TextSpan(
-                                    text: ' kg',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                            Column(
+                              children: [
+                                const Text(
+                                  '총 주행거리',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: clearBlackColor,
                                   ),
-                                ],
-                              ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    text: getCleanTextFromDouble(
+                                        _.postedExerciseRecord!['record_data']
+                                            ['record_distance']),
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: darkPrimaryColor,
+                                    ),
+                                    children: const [
+                                      TextSpan(
+                                        text: ' km',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            horizontalSpacer(30),
+                            Column(
+                              children: [
+                                const Text(
+                                  '소모 칼로리',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: clearBlackColor,
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    text: getCleanTextFromDouble(
+                                        _.postedExerciseRecord!['record_data']
+                                            ['record_calories']),
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: darkPrimaryColor,
+                                    ),
+                                    children: const [
+                                      TextSpan(
+                                        text: ' kcal',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        ),
-                        horizontalSpacer(30),
-                        Column(
-                          children: [
-                            const Text(
-                              '총 세트 수',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: clearBlackColor,
-                              ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                text: _.postedExerciseRecord!['record_data']
-                                        ['total_sets']
-                                    .toString(),
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: darkPrimaryColor,
-                                ),
-                                children: const [
-                                  TextSpan(
-                                    text: ' set',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                        );
+                      } else {
+                        return !_isBodyWeight
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      const Text(
+                                        '최고 1RM',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: clearBlackColor,
+                                        ),
+                                      ),
+                                      Text.rich(
+                                        TextSpan(
+                                          text: getCleanTextFromDouble(
+                                              _.postedExerciseRecord![
+                                                  'record_data']['max_one_rm']),
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: darkPrimaryColor,
+                                          ),
+                                          children: const [
+                                            TextSpan(
+                                              text: ' kg',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  horizontalSpacer(30),
+                                  Column(
+                                    children: [
+                                      const Text(
+                                        '총 세트 수',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: clearBlackColor,
+                                        ),
+                                      ),
+                                      Text.rich(
+                                        TextSpan(
+                                          text: _.postedExerciseRecord![
+                                                  'record_data']['total_sets']
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: darkPrimaryColor,
+                                          ),
+                                          children: const [
+                                            TextSpan(
+                                              text: ' set',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  horizontalSpacer(30),
+                                  Column(
+                                    children: [
+                                      const Text(
+                                        '총 운동 볼륨',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: clearBlackColor,
+                                        ),
+                                      ),
+                                      Text.rich(
+                                        TextSpan(
+                                          text: getCleanTextFromDouble(_
+                                                  .postedExerciseRecord![
+                                              'record_data']['total_volume']),
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: darkPrimaryColor,
+                                          ),
+                                          children: const [
+                                            TextSpan(
+                                              text: ' kg',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        horizontalSpacer(30),
-                        Column(
-                          children: [
-                            const Text(
-                              '총 운동 볼륨',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: clearBlackColor,
-                              ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                text: getCleanTextFromDouble(
-                                    _.postedExerciseRecord!['record_data']
-                                        ['total_volume']),
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: darkPrimaryColor,
-                                ),
-                                children: const [
-                                  TextSpan(
-                                    text: ' kg',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      const Text(
+                                        '총 반복횟수',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: clearBlackColor,
+                                        ),
+                                      ),
+                                      Text.rich(
+                                        TextSpan(
+                                          text: _.postedExerciseRecord![
+                                                  'record_data']['total_reps']
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: darkPrimaryColor,
+                                          ),
+                                          children: const [
+                                            TextSpan(
+                                              text: ' 회',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  horizontalSpacer(30),
+                                  Column(
+                                    children: [
+                                      const Text(
+                                        '총 세트 수',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: clearBlackColor,
+                                        ),
+                                      ),
+                                      Text.rich(
+                                        TextSpan(
+                                          text: _.postedExerciseRecord![
+                                                  'record_data']['total_sets']
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: darkPrimaryColor,
+                                          ),
+                                          children: const [
+                                            TextSpan(
+                                              text: ' set',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              );
+                      }
+                    }(),
                     verticalSpacer(140),
                     SizedBox(
                       width: context.width - 80,

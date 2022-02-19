@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/helpers/enums.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/physics.dart';
@@ -80,18 +81,49 @@ class TextActionButton extends StatelessWidget {
     this.isUnderlined = true,
     this.leading,
     this.width,
-    this.height = 30,
+    this.height = 40,
     this.fontWeight,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final ButtonStyle style = ButtonStyle(
-      overlayColor: MaterialStateProperty.all(overlayColor),
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+      ),
+      overlayColor: MaterialStateProperty.all(
+          overlayColor ?? brightPrimaryColor.withOpacity(0.1)),
       minimumSize: MaterialStateProperty.all(Size.zero),
-      padding: MaterialStateProperty.all(const EdgeInsets.all(5)),
+      padding: MaterialStateProperty.all(
+          const EdgeInsets.symmetric(vertical: 5, horizontal: 10)),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
+
+    Widget text = Text(
+      buttonText,
+      style: TextStyle(
+        fontWeight: fontWeight,
+        fontSize: fontSize,
+        color: textColor,
+        textBaseline: TextBaseline.ideographic,
+        height: 1.0,
+      ),
+    );
+
+    Widget underlinedText = isUnderlined!
+        ? DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: textColor ?? Colors.black,
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: text)
+        : text;
 
     return SizedBox(
       width: width,
@@ -99,33 +131,11 @@ class TextActionButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         child: leading == null
-            ? Text(
-                buttonText,
-                style: TextStyle(
-                  fontWeight: fontWeight,
-                  fontSize: fontSize,
-                  color: textColor,
-                  decoration: isUnderlined!
-                      ? TextDecoration.underline
-                      : TextDecoration.none,
-                  height: 1.0,
-                ),
-              )
+            ? underlinedText
             : Row(
                 children: [
                   leading!,
-                  Text(
-                    buttonText,
-                    style: TextStyle(
-                      fontSize: fontSize,
-                      fontWeight: fontWeight,
-                      color: textColor,
-                      decoration: isUnderlined!
-                          ? TextDecoration.underline
-                          : TextDecoration.none,
-                      height: 1.0,
-                    ),
-                  ),
+                  underlinedText,
                 ],
               ),
         style: style,
@@ -224,6 +234,46 @@ class FloatingIconButton extends StatelessWidget {
           onPressed: onPressed,
           child: icon,
           backgroundColor: backgroundColor,
+        ),
+      ),
+    );
+  }
+}
+
+class HelpIconButton extends StatelessWidget {
+  final void Function() onPressed;
+  final Color? overlayColor;
+  final Color? backgroundColor;
+  final double? size;
+  const HelpIconButton({
+    Key? key,
+    required this.onPressed,
+    this.overlayColor,
+    this.backgroundColor,
+    this.size,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size ?? 20,
+      height: size ?? 20,
+      child: Material(
+        color: backgroundColor ?? Colors.white,
+        shape: const CircleBorder(),
+        child: IconButton(
+          icon: const Text(
+            '?',
+            style: TextStyle(
+              fontSize: 12,
+              color: brightPrimaryColor,
+            ),
+          ),
+          splashRadius: size != null ? (size! / 2) : 10,
+          splashColor: overlayColor ?? mainBackgroundColor,
+          highlightColor: overlayColor ?? mainBackgroundColor,
+          onPressed: onPressed,
+          padding: EdgeInsets.zero,
         ),
       ),
     );

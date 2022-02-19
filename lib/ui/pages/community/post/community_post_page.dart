@@ -138,36 +138,27 @@ class CommunityPostPage extends GetView<CommunityController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 8),
-                            child: CircleAvatar(
-                              radius: 17,
-                              backgroundColor: lightGrayColor,
+                          Text(
+                            activityLevelIntToStr[_.postContent['user_data']
+                                    ['activity_level']]! +
+                                ' ' +
+                                _.postContent['user_data']['username'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: clearBlackColor,
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _.postContent['user_data']['username'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  letterSpacing: -2,
-                                  color: clearBlackColor,
-                                ),
-                              ),
-                              Text(
-                                formatDateTimeRawString(
-                                    _.postContent['post']['created_at']),
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  color: lightGrayColor,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            formatDateTimeRawString(
+                                _.postContent['post']['created_at']),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: lightGrayColor,
+                            ),
                           ),
                         ],
                       ),
@@ -350,20 +341,15 @@ class CommunityPostPage extends GetView<CommunityController> {
                   children: [
                     Row(
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: CircleAvatar(
-                            backgroundColor: lightGrayColor,
-                            radius: 10,
-                          ),
-                        ),
                         Text(
-                          controller.postCommentList[index]['comments']
-                              ['user_data']['username'],
+                          activityLevelIntToStr[_.postCommentList[index]['comments']
+                                  ['user_data']['activity_level']]! +
+                              ' ' +
+                              _.postCommentList[index]['comments']['user_data']
+                                  ['username'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            letterSpacing: -2,
                             color: clearBlackColor,
                           ),
                         ),
@@ -572,19 +558,13 @@ class CommunityPostPage extends GetView<CommunityController> {
                   children: [
                     Row(
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: CircleAvatar(
-                            backgroundColor: lightGrayColor,
-                            radius: 10,
-                          ),
-                        ),
                         Text(
-                          replyList[index]['user_data']['username'],
+                          activityLevelIntToStr[replyList[index]['user_data']
+                                    ['activity_level']]! +
+                                ' ' + replyList[index]['user_data']['username'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            letterSpacing: -2,
                             color: clearBlackColor,
                           ),
                         ),

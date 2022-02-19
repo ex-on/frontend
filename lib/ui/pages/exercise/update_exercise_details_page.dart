@@ -3,6 +3,7 @@ import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
+import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
@@ -21,9 +22,18 @@ class UpdateExerciseDetailsPage extends GetView<AddExerciseController> {
       Get.back();
     }
 
-    void _onStartPressed(int id,Map<String,dynamic> exerciseData) async {
-      await ExerciseBlockController.to.getExercisePlanWeightSets(id);
-      ExerciseBlockController.to.startExercise(id, exerciseData);
+    void _onStartPressed(Map<String, dynamic> planData,
+        Map<String, dynamic> exerciseData) async {
+      if (exerciseData['target_muscle'] != null) {
+        await ExerciseBlockController.to
+            .getExercisePlanWeightSets(planData['id']);
+        ExerciseBlockController.to
+            .startExerciseWeight(planData['id'], exerciseData);
+      } else {
+        ExerciseBlockController.to.updateExercisePlanCardio(planData);
+        ExerciseBlockController.to
+            .startExerciseCardio(planData['id'], exerciseData);
+      }
     }
 
     return Scaffold(
@@ -39,7 +49,7 @@ class UpdateExerciseDetailsPage extends GetView<AddExerciseController> {
             padding: const EdgeInsets.only(left: 30, right: 30),
             child: Text(
               _totalExercisePlanNumText +
-                  HomeController.to.todayExercisePlanList.length.toString() +
+                  HomeController.to.indexDayExercisePlanList.length.toString() +
                   '개',
               style: const TextStyle(
                 color: softGrayColor,
@@ -52,9 +62,9 @@ class UpdateExerciseDetailsPage extends GetView<AddExerciseController> {
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
               itemBuilder: (context, index) {
                 var exerciseData = HomeController
-                    .to.todayExercisePlanList[index]['exercise_data'];
-                var planData =
-                    HomeController.to.todayExercisePlanList[index]['plan_data'];
+                    .to.indexDayExercisePlanList[index]['exercise_data'];
+                var planData = HomeController.to.indexDayExercisePlanList[index]
+                    ['plan_data'];
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -67,49 +77,73 @@ class UpdateExerciseDetailsPage extends GetView<AddExerciseController> {
                         children: [
                           StartExerciseButton(
                             onStartPressed: () => _onStartPressed(
-                              planData['id'],
+                              planData,
                               exerciseData,
                             ),
                           ),
                           horizontalSpacer(15),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                exerciseData['name'],
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: clearBlackColor,
-                                ),
-                              ),
-                              verticalSpacer(10),
-                              DecoratedBox(
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    left: BorderSide(
-                                      color: brightSecondaryColor,
-                                      width: 2,
+                          exerciseData['target_muscle'] != null
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      exerciseData['name'],
+                                      style: const TextStyle(
+                                        height: 1.0,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: clearBlackColor,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 5, top: 2),
-                                  child: Text(
-                                    '${targetMuscleIntToStr[exerciseData['target_muscle']]} / ${exerciseMethodIntToStr[exerciseData['exercise_method']]} / ${planData['num_sets']}세트',
-                                    style: const TextStyle(
-                                      height: 1.0,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: clearBlackColor,
+                                    verticalSpacer(10),
+                                    TargetMuscleLabel(
+                                      targetMuscle:
+                                          exerciseData['target_muscle'],
+                                      text:
+                                          '${targetMuscleIntToStr[exerciseData['target_muscle']]} / ${exerciseMethodIntToStr[exerciseData['exercise_method']]} / ${planData['num_sets']}세트',
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                                  ],
+                                )
+                              : Builder(builder: (context) {
+                                  String _targetDistance = '';
+                                  String _targetDuration = '';
+
+                                  if (planData['target_distance'] != null) {
+                                    _targetDistance = ' / ' +
+                                        getCleanTextFromDouble(
+                                            planData['target_distance']) +
+                                        'km';
+                                  }
+
+                                  if (planData['target_duration'] != null) {
+                                    _targetDuration = ' / ' +
+                                        formatTimeToText(
+                                            planData['target_duration']);
+                                  }
+
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        exerciseData['name'],
+                                        style: const TextStyle(
+                                          height: 1.0,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: clearBlackColor,
+                                        ),
+                                      ),
+                                      verticalSpacer(10),
+                                      CardioLabel(
+                                        text:
+                                            '유산소 / ${cardioMethodIntToStr[exerciseData['exercise_method']]}$_targetDistance$_targetDuration',
+                                      ),
+                                    ],
+                                  );
+                                }),
                         ],
                       ),
                     ],
@@ -117,7 +151,7 @@ class UpdateExerciseDetailsPage extends GetView<AddExerciseController> {
                 );
               },
               separatorBuilder: (context, index) => verticalSpacer(24),
-              itemCount: HomeController.to.todayExercisePlanList.length,
+              itemCount: HomeController.to.indexDayExercisePlanList.length,
             ),
           ),
         ],

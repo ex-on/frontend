@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 class ExerciseBlockController extends GetxController
     with SingleGetTickerProviderMixin {
   static ExerciseBlockController to = Get.find();
-  AnimationController? timerAnimationController;
+  late AnimationController timerAnimationController;
 
   ConfettiController confettiControllerTop =
       ConfettiController(duration: const Duration(seconds: 1));
@@ -43,6 +43,10 @@ class ExerciseBlockController extends GetxController
   FixedExtentScrollController recordRepsScrollController =
       FixedExtentScrollController();
   int recommendedRestTime = 90;
+  double inputDistanceChangeValue = 3;
+  TextEditingController recordDistanceTextController =
+      TextEditingController(text: '0.0');
+  Map<String, dynamic> exercisePlanCardio = {};
   Map<String, dynamic> exerciseData = {};
   Map<String, dynamic>? exerciseRecord;
   Map<String, dynamic>? postedExerciseRecord;
@@ -58,9 +62,7 @@ class ExerciseBlockController extends GetxController
   @override
   void onClose() {
     recordRepsScrollController.dispose();
-    if (timerAnimationController != null) {
-      timerAnimationController!.dispose();
-    }
+    timerAnimationController.dispose();
     if (restStartHintCounter != null) {
       restStartHintCounter!.cancel();
     }
@@ -104,8 +106,8 @@ class ExerciseBlockController extends GetxController
     update();
   }
 
-  void startExercise(int id, Map<String, dynamic> data) {
-    Get.toNamed('/exercise_block');
+  void startExerciseWeight(int id, Map<String, dynamic> data) {
+    Get.toNamed('/exercise_weight_block');
     exerciseData = data;
     if (exercisePlan != null && exercisePlan != []) {
       numSets = exercisePlan!.length;
@@ -195,7 +197,7 @@ class ExerciseBlockController extends GetxController
       value: resting ? restTime.value / recommendedRestTime : 0.0,
       duration: Duration(seconds: recommendedRestTime),
     );
-    timerAnimationController!.reverse(from: 1.0);
+    timerAnimationController.reverse(from: 1.0);
     restStartHintCounter = Timer.periodic(
       const Duration(milliseconds: 300),
       (timer) {
@@ -224,7 +226,7 @@ class ExerciseBlockController extends GetxController
   void endRest() {
     if (restTimeCounter != null) {
       restTimeCounter!.cancel();
-      timerAnimationController!.removeListener(checkEndRest);
+      timerAnimationController.removeListener(checkEndRest);
     }
     resting = false;
     update();
@@ -237,15 +239,15 @@ class ExerciseBlockController extends GetxController
 
   void subtractRestTime() {
     restTime -= 10;
-    timerAnimationController!.value = restTime.value / recommendedRestTime;
-    timerAnimationController!.reverse();
+    timerAnimationController.value = restTime.value / recommendedRestTime;
+    timerAnimationController.reverse();
     update();
   }
 
   void addRestTime() {
     restTime += 10;
-    timerAnimationController!.value = restTime.value / recommendedRestTime;
-    timerAnimationController!.reverse();
+    timerAnimationController.value = restTime.value / recommendedRestTime;
+    timerAnimationController.reverse();
     update();
   }
 
@@ -283,7 +285,7 @@ class ExerciseBlockController extends GetxController
     update();
   }
 
-  void endExercise() async {
+  void endExerciseWeight() async {
     Get.offNamed('/exercise_summary');
     exerciseRecord!['sets'][currentSet - 1]['record_weight'] =
         inputSetValues![0].text;
@@ -301,6 +303,113 @@ class ExerciseBlockController extends GetxController
     reset();
   }
 
+  void startExerciseCardio(int id, Map<String, dynamic> data) {
+    Get.toNamed('/exercise_cardio_block');
+    exerciseData = data;
+    totalExerciseTimeCounter = _createCounter(totalExerciseTime);
+    currentExerciseTimeCounter = _createCounter(currentExerciseTime);
+    exerciseRecord = {
+      'exercise_id': data['id'],
+      'exercise_plan_cardio_id': id,
+      'start_time': DateTime.now().toString(),
+    };
+    update();
+  }
+
+  void startCardioRest() {
+    resting = true;
+    currentExerciseTimeCounter!.cancel();
+    totalExerciseTimeCounter!.cancel();
+    restTime.value = 0;
+    restTimeCounter = _createCounter(restTime);
+
+    update();
+  }
+
+  void endCardioRest() {
+    resting = false;
+    if (restTimeCounter != null) {
+      restTimeCounter!.cancel();
+    }
+    totalExerciseTimeCounter = _createCounter(totalExerciseTime);
+    currentExerciseTimeCounter = _createCounter(currentExerciseTime);
+    update();
+  }
+
+  void endExerciseCardio() {
+    if (restTimeCounter != null) {
+      restTimeCounter!.cancel();
+    }
+    if (currentExerciseTimeCounter != null) {
+      currentExerciseTimeCounter!.cancel();
+    }
+    if (totalExerciseTimeCounter != null) {
+      totalExerciseTimeCounter!.cancel();
+    }
+    exerciseRecord!.addAll({
+      'end_time': DateTime.now().toString(),
+      'record_duration': currentExerciseTime.value,
+    });
+    Get.toNamed('/exercise_cardio_record');
+  }
+
+  void updateInputDistanceChangeValue(double val) {
+    inputDistanceChangeValue = val;
+    update();
+  }
+
+  void onDistanceInputChanged(String value) {
+    String val = (value == '') ? '0.0' : value;
+    if (double.parse(val) > 50) {
+      recordDistanceTextController.text = '49';
+    } else {
+      recordDistanceTextController.text = value;
+      recordDistanceTextController.selection = TextSelection.fromPosition(
+          TextPosition(offset: recordDistanceTextController.text.length));
+    }
+    update();
+  }
+
+  void subtractRecordDistance() {
+    if (recordDistanceTextController.text.isNotEmpty) {
+      if (double.parse(recordDistanceTextController.text) >=
+          inputDistanceChangeValue) {
+        recordDistanceTextController.text =
+            (double.parse(recordDistanceTextController.text) -
+                    inputDistanceChangeValue)
+                .toString();
+      }
+    }
+    update();
+  }
+
+  void addRecordDistance() {
+    if (recordDistanceTextController.text.isEmpty) {
+      recordDistanceTextController.text = inputDistanceChangeValue.toString();
+    } else {
+      if (double.parse(recordDistanceTextController.text) +
+              inputDistanceChangeValue <=
+          50) {
+        recordDistanceTextController.text =
+            (double.parse(recordDistanceTextController.text) +
+                    inputDistanceChangeValue)
+                .toString();
+      }
+    }
+    update();
+  }
+
+  void endExerciseCardioRecord() async {
+    Get.offNamed('/exercise_summary');
+    exerciseRecord!['record_distance'] =
+        double.parse(recordDistanceTextController.text);
+    print(exerciseRecord!);
+    int recordCardioId =
+        await ExerciseApiService.postExerciseRecordCardio(exerciseRecord!);
+    getExerciseRecordCardio(recordCardioId);
+    reset();
+  }
+
   void reset() {
     currentSet = 1;
     inputSetValues = null;
@@ -312,6 +421,7 @@ class ExerciseBlockController extends GetxController
       TextEditingController(text: '0.0'),
       TextEditingController(text: '0'),
     ];
+    recordDistanceTextController.clear();
 
     totalExerciseTimeCounter!.cancel();
     currentExerciseTimeCounter!.cancel();
@@ -336,9 +446,22 @@ class ExerciseBlockController extends GetxController
     update();
   }
 
+  void updateExercisePlanCardio(Map<String, dynamic> plan) async {
+    exercisePlanCardio = plan;
+    update();
+  }
+
   Future<void> getExerciseRecordWeight(int id) async {
     setPostLoading(true);
     var res = await ExerciseApiService.getExerciseRecordWeight(id);
+    postedExerciseRecord = res;
+    update();
+    setPostLoading(false);
+  }
+
+  Future<void> getExerciseRecordCardio(int id) async {
+    setPostLoading(true);
+    var res = await ExerciseApiService.getExerciseRecordCardio(id);
     postedExerciseRecord = res;
     update();
     setPostLoading(false);

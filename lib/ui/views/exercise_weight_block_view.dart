@@ -4,7 +4,7 @@ import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/enums.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/color_badge.dart';
+import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
-class ExerciseBlockView extends GetView<ExerciseBlockController> {
-  const ExerciseBlockView({Key? key}) : super(key: key);
+class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
+  const ExerciseWeightBlockView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
 
     void _onCompleteSetRecordPressed() {
       if (controller.currentSet == controller.numSets) {
-        controller.endExercise();
+        controller.endExerciseWeight();
       } else {
         controller.completeExerciseSetRecord();
       }
@@ -69,7 +69,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
       if (!controller.exercisePaused) {
         controller.completeSet();
       }
-      controller.endExercise();
+      controller.endExerciseWeight();
     }
 
     void _onSlidableButtonPositionChanged(SlidableButtonPosition position) {
@@ -93,6 +93,8 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
       controller.startNextSet();
     }
 
+    print(controller.exerciseData);
+
     Widget _inputSetRecordDialog = Scaffold(
       backgroundColor: Colors.transparent,
       body: Align(
@@ -104,7 +106,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
               children: [
                 Container(
                   width: context.width - 40,
-                  constraints: const BoxConstraints(minHeight: 400),
+                  constraints: const BoxConstraints(minHeight: 300),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -151,86 +153,97 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                         ),
                       ),
                       verticalSpacer(30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          4 + 3,
-                          (index) => index % 2 == 1
-                              ? horizontalSpacer(10)
-                              : SizedBox(
-                                  height: 38,
-                                  width: 62,
-                                  child: ElevatedActionButton(
-                                    buttonText: getCleanTextFromDouble(
-                                        inputWeightChangeValueList[index ~/ 2]),
-                                    onPressed: () =>
-                                        _updateWeightChangeValue(index ~/ 2),
-                                    backgroundColor: _.inputWeightChangeValue ==
-                                            inputWeightChangeValueList[
-                                                index ~/ 2]
-                                        ? brightPrimaryColor
-                                        : const Color(0xffE1F4F8),
-                                    textStyle: TextStyle(
-                                      color: _.inputWeightChangeValue ==
+                      _.exerciseData['exercise_method'] == 1
+                          ? const SizedBox.shrink()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                4 + 3,
+                                (index) => index % 2 == 1
+                                    ? horizontalSpacer(10)
+                                    : SizedBox(
+                                        height: 38,
+                                        width: 62,
+                                        child: ElevatedActionButton(
+                                          buttonText: getCleanTextFromDouble(
                                               inputWeightChangeValueList[
-                                                  index ~/ 2]
-                                          ? Colors.white
-                                          : brightPrimaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Manrope',
-                                    ),
-                                  ),
-                                ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 30),
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                icon: const SubtractIcon(),
-                                splashRadius: 20,
-                                onPressed: _onSubtractWeightRecordPressed,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Row(
-                                  children: [
-                                    NumberInputField(
-                                      controller: _.inputSetValues![0],
-                                      onChanged: _onWeightRecordInputChanged,
-                                      hintText: '0.0',
-                                    ),
-                                    const Text(
-                                      'kg',
-                                      style: TextStyle(
-                                        fontSize: 26,
-                                        color: brightPrimaryColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Mandrope',
+                                                  index ~/ 2]),
+                                          onPressed: () =>
+                                              _updateWeightChangeValue(
+                                                  index ~/ 2),
+                                          backgroundColor: _
+                                                      .inputWeightChangeValue ==
+                                                  inputWeightChangeValueList[
+                                                      index ~/ 2]
+                                              ? brightPrimaryColor
+                                              : const Color(0xffE1F4F8),
+                                          textStyle: TextStyle(
+                                            color: _.inputWeightChangeValue ==
+                                                    inputWeightChangeValueList[
+                                                        index ~/ 2]
+                                                ? Colors.white
+                                                : brightPrimaryColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Manrope',
+                                          ),
+                                        ),
                                       ),
+                              ),
+                            ),
+                      _.exerciseData['exercise_method'] == 1
+                          ? const SizedBox.shrink()
+                          : Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 30),
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: const SubtractIcon(),
+                                      splashRadius: 20,
+                                      onPressed: _onSubtractWeightRecordPressed,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Row(
+                                        children: [
+                                          NumberInputField(
+                                            controller: _.inputSetValues![0],
+                                            onChanged:
+                                                _onWeightRecordInputChanged,
+                                            hintText: '0.0',
+                                          ),
+                                          const Text(
+                                            'kg',
+                                            style: TextStyle(
+                                              fontSize: 26,
+                                              color: brightPrimaryColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Mandrope',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const AddIcon(),
+                                      splashRadius: 20,
+                                      onPressed: _onAddWeightRecordPressed,
                                     ),
                                   ],
                                 ),
                               ),
-                              IconButton(
-                                icon: const AddIcon(),
-                                splashRadius: 20,
-                                onPressed: _onAddWeightRecordPressed,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Divider(
-                        color: Color(0xffE1F4F8),
-                        thickness: 4,
-                        height: 4,
-                      ),
+                            ),
+                      _.exerciseData['exercise_method'] == 1
+                          ? const SizedBox.shrink()
+                          : const Divider(
+                              color: Color(0xffE1F4F8),
+                              thickness: 4,
+                              height: 4,
+                            ),
                       () {
                         List<Widget> children = _.inputTargetRepsList.map((e) {
                           if (e == int.parse(_.inputSetValues![1].text)) {
@@ -333,8 +346,9 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                       fontFamily: 'Manrope',
                     ),
                     borderRadius: 100,
-                    buttonText: _.inputSetValues![0].text +
-                        'kg X ' +
+                    buttonText: (_.exerciseData['exercise_method'] == 1
+                            ? ''
+                            : (_.inputSetValues![0].text + 'kg X ')) +
                         _.inputSetValues![1].text +
                         '회',
                     onPressed: () {},
@@ -539,7 +553,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
     Widget _exerciseBlockSetHeader = GetBuilder<ExerciseBlockController>(
       builder: (_) {
         return Padding(
-          padding: const EdgeInsets.fromLTRB(30, 10, 30, 40),
+          padding: const EdgeInsets.fromLTRB(30, 10, 30, 30),
           child: Column(
             children: [
               Row(
@@ -550,8 +564,8 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                       return Text(
                         _.currentSet.toString() + '세트 준비 중...',
                         style: const TextStyle(
-                          // color: darkSecondaryColor,
-                          color: brightPrimaryColor,
+                          // color: brightPrimaryColor,
+                          color: darkSecondaryColor,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -560,8 +574,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                     return Text(
                       _.currentSet.toString() + '세트 진행 중...',
                       style: const TextStyle(
-                        color: darkSecondaryColor,
-                        // color: brightPrimaryColor,
+                        color: brightPrimaryColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -591,9 +604,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                   width: (context.width - 60) * _.currentSet / _.numSets,
                   height: 15,
                   decoration: BoxDecoration(
-                    // color: brightPrimaryColor,
-                    gradient: const LinearGradient(
-                        colors: [darkSecondaryColor, brightPrimaryColor]),
+                    color: _.resting ? darkSecondaryColor : brightPrimaryColor,
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -605,12 +616,11 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                   Row(
                     children: [
                       TargetMuscleLabel(
-                        targetMuscle: _.exerciseData['target_muscle'],
+                        targetMuscle: _.exerciseData['exercise_method'],
                       ),
                       horizontalSpacer(10),
                       ExerciseMethodLabel(
-                        text: exerciseMethodIntToStr[
-                            _.exerciseData['exercise_method']]!,
+                        exerciseMethod: _.exerciseData['exercise_method'],
                       ),
                     ],
                   ),
@@ -729,7 +739,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
           height: 260,
           child: GetBuilder<ExerciseBlockController>(builder: (_) {
             return LiquidCircularProgressIndicator(
-              value: _.timerAnimationController!.value,
+              value: _.timerAnimationController.value,
               backgroundColor: Colors.white,
               valueColor: AlwaysStoppedAnimation(
                 darkSecondaryColor.withOpacity(0.4),
@@ -799,7 +809,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                 children: [
                   GetBuilder<ExerciseBlockController>(builder: (_) {
                     if (_.resting) {
-                      Future.delayed(const Duration(seconds: 80),
+                      Future.delayed(const Duration(seconds: 3),
                           () => _.hideRestStartHint());
                       if (_.showRestStartHint) {
                         List<Widget> _children = [
@@ -812,30 +822,8 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                           ),
                         ];
 
-                        // for (int i = 0; i < _.restStartHintTime % 3; i++) {
-                        //   _children.add(
-                        //     const Text(
-                        //       '.',
-                        //       style: TextStyle(
-                        //         fontSize: 30,
-                        //         color: clearBlackColor,
-                        //       ),
-                        //     ),
-                        //   );
-                        // }
-                        // _children.add(
-                        //   const Text(
-                        //     '.',
-                        //     style: TextStyle(
-                        //       fontSize: 40,
-                        //       color: clearBlackColor,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
-                        // );
-
                         return SizedBox(
-                          height: 80,
+                          height: 90,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -844,7 +832,7 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                         );
                       } else {
                         return SizedBox(
-                          height: 80,
+                          height: 90,
                           child: Column(
                             children: [
                               const Text(
@@ -855,10 +843,12 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                                 ),
                               ),
                               Text(
-                                getCleanTextFromDouble(
-                                        _.exercisePlan![_.currentSet - 1]
-                                            ['target_weight']) +
-                                    'kg X ' +
+                                (_.exerciseData['exercise_method'] == 1
+                                        ? ''
+                                        : (getCleanTextFromDouble(
+                                                _.exercisePlan![_.currentSet -
+                                                    1]['target_weight']) +
+                                            'kg X ')) +
                                     _.exercisePlan![_.currentSet - 1]
                                             ['target_reps']
                                         .toString() +
@@ -876,20 +866,23 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                       }
                     } else {
                       return SizedBox(
-                        height: 80,
+                        height: 90,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
                             children: [
-                              FittedBox(
-                                child: Text(
-                                  _.exerciseData['name'] +
-                                      ' ' +
-                                      _.currentSet.toString() +
-                                      '세트',
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    color: clearBlackColor,
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 5),
+                                child: FittedBox(
+                                  child: Text(
+                                    _.exerciseData['name'] +
+                                        ' ' +
+                                        _.currentSet.toString() +
+                                        '세트',
+                                    style: const TextStyle(
+                                      fontSize: 30,
+                                      color: clearBlackColor,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -902,11 +895,16 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                                       children: [
                                         Text(
                                           '기록 ' +
-                                              getCleanTextFromDouble(
-                                                  double.parse((_
-                                                      .inputSetValues![0]
-                                                      .text))) +
-                                              'kg X ' +
+                                              (_.exerciseData[
+                                                          'target_muscle'] ==
+                                                      1
+                                                  ? ''
+                                                  : (getCleanTextFromDouble(
+                                                          double.parse((_
+                                                              .inputSetValues![
+                                                                  0]
+                                                              .text))) +
+                                                      'kg X ')) +
                                               _.inputSetValues![1].text +
                                               '회',
                                           style: const TextStyle(
@@ -925,10 +923,15 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                                         ),
                                         Text(
                                           '목표 ' +
-                                              getCleanTextFromDouble(
-                                                  _.exercisePlan![_.currentSet -
-                                                      1]['target_weight']) +
-                                              'kg X ' +
+                                              (_.exerciseData[
+                                                          'target_muscle'] ==
+                                                      1
+                                                  ? ''
+                                                  : (getCleanTextFromDouble(_
+                                                          .exercisePlan![_
+                                                              .currentSet -
+                                                          1]['target_weight']) +
+                                                      'kg X ')) +
                                               _.exercisePlan![_.currentSet - 1]
                                                       ['target_reps']
                                                   .toString() +
@@ -945,10 +948,12 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                                   );
                                 }
                                 return Text(
-                                  getCleanTextFromDouble(
-                                          _.exercisePlan![_.currentSet - 1]
-                                              ['target_weight']) +
-                                      'kg X ' +
+                                  (_.exerciseData['exercise_method'] == 1
+                                          ? ''
+                                          : (getCleanTextFromDouble(
+                                                  _.exercisePlan![_.currentSet -
+                                                      1]['target_weight']) +
+                                              'kg X ')) +
                                       _.exercisePlan![_.currentSet - 1]
                                               ['target_reps']
                                           .toString() +
@@ -1021,10 +1026,13 @@ class ExerciseBlockView extends GetView<ExerciseBlockController> {
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Manrope',
                                 ),
-                                buttonText: _.inputSetValues![0].text +
-                                    'kg X ' +
-                                    _.inputSetValues![1].text +
-                                    '회',
+                                buttonText:
+                                    (_.exerciseData['exercise_method'] == 1
+                                            ? ''
+                                            : (_.inputSetValues![0].text +
+                                                'kg X ')) +
+                                        _.inputSetValues![1].text +
+                                        '회',
                                 onPressed: _onInputExerciseRecordPressed,
                               ),
                             ),

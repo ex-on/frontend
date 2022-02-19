@@ -1,12 +1,14 @@
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
+import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/index_indicator.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/stats/exercise_stat_block.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class CumulativeStatsExercisePage extends GetView<StatsController> {
@@ -14,293 +16,329 @@ class CumulativeStatsExercisePage extends GetView<StatsController> {
 
   @override
   Widget build(BuildContext context) {
-    const String exonWatermark = 'assets/exonWatermark.svg';
+    const String _exerciseCategoryStatsLabelText = '운동 부위별 통계';
 
-    List<PieChartSectionData> _piChartSectionBuilder() {
-      return List.generate(
-        4,
-        (i) {
-          final isTouched = false;
-          final fontSize = isTouched ? 25.0 : 16.0;
-          final radius = isTouched ? 60.0 : 50.0;
-          switch (i) {
-            case 0:
-              return PieChartSectionData(
-                color: brightPrimaryColor,
-                value: 40,
-                showTitle: false,
-                radius: radius,
-              );
-            case 1:
-              return PieChartSectionData(
-                color: const Color(0xff6DBED1),
-                value: 30,
-                showTitle: false,
-                radius: radius,
-              );
-            case 2:
-              return PieChartSectionData(
-                color: const Color(0xff9AD9E8),
-                value: 15,
-                showTitle: false,
-                radius: radius,
-              );
-            case 3:
-              return PieChartSectionData(
-                color: const Color(0xffD3F7FF),
-                value: 15,
-                showTitle: false,
-                radius: radius,
-              );
-            default:
-              throw Error();
-          }
-        },
-      );
+    Future.delayed(Duration.zero, () {
+      if (controller.cumulativeExerciseStatData.isEmpty) {
+        controller.getCumulativeExerciseStats();
+      }
+    });
+
+    void _onExpandExerciseStatsListPressed() {
+      Get.toNamed('stats/exercise_list');
     }
 
-    return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(30, 30, 30, 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                '제일 많이 한 운동',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              TextActionButton(
-                buttonText: '전체보기',
-                onPressed: () {},
-                textColor: deepGrayColor,
-                fontSize: 13,
-              )
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 260,
-          child: NotificationListener(
-            onNotification: (OverscrollIndicatorNotification overscroll) {
-              overscroll.disallowGlow();
-              return true;
-            },
-            child: PageView.builder(
-              itemCount: (16 / 3).ceil(),
-              onPageChanged: controller.updateCurrentCumulativeExerciseIndex,
-              itemBuilder: (context, index) {
-                int lastPageItemNum = (16 % 3 == 0) ? 3 : (16 % 3);
-                List<Widget> children = List.generate(
-                  (16 / 3).ceil() - 1 == index ? lastPageItemNum : 3,
-                  (index) => const ExcerciseStatBlock(
-                    // id: id,
-                    exerciseId: 117,
-                    exerciseName: '바벨 인클라인 벤치프레스',
-                    targetMuscle: 1,
-                    exerciseMethod: 5,
+    return GetBuilder<StatsController>(
+      builder: (_) {
+        if (_.loading || _.cumulativeExerciseStatData.isEmpty) {
+          return const LoadingIndicator();
+        } else {
+          int piChartValuesLength = 0;
+          int piChartValuesSum = 0; // Total exercise time
+          List<int> targetMuscleList = [];
+          List<int> piChartValuesList = []; // Exercise time list
+
+          if (_.cumulativeExerciseStatData['category_stats']['weight'] !=
+              null) {
+            _.cumulativeExerciseStatData['category_stats']['weight']
+                .forEach((key, val) {
+              piChartValuesLength += 1;
+              targetMuscleList.add(int.parse(key));
+              piChartValuesSum += val as int;
+              piChartValuesList.add(val);
+            });
+          }
+          if (_.cumulativeExerciseStatData['category_stats']['cardio'] > 0) {
+            piChartValuesLength += 1;
+            piChartValuesSum +=
+                _.cumulativeExerciseStatData['category_stats']['cardio'] as int;
+            piChartValuesList.add(_.cumulativeExerciseStatData['category_stats']
+                ['cardio'] as int);
+          }
+          List<PieChartSectionData> _generatePiChartData() {
+            return List.generate(
+              piChartValuesLength,
+              (i) {
+                bool isTouched = i == _.cumulativeExerciseStatsPiTouchIndex;
+                double fontSize = isTouched
+                    ? (20 +
+                        (piChartValuesList[i].toDouble() /
+                            piChartValuesSum *
+                            45))
+                    : (15 +
+                        (piChartValuesList[i].toDouble() /
+                            piChartValuesSum *
+                            45));
+                double radius = isTouched ? 120.0 : 110.0;
+                if (piChartValuesLength != targetMuscleList.length &&
+                    i == piChartValuesLength - 1) {
+                  return PieChartSectionData(
+                    color: cardioColor,
+                    value: piChartValuesList[i].toDouble(),
+                    title: '유산소',
+                    radius: radius,
+                    titleStyle: TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xffffffff),
+                    ),
+                  );
+                }
+                return PieChartSectionData(
+                  color: targetMuscleIntToColor[targetMuscleList[i]],
+                  value: piChartValuesList[i].toDouble(),
+                  title: targetMuscleIntToStr[targetMuscleList[i]],
+                  radius: radius,
+                  titleStyle: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xffffffff),
                   ),
-                );
-                return Column(
-                  children: children,
                 );
               },
-            ),
-          ),
-        ),
-        GetBuilder<StatsController>(
-          builder: (_) {
-            return IndexIndicator(
-                currentIndex: _.currentCumulativeExerciseIndex,
-                totalLength: (16 / 3).ceil());
-          },
-        ),
-        verticalSpacer(50),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Row(
-            children: const [
-              Text(
-                '운동 비율 그래프',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30),
-          child: SizedBox(
-            height: 200,
-            width: 200,
-            child: Stack(
-              alignment: Alignment.center,
+            );
+          }
+
+          _generatePiChartLabel(context, index) {
+            bool isSelected = index == _.cumulativeExerciseStatsPiTouchIndex;
+            return Column(
               children: [
-                PieChart(
-                  PieChartData(
-                    borderData: FlBorderData(
-                      show: false,
+                Row(
+                  children: [
+                    SizedBox(
+                      width: isSelected ? 12 : 9,
+                      height: isSelected ? 12 : 9,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: index == targetMuscleList.length
+                              ? cardioColor
+                              : targetMuscleIntToColor[targetMuscleList[index]],
+                        ),
+                      ),
                     ),
-                    sectionsSpace: 0,
-                    centerSpaceRadius: 60,
-                    sections: _piChartSectionBuilder(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(
+                        index == targetMuscleList.length
+                            ? '유산소'
+                            : targetMuscleIntToStr[targetMuscleList[index]]!,
+                        style: TextStyle(
+                          fontSize: isSelected ? 15 : 12,
+                          color: clearBlackColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: Text(
+                    formatMMSS(piChartValuesList[index]),
+                    style: TextStyle(
+                      color: clearBlackColor,
+                      fontSize: isSelected ? 25 : 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Manrope',
+                    ),
                   ),
                 ),
-                Positioned(
-                  child: SvgPicture.asset(
-                    exonWatermark,
-                    height: 45,
-                    width: 70,
+                Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: Text(
+                    getCleanTextFromDouble(
+                            piChartValuesList[index] / piChartValuesSum * 100) +
+                        '%',
+                    style: TextStyle(
+                      color: deepGrayColor,
+                      fontSize: isSelected ? 15 : 12,
+                    ),
                   ),
                 ),
               ],
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-          margin: const EdgeInsets.symmetric(horizontal: 30),
-          decoration: BoxDecoration(
-            color: mainBackgroundColor,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
+            );
+          }
+
+          return ListView(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        '운동 비율 그래프',
-                        style: TextStyle(
-                          color: clearBlackColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 15),
-                        child: Text.rich(
-                          TextSpan(
-                            text: '가장 많이 운동한 종류는\n',
-                            style: TextStyle(
-                              fontSize: 14,
-                              height: 22 / 14,
-                              color: darkPrimaryColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '바벨 ',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  height: 22 / 14,
-                                  color: darkPrimaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '운동이네요',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  height: 22 / 14,
-                                  color: darkPrimaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: IntrinsicWidth(
-                      child: Column(
-                        children: [
-                          Material(
-                            type: MaterialType.transparency,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(6)),
-                            child: InkWell(
-                              splashColor: darkSecondaryColor,
-                              highlightColor: Colors.transparent,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(6),
-                                bottomLeft: Radius.circular(6),
-                              ),
-                              onTap: () {},
-                              child: const SizedBox(
-                                width: 70,
-                                height: 35,
-                                child: Center(
-                                  child: Text(
-                                    '종류별',
-                                    style: TextStyle(
-                                      fontSize: 14.5,
-                                      color: deepGrayColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const Divider(
-                            thickness: 1,
-                            height: 2,
-                            color: unselectedIconColor,
-                            indent: 16,
-                            endIndent: 16,
-                          ),
-                          Material(
-                            type: MaterialType.transparency,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(6)),
-                            child: InkWell(
-                              splashColor: darkSecondaryColor,
-                              highlightColor: Colors.transparent,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(6),
-                                bottomLeft: Radius.circular(6),
-                              ),
-                              onTap: () {},
-                              child: const SizedBox(
-                                width: 70,
-                                height: 35,
-                                child: Center(
-                                  child: Text(
-                                    '부위별',
-                                    style: TextStyle(
-                                      fontSize: 14.5,
-                                      color: deepGrayColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 20, 30, 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      '제일 많이 한 운동',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: statsLabelFontSize,
                       ),
                     ),
+                    () {
+                      if (_.cumulativeExerciseStatData['exercise_stats']
+                              .length >
+                          3) {
+                        return TextActionButton(
+                          buttonText: '전체보기',
+                          onPressed: _onExpandExerciseStatsListPressed,
+                          textColor: deepGrayColor,
+                          fontSize: 13,
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    }(),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 260,
+                child: NotificationListener(
+                  onNotification: (OverscrollIndicatorNotification overscroll) {
+                    overscroll.disallowGlow();
+                    return true;
+                  },
+                  child: PageView.builder(
+                    itemCount:
+                        _.cumulativeExerciseStatData['exercise_stats'].length,
+                    onPageChanged:
+                        controller.updateCurrentCumulativeExerciseIndex,
+                    itemBuilder: (context, page) {
+                      int lastPageItemNum =
+                          (_.cumulativeExerciseStatData['exercise_stats']
+                                          .length %
+                                      3 ==
+                                  0)
+                              ? 3
+                              : (_.cumulativeExerciseStatData['exercise_stats']
+                                      .length %
+                                  3);
+                      List<Widget> children = List.generate(
+                        (_.cumulativeExerciseStatData['exercise_stats'].length /
+                                            3)
+                                        .ceil() -
+                                    1 ==
+                                page
+                            ? lastPageItemNum
+                            : 3,
+                        (index) => ExerciseStatBlock(
+                          exerciseId:
+                              _.cumulativeExerciseStatData['exercise_stats']
+                                  [page * 3 + index]['exercise']['id'],
+                          exerciseName:
+                              _.cumulativeExerciseStatData['exercise_stats']
+                                  [page * 3 + index]['exercise']['name'],
+                          targetMuscle: _
+                                  .cumulativeExerciseStatData['exercise_stats']
+                              [page * 3 + index]['exercise']['target_muscle'],
+                          exerciseMethod: _
+                                  .cumulativeExerciseStatData['exercise_stats']
+                              [page * 3 + index]['exercise']['exercise_method'],
+                          count: _.cumulativeExerciseStatData['exercise_stats']
+                              [page * 3 + index]['count'],
+                          time: _.cumulativeExerciseStatData['exercise_stats']
+                              [page * 3 + index]['time'],
+                        ),
+                      );
+                      return Column(
+                        children: children,
+                      );
+                    },
                   ),
-                ],
+                ),
+              ),
+              GetBuilder<StatsController>(
+                builder: (_) {
+                  return IndexIndicator(
+                      currentIndex: _.currentCumulativeExerciseIndex,
+                      totalLength: (_
+                                  .cumulativeExerciseStatData['exercise_stats']
+                                  .length /
+                              3)
+                          .ceil());
+                },
+              ),
+              verticalSpacer(50),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Row(
+                  children: const [
+                    Text(
+                      _exerciseCategoryStatsLabelText,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: statsLabelFontSize,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
+                child: Text(
+                  AuthController.to.userInfo['username'] +
+                      '님, ' +
+                      _.cumulativeExerciseStatData['category_stats']['copy'],
+                  style: const TextStyle(
+                    fontSize: statsLabelFontSize,
+                    fontWeight: FontWeight.w500,
+                    color: clearBlackColor,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: SizedBox(
+                  width: 220,
+                  height: 220,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: PieChart(
+                      PieChartData(
+                        pieTouchData: PieTouchData(touchCallback:
+                            (FlTouchEvent event, pieTouchResponse) {
+                          if (!event.isInterestedForInteractions ||
+                              pieTouchResponse == null ||
+                              pieTouchResponse.touchedSection == null) {
+                            _.updateCumulativeExerciseStatsPiTouchIndex(-1);
+                            return;
+                          }
+                          _.updateCumulativeExerciseStatsPiTouchIndex(
+                              pieTouchResponse
+                                  .touchedSection!.touchedSectionIndex);
+                        }),
+                        borderData: FlBorderData(
+                          show: false,
+                        ),
+                        sectionsSpace: 0,
+                        centerSpaceRadius: 0,
+                        sections: _generatePiChartData(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 100,
+                child: Center(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.fromLTRB(30, 0, 30, 15),
+                    itemBuilder: _generatePiChartLabel,
+                    separatorBuilder: (context, index) => const VerticalDivider(
+                      color: dividerColor,
+                      width: 30,
+                      thickness: 1,
+                      endIndent: 30,
+                    ),
+                    itemCount: piChartValuesList.length,
+                  ),
+                ),
               ),
             ],
-          ),
-        ),
-      ],
+          );
+        }
+      },
     );
   }
 }

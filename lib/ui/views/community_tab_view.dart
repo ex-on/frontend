@@ -70,30 +70,35 @@ class CommunityTabView extends GetView<CommunityController> {
                 ],
               ),
               GetBuilder<CommunityController>(builder: (_) {
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  color: Colors.white,
-                  height: _.searchOpen ? null : 0,
-                  constraints: BoxConstraints(
-                    maxHeight: context.height - 56,
-                  ),
-                  width: context.width,
-                  child: SingleChildScrollView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    child: SizedBox(
-                      height: context.height - 56,
-                      child: Column(
-                        children: [
-                          verticalSpacer(100),
-                          SvgPicture.asset(_searchCharacter),
-                          const Text(
-                            '게시판의 글을 검색해보세요',
-                            style: TextStyle(
-                              color: deepGrayColor,
-                              fontSize: 18,
+                return AnimatedPositioned(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                  left: _.searchOpen ? 0 : context.width,
+                  child: Container(
+                    // duration: const Duration(milliseconds: 300),
+                    color: Colors.white,
+                    height: _.searchOpen ? null : 0,
+                    constraints: BoxConstraints(
+                      maxHeight: context.height - 56,
+                    ),
+                    width: context.width,
+                    child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: SizedBox(
+                        height: context.height - 56,
+                        child: Column(
+                          children: [
+                            verticalSpacer(100),
+                            SvgPicture.asset(_searchCharacter),
+                            const Text(
+                              '게시판의 글을 검색해보세요',
+                              style: TextStyle(
+                                color: deepGrayColor,
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

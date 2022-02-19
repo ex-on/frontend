@@ -1,4 +1,4 @@
-package com.example.exon_app
+package com.exonverse.exon_app
 
 import io.flutter.embedding.android.FlutterActivity
 

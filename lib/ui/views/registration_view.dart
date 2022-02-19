@@ -25,7 +25,9 @@ class RegistrationView extends GetView<RegisterController> {
     }
     return GetBuilder<RegisterController>(
       builder: (_) {
-        return Scaffold(body: _pages[_.page]);
+        return Scaffold(
+          body: _pages[_.page],
+        );
       },
     );
   }

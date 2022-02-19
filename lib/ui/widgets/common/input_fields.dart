@@ -124,7 +124,11 @@ class CommentInputTextField extends StatelessWidget {
           prefixIcon: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
-              CommentIcon(width: 20, height: 20),
+              CommentIcon(
+                width: 20,
+                height: 20,
+                color: Color(0xffDBD7EA),
+              ),
             ],
           ),
           suffixIcon: Transform.rotate(
@@ -193,12 +197,14 @@ class NumberInputField extends StatelessWidget {
   final String? hintText;
   final int? maxLength;
   final double? fontSize;
+  final double? height;
   final Function(String)? onChanged;
   const NumberInputField({
     Key? key,
     required this.controller,
     this.hintText,
     this.fontSize = 40,
+    this.height,
     this.maxLength,
     this.onChanged,
   }) : super(key: key);
@@ -206,6 +212,7 @@ class NumberInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+      // height: 75,
       width: 95,
       child: TextField(
         onChanged: onChanged,
@@ -238,6 +245,76 @@ class NumberInputField extends StatelessWidget {
             fontFamily: 'Manrope',
           ),
           border: InputBorder.none,
+          isCollapsed: true,
+        ),
+      ),
+    );
+  }
+}
+
+class PrefixLabelTextField extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final String? unit;
+
+  const PrefixLabelTextField({
+    Key? key,
+    required this.label,
+    required this.controller,
+    required this.focusNode,
+    this.unit,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 330,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: textFieldFillColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: () => FocusScope.of(context).requestFocus(focusNode),
+            borderRadius: BorderRadius.circular(20),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 15, left: 15, right: 10, bottom: 15),
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      height: 1,
+                      color: deepGrayColor,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                  width: 80,
+                  child: TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      suffixText: unit,
+                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                      ),
+                      // border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -247,10 +324,13 @@ class NumberInputField extends StatelessWidget {
 class InputFieldDisplay extends StatefulWidget {
   final String labelText;
   final String inputText;
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final bool isToggled;
   final double inputWidgetHeight;
   final Widget inputWidget;
+
+  final TextEditingController? controller;
+  final String? suffixText;
   const InputFieldDisplay({
     Key? key,
     required this.labelText,
@@ -259,6 +339,8 @@ class InputFieldDisplay extends StatefulWidget {
     required this.isToggled,
     required this.inputWidgetHeight,
     required this.inputWidget,
+    this.controller,
+    this.suffixText,
   }) : super(key: key);
 
   @override
@@ -307,25 +389,56 @@ class _InputFieldDisplayState extends State<InputFieldDisplay> {
                       ),
                     ),
                   ),
-                  widget.inputText == ''
-                      ? const SizedBox(
-                          height: 0,
-                          width: 0,
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                            bottom: 10,
-                          ),
-                          child: Text(
-                            widget.inputText,
-                            style: const TextStyle(
-                              height: 1,
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                          ),
+                  // widget.inputText == ''
+                  //     ? const SizedBox(
+                  //         height: 0,
+                  //         width: 0,
+                  //       )
+                  //     : Padding(
+                  //         padding: const EdgeInsets.only(
+                  //           top: 10,
+                  //           bottom: 10,
+                  //         ),
+                  //         child: Text(
+                  //           widget.inputText,
+                  //           style: const TextStyle(
+                  //             height: 1,
+                  //             color: Colors.black,
+                  //             fontSize: 15,
+                  //           ),
+                  //         ),
+                  //       ),
+                  SizedBox(
+                    height: 25,
+                    width: 80,
+                    child: TextField(
+                      controller: widget.controller,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        suffixText: widget.suffixText,
+                        contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
                         ),
+                        // border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: AnimatedRotation(
+                      duration: const Duration(milliseconds: 200),
+                      turns: widget.isToggled ? 1 / 4 : -1 / 4,
+                      child: Icon(
+                        Icons.arrow_back_ios_new_rounded,
+                        size: 18,
+                        color: widget.isToggled
+                            ? brightPrimaryColor
+                            : deepGrayColor,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

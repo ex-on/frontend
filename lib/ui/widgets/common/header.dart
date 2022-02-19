@@ -2,6 +2,7 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,9 @@ class Header extends StatelessWidget {
     this.actions,
     this.icon,
   }) : super(key: key);
+
+  // @override
+  // Size get preferredSize => Size.fromHeight(this.preferredSize.height);
 
   @override
   Widget build(BuildContext context) {
@@ -129,8 +133,8 @@ class _SearchHeaderState extends State<SearchHeader> {
               child: widget.leading,
             ),
             AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeIn,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
               left: searchOpen ? 50 : context.width,
               child: SizedBox(
                 width: 300,
@@ -143,7 +147,7 @@ class _SearchHeaderState extends State<SearchHeader> {
             ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 200),
-              curve: Curves.easeIn,
+              curve: Curves.easeOut,
               right: searchOpen ? context.width - 50 : 10,
               child: Material(
                 type: MaterialType.transparency,
@@ -193,16 +197,16 @@ class _SearchHeaderState extends State<SearchHeader> {
 }
 
 class StatsHeader extends StatelessWidget {
-  final Function() onCalendarPressed;
-  final Function() onChartPressed;
+  final Function() onByPeriodPressed;
+  final Function() onCumulativePressed;
   final String title;
   final int currentIndex;
-  final PreferredSizeWidget bottom;
+  final PreferredSizeWidget? bottom;
   final Color backgroundColor;
   const StatsHeader({
     Key? key,
-    required this.onCalendarPressed,
-    required this.onChartPressed,
+    required this.onByPeriodPressed,
+    required this.onCumulativePressed,
     required this.title,
     required this.currentIndex,
     required this.bottom,
@@ -212,21 +216,19 @@ class StatsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const String calendarIcon = 'assets/icons/Calendar.svg';
-    const String chartIcon = 'assets/icons/chart.svg';
     print(currentIndex);
 
     return AppBar(
       actions: [
         IconButton(
           splashRadius: 20,
-          icon: SvgPicture.asset(
-            chartIcon,
+          icon: StatIcon(
             width: 24,
             height: 24,
             color: currentIndex == 0 ? brightPrimaryColor : deepGrayColor,
           ),
           padding: EdgeInsets.zero,
-          onPressed: onCalendarPressed,
+          onPressed: onByPeriodPressed,
         ),
         IconButton(
           splashRadius: 20,
@@ -237,7 +239,7 @@ class StatsHeader extends StatelessWidget {
             color: currentIndex == 1 ? brightPrimaryColor : deepGrayColor,
           ),
           padding: EdgeInsets.zero,
-          onPressed: onChartPressed,
+          onPressed: onCumulativePressed,
         ),
         horizontalSpacer(10),
       ],

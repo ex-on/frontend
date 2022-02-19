@@ -1,13 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
 
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:exon_app/core/controllers/home_navigation_controller.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
-import 'package:exon_app/core/services/api_service.dart';
 import 'package:exon_app/core/services/user_api_service.dart';
 import 'package:exon_app/helpers/parse_jwt.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/all.dart';
@@ -42,8 +38,14 @@ class AuthController extends GetxController {
     update();
   }
 
+  void reset() {
+    userInfo = {};
+    update();
+  }
+
   Future<void> asyncMethod() async {
     await getUserInfo();
+    HomeNavigationController.to.reset();
     Get.offNamed('/home');
   }
 

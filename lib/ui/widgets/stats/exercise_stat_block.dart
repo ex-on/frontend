@@ -1,30 +1,39 @@
-import 'dart:math' as Math;
-
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ExcerciseStatBlock extends StatelessWidget {
+class ExerciseStatBlock extends GetView<StatsController> {
   final int exerciseId;
   final String exerciseName;
   final int targetMuscle;
   final int exerciseMethod;
-  const ExcerciseStatBlock({
+  final int count;
+  final int time;
+  const ExerciseStatBlock({
     Key? key,
     required this.exerciseId,
     required this.exerciseName,
     required this.targetMuscle,
     required this.exerciseMethod,
+    required this.count,
+    required this.time,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const double _excerciseTextWidth = 130;
-
-    void _onPressed() async {}
+    void _onPressed() {
+      controller.updateSelectedExerciseInfo({
+        'id': exerciseId,
+        'name': exerciseName,
+        'target_muscle': targetMuscle,
+        'exercise_method': exerciseMethod,
+      });
+      Get.toNamed('/stats/exercise');
+    }
 
     return Container(
       height: 76,
@@ -61,36 +70,18 @@ class ExcerciseStatBlock extends StatelessWidget {
                       child: verticalSpacer(0),
                     ),
                     const Text(
-                      '예상 1RM ',
+                      '수행 횟수 ',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 11,
                         color: clearBlackColor,
                       ),
                     ),
-                    const Text(
-                      '70kg',
-                      style: TextStyle(
+                    Text(
+                      count.toString() + '회',
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                         color: brightPrimaryColor,
-                      ),
-                    ),
-                    horizontalSpacer(5),
-                    SizedBox(
-                      height: 25,
-                      width: 25,
-                      child: IconButton(
-                        splashRadius: 25,
-                        padding: EdgeInsets.zero,
-                        onPressed: () {},
-                        icon: Transform.rotate(
-                          angle: -Math.pi * 90 / 180,
-                          child: const Icon(
-                            Icons.arrow_back_ios_rounded,
-                            size: 20,
-                            color: softGrayColor,
-                          ),
-                        ),
                       ),
                     ),
                   ],
@@ -98,49 +89,21 @@ class ExcerciseStatBlock extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 34,
-                      height: 21,
-                      decoration: BoxDecoration(
-                        color: const Color(0xffFFC700),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        targetMuscleIntToStr[targetMuscle] ?? '',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    TargetMuscleLabel(targetMuscle: targetMuscle),
                     horizontalSpacer(10),
-                    Container(
-                      width: 34,
-                      height: 21,
-                      decoration: BoxDecoration(
-                        color: brightPrimaryColor,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        exerciseMethodIntToStr[exerciseMethod] ?? '',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                        ),
-                      ),
+                    ExerciseMethodLabel(
+                      exerciseMethod: exerciseMethod,
                     ),
                     const Expanded(
                       child: SizedBox(
                         height: 0,
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 35),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 0),
                       child: Text(
-                        '14분 21초',
-                        style: TextStyle(
+                        formatTimeToText(time),
+                        style: const TextStyle(
                           fontSize: 12,
                           color: deepGrayColor,
                         ),

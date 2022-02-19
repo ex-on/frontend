@@ -1,14 +1,14 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
-import 'package:exon_app/helpers/enums.dart';
 import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/color_badge.dart';
+import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/transformers.dart';
@@ -99,7 +99,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
         title: exerciseTypeEnumToStr[_.exerciseType]! + _headerTitle,
         actions: [
           Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
             child: TextActionButton(
               buttonText:
                   exerciseTypeEnumToStr[getOtherExerciseType(_.exerciseType)]!,
@@ -342,11 +342,9 @@ class SelectExercisePage extends GetView<AddExerciseController> {
                     name: _.selectedExerciseDataList[index]['name'] ?? '',
                     exerciseId: _.selectedExerciseDataList[index]['id'],
                     targetMuscle: _.selectedExerciseDataList[index]
-                            ['target_muscle'] ??
-                        '',
+                        ['target_muscle'],
                     exerciseMethod: _.selectedExerciseDataList[index]
-                            ['exercise_method'] ??
-                        '',
+                        ['exercise_method'],
                     onTap: () => _onExerciseBlockPressed(index),
                   ),
                 ],
@@ -387,22 +385,25 @@ class SelectExercisePage extends GetView<AddExerciseController> {
 class _ExerciseBlock extends StatelessWidget {
   final String name;
   final int exerciseId;
-  final int targetMuscle;
+  final int? targetMuscle;
   final int exerciseMethod;
   final void Function() onTap;
   const _ExerciseBlock({
     Key? key,
     required this.name,
     required this.exerciseId,
-    required this.targetMuscle,
+    this.targetMuscle,
     required this.exerciseMethod,
     required this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    const Color _lightDarkSecondaryColor = Color(0xffD8D1FB);
+    const Color _lightBrightPrimaryColor = Color(0xffB9ECEA);
+
     void _onInfoButtonPressed(String name) {
-      Get.toNamed('/excercise_info', arguments: name);
+      Get.toNamed('/exercise_info', arguments: name);
     }
 
     return SizedBox(
@@ -424,16 +425,23 @@ class _ExerciseBlock extends StatelessWidget {
               ),
             ),
           ),
-          const Positioned(
+          Positioned(
             right: 0,
             width: 115,
             height: 90,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: lightGrayColor,
-                borderRadius: BorderRadius.only(
+                color: targetMuscle != null
+                    ? _lightDarkSecondaryColor
+                    : _lightBrightPrimaryColor,
+                borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(20),
                   bottomRight: Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: ExonIconLogo(
+                  color: Colors.white.withOpacity(0.4),
                 ),
               ),
             ),
@@ -471,20 +479,36 @@ class _ExerciseBlock extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Row(
-                            children: [
-                              TargetMuscleLabel(targetMuscle: targetMuscle),
-                              horizontalSpacer(10),
-                              ExerciseMethodLabel(
-                                  text:
-                                      exerciseMethodIntToStr[exerciseMethod]!),
-                              const Expanded(
-                                child: SizedBox(
-                                  height: 0,
+                          targetMuscle != null
+                              ? Row(
+                                  children: [
+                                    TargetMuscleLabel(
+                                        targetMuscle: targetMuscle!),
+                                    horizontalSpacer(10),
+                                    ExerciseMethodLabel(
+                                      exerciseMethod: exerciseMethod,
+                                    ),
+                                    const Expanded(
+                                      child: SizedBox(
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  children: [
+                                    const CardioLabel(),
+                                    horizontalSpacer(10),
+                                    CardioMethodLabel(
+                                      exerciseMethod: exerciseMethod,
+                                    ),
+                                    const Expanded(
+                                      child: SizedBox(
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),

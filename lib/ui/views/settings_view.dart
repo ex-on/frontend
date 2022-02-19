@@ -10,19 +10,18 @@ import 'package:get/get.dart';
 const String _headerText = '설정';
 const String _accountSettingsLabelText = '계정';
 const String _changePasswordLabelText = '비밀번호 변경';
-const String _phoneNumberLabelText = '전화번호';
+const String _usernameLabelText = '닉네임';
 const String _emailLabelText = '이메일';
-const String _privateAccountLabelText = '비공개 계정';
+const String _accountPrivacyLabelText = '공개 여부 설정';
 const String _pushAlarmLabelText = '푸시 알림';
 const String _signOutLabelText = '로그아웃';
-const String _support = '지원';
-const String _noticeLabelText = '공지사항';
-const String _faqLabelText = 'FAQ';
-const String _emailInquiryLabelText = '이메일 문의';
+const String _communicateSettingsLabelText = 'EXON과 소통하기';
+const String _reviewLabelText = '간단하게 리뷰 남기기';
+const String _instagramLabelText = 'EXON 이야기 팔로우';
+const String _featureFeedbackLabelText = '업데이트 기능 제안하기';
 const String _informationSettingsLabelText = '정보';
 const String _aboutExonLabelText = 'About EXON';
-const String _exonUserGuideLabelText = 'EXON 이용 가이드';
-const String _exonUserAgreementLabelText = 'Exon 이용약관';
+const String _exonUserAgreementLabelText = '이용약관';
 const String _personalInformationHandlingPolicy = '개인정보처리방침';
 const String _appVersion = '앱 버전';
 
@@ -46,16 +45,17 @@ class SettingsView extends StatelessWidget {
 
     Widget _getSettingsLabelItem(String labelText) {
       return SizedBox(
-        height: 50,
+        height: 40,
         child: Align(
           alignment: Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 24),
+            padding: const EdgeInsets.only(left: 18),
             child: Text(
               labelText,
               style: const TextStyle(
-                color: Colors.black,
-                fontSize: 20,
+                color: clearBlackColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
               ),
             ),
           ),
@@ -63,81 +63,123 @@ class SettingsView extends StatelessWidget {
       );
     }
 
-    Widget _getSettingsMenuItem(Function() onTap, String labelText) {
+    Widget _getSettingsMenuItem(Function() onTap, String labelText,
+        {Widget trailing = const SizedBox()}) {
       return SizedBox(
-        height: 50,
+        height: 40,
         width: context.width,
         child: InkWell(
           onTap: onTap,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 44),
+                padding: const EdgeInsets.only(left: 24),
                 child: Text(
                   labelText,
-                  style: const TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 16),
                 ),
-              )
+              ),
+              trailing,
             ],
           ),
         ),
       );
     }
 
+    Widget _divider =
+        Divider(color: Colors.grey[200], thickness: 2, height: 16);
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(children: [
-        Column(
-          children: [
-            Header(
-              onPressed: _onBackPressed,
-              title: _headerText,
-            ),
-            Expanded(
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 40),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                children: [
-                  _getSettingsLabelItem(_accountSettingsLabelText),
-                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
-                  _getSettingsMenuItem(() => null, _changePasswordLabelText),
-                  _getSettingsMenuItem(() => null, _phoneNumberLabelText),
-                  _getSettingsMenuItem(() => null, _emailLabelText),
-                  _getSettingsMenuItem(() => null, _privateAccountLabelText),
-                  _getSettingsMenuItem(() => null, _pushAlarmLabelText),
-                  _getSettingsMenuItem(
-                      () => _onSignOutPressed(), _signOutLabelText),
-                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
-                  _getSettingsLabelItem(_support),
-                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
-                  _getSettingsMenuItem(() => null, _noticeLabelText),
-                  _getSettingsMenuItem(() => null, _faqLabelText),
-                  _getSettingsMenuItem(() => null, _emailInquiryLabelText),
-                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
-                  _getSettingsLabelItem(_informationSettingsLabelText),
-                  Divider(color: Colors.grey[200], thickness: 2, height: 2),
-                  _getSettingsMenuItem(() => null, _aboutExonLabelText),
-                  _getSettingsMenuItem(() => null, _exonUserGuideLabelText),
-                  _getSettingsMenuItem(() => null, _exonUserAgreementLabelText),
-                  _getSettingsMenuItem(
-                      () => null, _personalInformationHandlingPolicy),
-                  _getSettingsMenuItem(() => null, _appVersion),
-                ],
+      body: SafeArea(
+        child: Stack(children: [
+          Column(
+            children: [
+              Header(
+                onPressed: _onBackPressed,
+                title: _headerText,
               ),
-            ),
-          ],
-        ),
-        GetBuilder<SettingsController>(builder: (_) {
-          if (_.loading) {
-            return LoadingIndicator();
-          } else {
-            return horizontalSpacer(0);
-          }
-        })
-      ]),
+              Expanded(
+                child: ListView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.only(bottom: 40),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  children: [
+                    _getSettingsLabelItem(_accountSettingsLabelText),
+                    _divider,
+                    _getSettingsMenuItem(() => null, _usernameLabelText),
+                    _getSettingsMenuItem(() => null, _emailLabelText),
+                    _getSettingsMenuItem(() => null, _changePasswordLabelText),
+                    _getSettingsMenuItem(() => null, _accountPrivacyLabelText),
+                    _getSettingsMenuItem(() => null, _pushAlarmLabelText),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child:
+                          _getSettingsLabelItem(_communicateSettingsLabelText),
+                    ),
+                    _divider,
+                    _getSettingsMenuItem(
+                      () => null,
+                      _reviewLabelText,
+                      trailing: const Padding(
+                        padding: EdgeInsets.only(right: 25),
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                    _getSettingsMenuItem(
+                      () => null,
+                      _instagramLabelText,
+                      trailing: const Padding(
+                        padding: EdgeInsets.only(right: 25),
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                    _getSettingsMenuItem(
+                      () => null,
+                      _featureFeedbackLabelText,
+                      trailing: const Padding(
+                        padding: EdgeInsets.only(right: 25),
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child:
+                          _getSettingsLabelItem(_informationSettingsLabelText),
+                    ),
+                    _divider,
+                    _getSettingsMenuItem(
+                        () => null, _exonUserAgreementLabelText),
+                    _getSettingsMenuItem(
+                        () => null, _personalInformationHandlingPolicy),
+                    _getSettingsMenuItem(() => null, _appVersion),
+                    _getSettingsMenuItem(
+                        () => _onSignOutPressed(), _signOutLabelText),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          GetBuilder<SettingsController>(builder: (_) {
+            if (_.loading) {
+              return const LoadingIndicator();
+            } else {
+              return horizontalSpacer(0);
+            }
+          })
+        ]),
+      ),
     );
   }
 }

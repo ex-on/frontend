@@ -1,5 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/rank_controller.dart';
+import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,18 +44,7 @@ class RankProteinPage extends GetView<RankController> {
                         ),
                         Material(
                           type: MaterialType.transparency,
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: IconButton(
-                              icon: const HelpIcon(),
-                              splashRadius: 15,
-                              splashColor: mainBackgroundColor,
-                              highlightColor: mainBackgroundColor,
-                              onPressed: _onHelpPressed,
-                              padding: EdgeInsets.zero,
-                            ),
-                          ),
+                          child: HelpIconButton(onPressed: _onHelpPressed),
                         ),
                       ],
                     ),

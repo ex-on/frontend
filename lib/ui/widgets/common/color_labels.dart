@@ -111,12 +111,50 @@ class TargetMuscleLabel extends StatelessWidget {
   }
 }
 
+class CardioLabel extends StatelessWidget {
+  final String? text;
+  final double? fontSize;
+  const CardioLabel({
+    Key? key,
+    this.text,
+    this.fontSize = 14,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: cardioColor,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 6, top: 2),
+        child: Text(
+          text ?? '유산소',
+          style: TextStyle(
+            height: 1.0,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            color: clearBlackColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class ExerciseMethodLabel extends StatelessWidget {
-  final String text;
+  final int exerciseMethod;
+  final String? text;
   final double? fontSize;
   const ExerciseMethodLabel({
     Key? key,
-    required this.text,
+    required this.exerciseMethod,
+    this.text,
     this.fontSize = 14,
   }) : super(key: key);
 
@@ -134,7 +172,45 @@ class ExerciseMethodLabel extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 6, top: 2),
         child: Text(
-          text,
+          text ?? exerciseMethodIntToStr[exerciseMethod]!,
+          style: TextStyle(
+            height: 1.0,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w500,
+            color: clearBlackColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CardioMethodLabel extends StatelessWidget {
+  final int exerciseMethod;
+  final String? text;
+  final double? fontSize;
+  const CardioMethodLabel({
+    Key? key,
+    required this.exerciseMethod,
+    this.text,
+    this.fontSize = 14,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: lightGrayColor,
+            width: 2,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 6, top: 2),
+        child: Text(
+          text ?? cardioMethodIntToStr[exerciseMethod]!,
           style: TextStyle(
             height: 1.0,
             fontSize: fontSize,

@@ -189,6 +189,9 @@ class AmplifyService {
       storage.delete(key: 'access_token');
       storage.delete(key: 'id_token');
       storage.delete(key: 'refresh_token');
+      storage.delete(key: 'username');
+      storage.delete(key: 'activity_level');
+      storage.delete(key: 'created_at');
       return true;
     } catch (e) {
       print(e);

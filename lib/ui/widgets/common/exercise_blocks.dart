@@ -2,7 +2,7 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/color_badge.dart';
+import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
@@ -10,14 +10,12 @@ import 'package:get/get.dart';
 
 class ExercisePlanBlock extends StatelessWidget {
   final Map<String, dynamic> exerciseData;
-  final int id;
-  final int numSets;
+  final Map<String, dynamic> planData;
   final bool incomplete;
   const ExercisePlanBlock({
     Key? key,
     required this.exerciseData,
-    required this.id,
-    required this.numSets,
+    required this.planData,
     required this.incomplete,
   }) : super(key: key);
 
@@ -28,8 +26,16 @@ class ExercisePlanBlock extends StatelessWidget {
     }
 
     void _onStartPressed() async {
-      await ExerciseBlockController.to.getExercisePlanWeightSets(id);
-      ExerciseBlockController.to.startExercise(id, exerciseData);
+      if (exerciseData['target_muscle'] != null) {
+        await ExerciseBlockController.to
+            .getExercisePlanWeightSets(planData['id']);
+        ExerciseBlockController.to
+            .startExerciseWeight(planData['id'], exerciseData);
+      } else {
+        ExerciseBlockController.to.updateExercisePlanCardio(planData);
+        ExerciseBlockController.to
+            .startExerciseCardio(planData['id'], exerciseData);
+      }
     }
 
     return Container(
@@ -57,27 +63,65 @@ class ExercisePlanBlock extends StatelessWidget {
                     ? const IncompleteIcon()
                     : StartExerciseButton(onStartPressed: _onStartPressed),
                 horizontalSpacer(15),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      exerciseData['name'],
-                      style: const TextStyle(
-                        height: 1.0,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: clearBlackColor,
-                      ),
-                    ),
-                    verticalSpacer(10),
-                    TargetMuscleLabel(
-                      targetMuscle: exerciseData['target_muscle'],
-                      text:
-                          '${targetMuscleIntToStr[exerciseData['target_muscle']]} / ${exerciseMethodIntToStr[exerciseData['exercise_method']]} / $numSets세트',
-                    ),
-                  ],
-                ),
+                exerciseData['target_muscle'] != null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            exerciseData['name'],
+                            style: const TextStyle(
+                              height: 1.0,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: clearBlackColor,
+                            ),
+                          ),
+                          verticalSpacer(10),
+                          TargetMuscleLabel(
+                            targetMuscle: exerciseData['target_muscle'],
+                            text:
+                                '${targetMuscleIntToStr[exerciseData['target_muscle']]} / ${exerciseMethodIntToStr[exerciseData['exercise_method']]} / ${planData['num_sets']}세트',
+                          ),
+                        ],
+                      )
+                    : Builder(builder: (context) {
+                        String _targetDistance = '';
+                        String _targetDuration = '';
+
+                        if (planData['target_distance'] != null) {
+                          _targetDistance = ' / ' +
+                              getCleanTextFromDouble(
+                                  planData['target_distance']) +
+                              'km';
+                        }
+
+                        if (planData['target_duration'] != null) {
+                          _targetDuration = ' / ' +
+                              formatTimeToText(planData['target_duration']);
+                        }
+
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              exerciseData['name'],
+                              style: const TextStyle(
+                                height: 1.0,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: clearBlackColor,
+                              ),
+                            ),
+                            verticalSpacer(10),
+                            CardioLabel(
+                              text:
+                                  '유산소 / ${cardioMethodIntToStr[exerciseData['exercise_method']]}$_targetDistance$_targetDuration',
+                            ),
+                          ],
+                        );
+                      }),
               ],
             ),
           ),
@@ -87,15 +131,13 @@ class ExercisePlanBlock extends StatelessWidget {
   }
 }
 
-class ExcerciseRecordBlock extends StatelessWidget {
+class ExerciseRecordBlock extends StatelessWidget {
   final Map<String, dynamic> exerciseData;
-  final int totalSets;
-  final double totalVolume;
-  const ExcerciseRecordBlock({
+  final Map<String, dynamic> recordData;
+  const ExerciseRecordBlock({
     Key? key,
     required this.exerciseData,
-    required this.totalSets,
-    required this.totalVolume,
+    required this.recordData,
   }) : super(key: key);
 
   @override
@@ -139,26 +181,50 @@ class ExcerciseRecordBlock extends StatelessWidget {
                       ),
                     ),
                     verticalSpacer(10),
-                    Row(
-                      children: [
-                        TargetMuscleLabel(
-                          targetMuscle: exerciseData['target_muscle'],
-                          text:
-                              '${targetMuscleIntToStr[exerciseData['target_muscle']]}',
-                          // $totalSets세트',
-                        ),
-                        horizontalSpacer(10),
-                        ExerciseMethodLabel(
-                          text:
-                              '${exerciseMethodIntToStr[exerciseData['exercise_method']]}',
-                        ),
-                        horizontalSpacer(10),
-                        ExerciseRecordLabel(
-                          text:
-                              '기록 / $totalSets세트 / ${getCleanTextFromDouble(totalVolume)}kg',
-                        ),
-                      ],
-                    ),
+                    (exerciseData['target_muscle'] != null)
+                        ? Row(
+                            children: [
+                              TargetMuscleLabel(
+                                text: targetMuscleIntToStr[
+                                        exerciseData['target_muscle']]! +
+                                    ' / ' +
+                                    exerciseMethodIntToStr[
+                                        exerciseData['exercise_method']]!,
+                                targetMuscle: exerciseData['target_muscle'],
+                              ),
+                              horizontalSpacer(10),
+                              ExerciseRecordLabel(
+                                text: recordData['total_volume'] != 0
+                                    ? '${recordData['total_sets']}세트 / ${getCleanTextFromDouble(recordData['total_volume'])}kg'
+                                    : '${recordData['total_sets']}세트 / ${recordData['total_reps']}회',
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              CardioLabel(
+                                text: '유산소 / ' +
+                                    cardioMethodIntToStr[
+                                        exerciseData['exercise_method']]!,
+                              ),
+                              horizontalSpacer(10),
+                              Builder(builder: (context) {
+                                String _recordDistance = '';
+                                String _recordDuration = ' / ' +
+                                    formatTimeToText(
+                                        recordData['record_duration']);
+
+                                if (recordData['record_distance'] != null) {
+                                  _recordDistance = getCleanTextFromDouble(
+                                          recordData['record_distance']) +
+                                      'km';
+                                }
+                                return ExerciseRecordLabel(
+                                  text: _recordDistance + _recordDuration,
+                                );
+                              }),
+                            ],
+                          ),
                   ],
                 ),
               ],

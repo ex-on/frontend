@@ -31,7 +31,7 @@ class HorizontalPicker extends StatefulWidget {
       this.activeItemTextColor = Colors.black,
       this.passiveItemTextColor = deepGrayColor,
       this.suffix = '',
-      this.unit = 'cm'})
+      this.unit = ''})
       : assert(minValue < maxValue),
         super(key: key);
 
@@ -129,7 +129,7 @@ class _HorizontalPickerState extends State<HorizontalPicker> {
                     return ItemWidget(curValue,
                         backgroundColor: widget.backgroundColor!,
                         suffix: widget.suffix!,
-                        unit: widget.unit ?? 'cm');
+                        unit: widget.unit ?? '');
                   }).toList()),
             ),
             Visibility(
@@ -158,7 +158,10 @@ class ItemWidget extends StatefulWidget {
   final String? suffix;
   final String unit;
   const ItemWidget(this.curItem,
-      {Key? key, required this.backgroundColor, this.suffix, required this.unit})
+      {Key? key,
+      required this.backgroundColor,
+      this.suffix,
+      required this.unit})
       : super(key: key);
 
   @override

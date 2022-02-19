@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+const String _exonLogo = "assets/exonLogo.svg";
+const String _exonIconLogo = "assets/exonIconLogo.svg";
+
+const String _communityIcon = 'assets/icons/communityIcon.svg';
+const String _rankIcon = 'assets/icons/rankIcon.svg';
+const String _statIcon = 'assets/icons/statIcon.svg';
+const String _homeIcon = 'assets/icons/homeIcon.svg';
+const String _profileIcon = 'assets/icons/profileIcon.svg';
 const String _likeIcon = 'assets/icons/lightningIcon.svg';
 const String _commentIcon = 'assets/icons/commentIcon.svg';
 const String _bookmarkIcon = 'assets/icons/bookmarkIcon.svg';
@@ -19,10 +27,172 @@ const String _scrollUpIcon = 'assets/icons/arrowDropUp.svg';
 
 const String _excitedCharacter = 'assets/characters/excitedCharacter.svg';
 const String _tiredCharacter = 'assets/characters/tiredCharacter.svg';
-const String _jumpingExcitedCharacter = 'assets/characters/jumpingExcitedCharacter.svg';
+const String _jumpingExcitedCharacter =
+    'assets/characters/jumpingExcitedCharacter.svg';
+const String _dumbellCharacter = 'assets/characters/dumbellCharacter.svg';
+const String _privacyCharacter = 'assets/characters/privacyCharacter.svg';
 
 const String _completeIcon = 'assets/completeIcon.svg';
 const String _incompleteIcon = 'assets/icons/incompleteIcon.svg';
+const String _fistIcon = 'assets/icons/fistIcon.svg';
+
+const String _maleAvatar = 'assets/maleAvatar.svg';
+
+class ExonLogo extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const ExonLogo({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _exonLogo,
+      width: width,
+      height: height,
+      color: color,
+      fit: BoxFit.contain,
+    );
+  }
+}
+
+class ExonIconLogo extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const ExonIconLogo({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _exonIconLogo,
+      width: width,
+      height: height,
+      color: color,
+      fit: BoxFit.contain,
+    );
+  }
+}
+
+class CommunityIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const CommunityIcon({
+    Key? key,
+    this.width = 25,
+    this.height = 25,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _communityIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class ProfileIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const ProfileIcon({
+    Key? key,
+    this.width = 25,
+    this.height = 25,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _profileIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class StatIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const StatIcon({
+    Key? key,
+    this.width = 25,
+    this.height = 25,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _statIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class HomeIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const HomeIcon({
+    Key? key,
+    this.width = 25,
+    this.height = 25,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _homeIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class RankIcon extends StatelessWidget {
+  final double width;
+  final double height;
+  final Color? color;
+  const RankIcon({
+    Key? key,
+    this.width = 25,
+    this.height = 25,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _rankIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
 
 class LikeIcon extends StatelessWidget {
   final double width;
@@ -376,6 +546,7 @@ class ExcitedCharacter extends StatelessWidget {
     );
   }
 }
+
 class JumpingExcitedCharacter extends StatelessWidget {
   final double? width;
   final double? height;
@@ -420,6 +591,50 @@ class TiredCharacter extends StatelessWidget {
   }
 }
 
+class DumbellCharacter extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const DumbellCharacter({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _dumbellCharacter,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class PrivacyCharacter extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const PrivacyCharacter({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _privacyCharacter,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
 class CompleteIcon extends StatelessWidget {
   final double? width;
   final double? height;
@@ -457,6 +672,50 @@ class IncompleteIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _incompleteIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class FistIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const FistIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _fistIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class MaleAvatar extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const MaleAvatar({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _maleAvatar,
       width: width,
       height: height,
       color: color,

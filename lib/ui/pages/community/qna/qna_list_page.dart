@@ -56,6 +56,7 @@ class QnaListPage extends StatelessWidget {
                       );
                     } else {
                       return Stack(
+                        alignment: Alignment.topCenter,
                         children: [
                           NotificationListener<OverscrollIndicatorNotification>(
                             onNotification:
@@ -95,7 +96,9 @@ class QnaListPage extends StatelessWidget {
                             child: FloatingWriteButton(
                               onPressed: _onWritePressed,
                             ),
-                            bottom: 35 + context.mediaQueryPadding.bottom + 88,
+                            bottom:
+                                // 35 + context.mediaQueryPadding.bottom + 88,
+                                50,
                             right: 35,
                           ),
                           Positioned(
@@ -115,7 +118,8 @@ class QnaListPage extends StatelessWidget {
                                     heroTag: 'scroll_up',
                                     backgroundColor: Colors.white,
                                     onPressed: _onScrollUpPressed,
-                                    icon: const ScrollUpIcon(),
+                                    icon: const ScrollUpIcon(
+                                        color: lightGrayColor),
                                     height: 40,
                                     width: 40,
                                   ),

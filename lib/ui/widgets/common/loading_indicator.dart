@@ -8,10 +8,12 @@ import 'package:get/get.dart';
 class LoadingIndicator extends StatefulWidget {
   final bool route;
   final bool icon;
+  final Color? backgroundColor;
   const LoadingIndicator({
     Key? key,
     this.route = false,
     this.icon = false,
+    this.backgroundColor = Colors.white,
   }) : super(key: key);
 
   @override
@@ -140,6 +142,86 @@ class CircularLoadingIndicator extends StatelessWidget {
     return const Center(
       child: CircularProgressIndicator(
         color: brightPrimaryColor,
+      ),
+    );
+  }
+}
+
+class LinearLoadingIndicator extends StatefulWidget {
+  final int? duration;
+  final double? width;
+  final Color indicatorColor;
+
+  const LinearLoadingIndicator({
+    Key? key,
+    this.duration = 2,
+    this.width = 300,
+    required this.indicatorColor,
+  }) : super(key: key);
+
+  @override
+  State<LinearLoadingIndicator> createState() => _LinearLoadingIndicatorState();
+}
+
+class _LinearLoadingIndicatorState extends State<LinearLoadingIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(seconds: widget.duration ?? 2),
+      vsync: this,
+    );
+    _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: widget.width,
+        height: 15,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+        ),
+        child: Row(
+          children: [
+            AnimatedBuilder(
+              animation: _controller,
+              child: SizedBox(
+                width: 120,
+                height: 15,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.white.withOpacity(0),
+                        widget.indicatorColor.withOpacity(0.4),
+                        Colors.white.withOpacity(0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              builder: (BuildContext context, Widget? child) {
+                return Transform.translate(
+                  offset: Offset(_controller.value * widget.width! - 60, 0),
+                  child: child!,
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

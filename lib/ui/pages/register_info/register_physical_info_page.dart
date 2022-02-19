@@ -13,7 +13,7 @@ import 'package:get/get.dart';
 const String _titleText = '신체를 업그레이드할 준비가 되셨나요?';
 const String _titleLabelText =
     '신체 정보를 입력하면 더욱 편리한 서비스 이용이 가능해요😊 아는 만큼 입력해주세요!!';
-const String _heightFieldLabelText = '신장';
+const String _heightFieldLabelText = '*신장';
 const String _weightFieldLabelText = '무게';
 const String _bodyFatPercentageFieldLabelText = '체지방률';
 const String _muscleMassFieldLabelText = '근육량';
@@ -210,7 +210,7 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
             return ElevatedActionButton(
               buttonText: _startButtonText,
               onPressed: _onStartPressed,
-              activated: _.height != null ||
+              activated: _.height != null &&
                   _.weight != null ||
                   _.bodyFatPercentage != null ||
                   _.muscleMass != null,

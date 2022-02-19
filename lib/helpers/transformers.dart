@@ -69,6 +69,13 @@ const Map<int, String> exerciseMethodIntToStr = {
   11: '기타',
 };
 
+const Map<int, String> cardioMethodIntToStr = {
+  0: '전체',
+  1: '맨몸',
+  2: '머신',
+  3: '기타',
+};
+
 const Map<int, String> difficultyIntToString = {
   0: '하급',
   1: '중급',
@@ -185,9 +192,17 @@ String formatTimeToText(int seconds) {
   int minutes = (sec / 60).truncate();
   sec = sec % 60;
 
-  if (seconds > 3600) {
+  if (seconds >= 3600) {
+    if (minutes == 0) {
+      return "$hours시간";
+    }
     return "$hours시간 $minutes분";
+  } else if (seconds < 60) {
+    return "$sec초";
   } else {
+    if (sec == 0) {
+      return "$minutes분";
+    }
     return "$minutes분 $sec초";
   }
 }
@@ -221,11 +236,14 @@ String getCleanTextFromDouble(double val) {
   }
 }
 
-Map<int, String> userActivityLevelIntToStr = {
-  0: '헬스세포',
-  1: '헬생아',
+Map<int, String> activityLevelIntToStr = {
+  0: '말랑말랑 인간',
+  1: '헬스세포',
   2: '헬린이',
-  3: '걸어다니는 헬스장',
+  3: '말하는 닭가슴살',
+  4: '근성장 교과서',
+  5: '걸어다니는 헬스장',
+  6: '근손실 방지 위원회',
 };
 
 Map<int, String> monthlyStatsCategoryIntToStr = {
@@ -243,3 +261,44 @@ Map<int, String> monthlyStatsCategoryIntToStrEng = {
   4: 'total_distance',
 };
 
+Map<int, String> physicalStatsCategoryIntToStr = {
+  0: '몸무게',
+  1: '골격근량',
+  2: '체지방률',
+  3: 'BMI',
+  4: '인바디점수',
+};
+
+Map<int, String> physicalStatsCategoryIntToStrEng = {
+  0: 'weight',
+  1: 'muscle_mass',
+  2: 'body_fat_percentage',
+  3: 'bmi',
+  4: 'inbody_score',
+};
+
+String getPhysicalStatsUnit(int category) {
+  late String unit;
+
+  switch (category) {
+    case 2:
+      unit = '%';
+      break;
+    case 3:
+      unit = '';
+      break;
+    case 4:
+      unit = '점';
+      break;
+    default:
+      unit = 'kg';
+      break;
+  }
+  return unit;
+}
+
+Map<int, Color> profileExerciseStatusIntToColor = {
+  1: brightPrimaryColor.withOpacity(0.1),
+  2: brightPrimaryColor.withOpacity(0.37),
+  3: brightPrimaryColor,
+};

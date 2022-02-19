@@ -49,10 +49,15 @@ dependencies:
   liquid_progress_indicator: ^0.4.0
   confetti: ^0.6.0
   syncfusion_flutter_charts: ^19.4.47
+  percent_indicator: ^4.0.0
+  pull_to_refresh: ^2.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-
+  firebase_core: ^1.12.0
+  firebase_messaging: ^11.2.6
+  flutter_local_notifications: ^9.2.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -81,15 +86,16 @@ flutter:
     - assets/benchpress.png
     - assets/completeIcon.svg
     - assets/loadingLogo.svg
-    - assets/exonWatermark.svg
+    - assets/exonIconLogo.svg
     - assets/searchCharacter.svg
     - assets/DaytimeIcon.svg
     - assets/NighttimeIcon.svg
-    - assets/icons/chart.svg
-    - assets/icons/desk.svg
-    - assets/icons/home.svg
-    - assets/icons/star.svg
-    - assets/icons/userCircle.svg
+    - assets/maleAvatar.svg
+    - assets/icons/communityIcon.svg
+    - assets/icons/rankIcon.svg
+    - assets/icons/profileIcon.svg
+    - assets/icons/statIcon.svg
+    - assets/icons/homeIcon.svg
     - assets/icons/commentIcon.svg
     - assets/icons/lightningIcon.svg
     - assets/icons/bookmarkIcon.svg
@@ -109,9 +115,12 @@ flutter:
     - assets/icons/XIcon.svg
     - assets/icons/checkIcon.svg
     - assets/icons/incompleteIcon.svg
+    - assets/icons/fistIcon.svg
     - assets/characters/excitedCharacter.svg
     - assets/characters/tiredCharacter.svg
     - assets/characters/jumpingExcitedCharacter.svg
+    - assets/characters/dumbellCharacter.svg
+    - assets/characters/privacyCharacter.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

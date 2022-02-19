@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
-import 'package:exon_app/ui/widgets/common/color_badge.dart';
+import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -87,6 +87,8 @@ class _DailyExerciseStatBlockState extends State<DailyExerciseStatBlock> {
                                   ),
                                   horizontalSpacer(8),
                                   ExerciseMethodLabel(
+                                    exerciseMethod:
+                                        _exerciseData['exercise_method'],
                                     text: exerciseMethodIntToStr[
                                             _exerciseData['exercise_method']]! +
                                         ' / ' +
