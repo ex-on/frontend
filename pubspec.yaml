@@ -97,6 +97,7 @@ flutter:
     - assets/icons/statIcon.svg
     - assets/icons/homeIcon.svg
     - assets/icons/commentIcon.svg
+    - assets/icons/commentIconTrailing.svg
     - assets/icons/lightningIcon.svg
     - assets/icons/bookmarkIcon.svg
     - assets/icons/Calendar.svg

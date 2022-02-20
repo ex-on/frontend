@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:exon_app/helpers/utils.dart';
 
 class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
   const ExerciseWeightBlockView({Key? key}) : super(key: key);

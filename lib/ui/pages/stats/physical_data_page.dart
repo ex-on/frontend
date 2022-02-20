@@ -11,6 +11,7 @@ import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:exon_app/helpers/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PhysicalDataPage extends GetView<PhysicalDataController> {

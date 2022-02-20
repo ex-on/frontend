@@ -130,6 +130,7 @@ class _SearchHeaderState extends State<SearchHeader> {
           children: [
             SizedBox(
               width: searchOpen ? 0 : null,
+              height: 56,
               child: widget.leading,
             ),
             AnimatedPositioned(

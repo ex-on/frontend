@@ -245,13 +245,17 @@ class HelpIconButton extends StatelessWidget {
   final Color? overlayColor;
   final Color? backgroundColor;
   final double? size;
-  const HelpIconButton({
-    Key? key,
-    required this.onPressed,
-    this.overlayColor,
-    this.backgroundColor,
-    this.size,
-  }) : super(key: key);
+  final double? fontSize;
+  final double? splashRadius;
+  const HelpIconButton(
+      {Key? key,
+      required this.onPressed,
+      this.overlayColor,
+      this.backgroundColor,
+      this.size,
+      this.fontSize,
+      this.splashRadius})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -262,14 +266,14 @@ class HelpIconButton extends StatelessWidget {
         color: backgroundColor ?? Colors.white,
         shape: const CircleBorder(),
         child: IconButton(
-          icon: const Text(
+          icon: Text(
             '?',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: fontSize ?? 12,
               color: brightPrimaryColor,
             ),
           ),
-          splashRadius: size != null ? (size! / 2) : 10,
+          splashRadius: splashRadius ?? (size != null ? (size! / 2) : 10),
           splashColor: overlayColor ?? mainBackgroundColor,
           highlightColor: overlayColor ?? mainBackgroundColor,
           onPressed: onPressed,

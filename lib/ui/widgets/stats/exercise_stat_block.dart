@@ -86,12 +86,36 @@ class ExerciseStatBlock extends GetView<StatsController> {
                     ),
                   ],
                 ),
-                Row(
+               targetMuscle != null ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TargetMuscleLabel(targetMuscle: targetMuscle),
                     horizontalSpacer(10),
                     ExerciseMethodLabel(
+                      exerciseMethod: exerciseMethod,
+                    ),
+                    const Expanded(
+                      child: SizedBox(
+                        height: 0,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 0),
+                      child: Text(
+                        formatTimeToText(time),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: deepGrayColor,
+                        ),
+                      ),
+                    )
+                  ],
+                ) : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const CardioLabel(),
+                    horizontalSpacer(10),
+                   CardioMethodLabel(
                       exerciseMethod: exerciseMethod,
                     ),
                     const Expanded(

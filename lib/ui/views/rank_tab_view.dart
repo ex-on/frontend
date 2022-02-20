@@ -1,13 +1,10 @@
 import 'package:exon_app/core/controllers/rank_controller.dart';
-import 'package:exon_app/ui/pages/rank/rank_aerobic_page.dart';
+import 'package:exon_app/ui/pages/rank/rank_cardio_page.dart';
 import 'package:exon_app/ui/pages/rank/rank_protein_page.dart';
 import 'package:exon_app/ui/pages/rank/rank_weight_page.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/constants/constants.dart';
-import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
-import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class RankTabView extends GetView<RankController> {
@@ -18,13 +15,15 @@ class RankTabView extends GetView<RankController> {
     Widget _tabBar = TabBar(
       controller: controller.rankMainTabController,
       isScrollable: true,
-      indicator: BoxDecoration(),
+      indicatorColor: brightPrimaryColor,
       labelColor: brightPrimaryColor,
       unselectedLabelColor: lightGrayColor,
       labelStyle: const TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
       ),
+      indicatorSize: TabBarIndicatorSize.label,
+      indicatorWeight: 3.5,
       unselectedLabelStyle: const TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
@@ -45,7 +44,7 @@ class RankTabView extends GetView<RankController> {
             controller: controller.rankMainTabController,
             children: const <Widget>[
               RankProteinPage(),
-              RankAerobicPage(),
+              RankCardioPage(),
               RankWeightPage(),
             ],
           ),

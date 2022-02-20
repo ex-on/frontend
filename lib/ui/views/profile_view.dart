@@ -78,7 +78,7 @@ class ProfileView extends GetView<ProfileController> {
                       child: Text(
                         _.userInfo.isNotEmpty
                             ? activityLevelIntToStr[
-                                    int.parse(_.userInfo['activity_level'])]! +
+                                    _.userInfo['activity_level']]! +
                                 ' ' +
                                 _.userInfo['username']
                             : '',

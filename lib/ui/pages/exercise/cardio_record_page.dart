@@ -10,6 +10,7 @@ import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:exon_app/helpers/utils.dart';
 
 class CardioRecordPage extends GetView<ExerciseBlockController> {
   const CardioRecordPage({Key? key}) : super(key: key);

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:exon_app/helpers/utils.dart';
 
 const Color _progressBackgroundColor = Color(0xffEAE9EF);
 
@@ -203,174 +204,336 @@ class ExerciseCardioBlockView extends GetView<ExerciseBlockController> {
       },
     );
 
-    Widget _currentExerciseTimeCounter = Padding(
-      padding: const EdgeInsets.only(top: 30),
-      child: GetX<ExerciseBlockController>(
-        builder: (__) {
-          return CircularPercentIndicator(
-            radius: 130,
-            lineWidth: 12,
-            backgroundColor: _progressBackgroundColor,
-            progressColor: brightPrimaryColor,
-            percent: __.currentExerciseTime.value /
-                __.exercisePlanCardio['target_duration'],
-            circularStrokeCap: CircularStrokeCap.round,
-            center: SizedBox(
-              width: 236,
-              height: 236,
-              child: DecoratedBox(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    verticalSpacer(55),
-                    SizedBox(
-                      width: 170,
+    Widget _currentExerciseTimeCounter = controller
+                .exercisePlanCardio['target_duration'] !=
+            null
+        ? Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: GetX<ExerciseBlockController>(
+              builder: (__) {
+                return CircularPercentIndicator(
+                  radius: 130,
+                  lineWidth: 12,
+                  backgroundColor: _progressBackgroundColor,
+                  progressColor: brightPrimaryColor,
+                  percent: __.currentExerciseTime.value /
+                      __.exercisePlanCardio['target_duration'],
+                  circularStrokeCap: CircularStrokeCap.round,
+                  center: SizedBox(
+                    width: 236,
+                    height: 236,
+                    child: DecoratedBox(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            controller.exerciseData['name'],
-                            overflow: TextOverflow.clip,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: darkPrimaryColor,
+                          verticalSpacer(55),
+                          SizedBox(
+                            width: 170,
+                            child: Column(
+                              children: [
+                                Text(
+                                  controller.exerciseData['name'],
+                                  overflow: TextOverflow.clip,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: darkPrimaryColor,
+                                  ),
+                                ),
+                                verticalSpacer(3),
+                                const Text(
+                                  '운동시간',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: darkPrimaryColor,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          verticalSpacer(3),
-                          const Text(
-                            '운동시간',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: darkPrimaryColor,
-                            ),
+                          GetX<ExerciseBlockController>(
+                            builder: (__) {
+                              if (__.currentExerciseTime.value >= 3600) {
+                                return Text(
+                                  formatHHMMSS(__.currentExerciseTime.value),
+                                  style: const TextStyle(
+                                    fontFamily: 'Manrope',
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: darkPrimaryColor,
+                                  ),
+                                );
+                              } else {
+                                return Text(
+                                  formatMMSS(__.currentExerciseTime.value),
+                                  style: const TextStyle(
+                                    fontFamily: 'Manrope',
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.bold,
+                                    color: darkPrimaryColor,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
                     ),
-                    GetX<ExerciseBlockController>(
-                      builder: (__) {
-                        if (__.currentExerciseTime.value >= 3600) {
-                          return Text(
-                            formatHHMMSS(__.currentExerciseTime.value),
-                            style: const TextStyle(
-                              fontFamily: 'Manrope',
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: darkPrimaryColor,
-                            ),
-                          );
-                        } else {
-                          return Text(
-                            formatMMSS(__.currentExerciseTime.value),
-                            style: const TextStyle(
-                              fontFamily: 'Manrope',
-                              fontSize: 50,
-                              fontWeight: FontWeight.bold,
-                              color: darkPrimaryColor,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
-    );
-
-    Widget _restTimeCounter = Padding(
-      padding: const EdgeInsets.only(top: 30),
-      child: GetX<ExerciseBlockController>(
-        builder: (__) {
-          return CircularPercentIndicator(
-            radius: 130,
-            lineWidth: 12,
-            backgroundColor: _progressBackgroundColor,
-            progressColor: darkSecondaryColor,
-            percent: __.currentExerciseTime.value /
-                __.exercisePlanCardio['target_duration'],
-            circularStrokeCap: CircularStrokeCap.round,
-            center: SizedBox(
-              width: 236,
-              height: 236,
-              child: LiquidCircularProgressIndicator(
-                value: __.currentExerciseTime.value /
-                    __.exercisePlanCardio['target_duration'],
-                backgroundColor: Colors.white,
-                valueColor: AlwaysStoppedAnimation(
-                  darkSecondaryColor.withOpacity(0.4),
-                ),
-                center: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    verticalSpacer(30),
-                    const SizedBox(
-                      width: 170,
-                      child: Text(
-                        '휴식중',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: darkPrimaryColor,
-                          // color: darkPrimaryColor.withOpacity(0.5),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: CircularPercentIndicator(
+              radius: 130,
+              lineWidth: 12,
+              backgroundColor: _progressBackgroundColor,
+              progressColor: brightPrimaryColor,
+              percent: 1,
+              circularStrokeCap: CircularStrokeCap.round,
+              center: SizedBox(
+                width: 236,
+                height: 236,
+                child: DecoratedBox(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      verticalSpacer(55),
+                      SizedBox(
+                        width: 170,
+                        child: Column(
+                          children: [
+                            Text(
+                              controller.exerciseData['name'],
+                              overflow: TextOverflow.clip,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: darkPrimaryColor,
+                              ),
+                            ),
+                            verticalSpacer(3),
+                            const Text(
+                              '운동시간',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: darkPrimaryColor,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    GetX<ExerciseBlockController>(
-                      builder: (__) {
-                        return Text(
-                          formatMMSS(__.restTime.value),
-                          style: const TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: darkPrimaryColor,
-                          ),
-                        );
-                      },
-                    ),
-                    verticalSpacer(10),
-                    GetX<ExerciseBlockController>(
-                      builder: (__) {
-                        if (__.currentExerciseTime.value >= 3600) {
-                          return Text(
-                            formatHHMMSS(__.currentExerciseTime.value),
-                            style: TextStyle(
-                              fontFamily: 'Manrope',
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: darkPrimaryColor.withOpacity(0.4),
-                            ),
-                          );
-                        } else {
-                          return Text(
-                            formatMMSS(__.currentExerciseTime.value),
-                            style: TextStyle(
-                              fontFamily: 'Manrope',
-                              fontSize: 50,
-                              fontWeight: FontWeight.bold,
-                              color: darkPrimaryColor.withOpacity(0.4),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                      GetX<ExerciseBlockController>(
+                        builder: (__) {
+                          if (__.currentExerciseTime.value >= 3600) {
+                            return Text(
+                              formatHHMMSS(__.currentExerciseTime.value),
+                              style: const TextStyle(
+                                fontFamily: 'Manrope',
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: darkPrimaryColor,
+                              ),
+                            );
+                          } else {
+                            return Text(
+                              formatMMSS(__.currentExerciseTime.value),
+                              style: const TextStyle(
+                                fontFamily: 'Manrope',
+                                fontSize: 50,
+                                fontWeight: FontWeight.bold,
+                                color: darkPrimaryColor,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           );
-        },
-      ),
-    );
+
+    Widget _restTimeCounter = controller
+                .exercisePlanCardio['target_duration'] !=
+            null
+        ? Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: GetX<ExerciseBlockController>(
+              builder: (__) {
+                return CircularPercentIndicator(
+                  radius: 130,
+                  lineWidth: 12,
+                  backgroundColor: _progressBackgroundColor,
+                  progressColor: darkSecondaryColor,
+                  percent: __.currentExerciseTime.value /
+                      __.exercisePlanCardio['target_duration'],
+                  circularStrokeCap: CircularStrokeCap.round,
+                  center: SizedBox(
+                    width: 236,
+                    height: 236,
+                    child: LiquidCircularProgressIndicator(
+                      value: __.currentExerciseTime.value /
+                          __.exercisePlanCardio['target_duration'],
+                      backgroundColor: Colors.white,
+                      valueColor: AlwaysStoppedAnimation(
+                        darkSecondaryColor.withOpacity(0.4),
+                      ),
+                      center: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          verticalSpacer(30),
+                          const SizedBox(
+                            width: 170,
+                            child: Text(
+                              '휴식중',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: darkPrimaryColor,
+                                // color: darkPrimaryColor.withOpacity(0.5),
+                              ),
+                            ),
+                          ),
+                          GetX<ExerciseBlockController>(
+                            builder: (__) {
+                              return Text(
+                                formatMMSS(__.restTime.value),
+                                style: const TextStyle(
+                                  fontFamily: 'Manrope',
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: darkPrimaryColor,
+                                ),
+                              );
+                            },
+                          ),
+                          verticalSpacer(10),
+                          GetX<ExerciseBlockController>(
+                            builder: (__) {
+                              if (__.currentExerciseTime.value >= 3600) {
+                                return Text(
+                                  formatHHMMSS(__.currentExerciseTime.value),
+                                  style: TextStyle(
+                                    fontFamily: 'Manrope',
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                    color: darkPrimaryColor.withOpacity(0.4),
+                                  ),
+                                );
+                              } else {
+                                return Text(
+                                  formatMMSS(__.currentExerciseTime.value),
+                                  style: TextStyle(
+                                    fontFamily: 'Manrope',
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.bold,
+                                    color: darkPrimaryColor.withOpacity(0.4),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: CircularPercentIndicator(
+              radius: 130,
+              lineWidth: 12,
+              backgroundColor: _progressBackgroundColor,
+              progressColor: darkSecondaryColor,
+              percent: 1,
+              circularStrokeCap: CircularStrokeCap.round,
+              center: SizedBox(
+                width: 236,
+                height: 236,
+                child: LiquidCircularProgressIndicator(
+                  value: 0.5,
+                  backgroundColor: Colors.white,
+                  valueColor: AlwaysStoppedAnimation(
+                    darkSecondaryColor.withOpacity(0.4),
+                  ),
+                  center: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      verticalSpacer(30),
+                      const SizedBox(
+                        width: 170,
+                        child: Text(
+                          '휴식중',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: darkPrimaryColor,
+                            // color: darkPrimaryColor.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                      GetX<ExerciseBlockController>(
+                        builder: (__) {
+                          return Text(
+                            formatMMSS(__.restTime.value),
+                            style: const TextStyle(
+                              fontFamily: 'Manrope',
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: darkPrimaryColor,
+                            ),
+                          );
+                        },
+                      ),
+                      verticalSpacer(10),
+                      GetX<ExerciseBlockController>(
+                        builder: (__) {
+                          if (__.currentExerciseTime.value >= 3600) {
+                            return Text(
+                              formatHHMMSS(__.currentExerciseTime.value),
+                              style: TextStyle(
+                                fontFamily: 'Manrope',
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: darkPrimaryColor.withOpacity(0.4),
+                              ),
+                            );
+                          } else {
+                            return Text(
+                              formatMMSS(__.currentExerciseTime.value),
+                              style: TextStyle(
+                                fontFamily: 'Manrope',
+                                fontSize: 50,
+                                fontWeight: FontWeight.bold,
+                                color: darkPrimaryColor.withOpacity(0.4),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
 
     return Scaffold(
       backgroundColor: mainBackgroundColor,

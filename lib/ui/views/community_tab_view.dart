@@ -29,7 +29,9 @@ class CommunityTabView extends GetView<CommunityController> {
     Widget _tabBar = TabBar(
       controller: controller.communityMainTabController,
       isScrollable: true,
-      indicator: BoxDecoration(),
+      indicatorWeight: 3.5,
+      indicatorColor: brightPrimaryColor,
+      indicatorSize: TabBarIndicatorSize.label,
       labelColor: brightPrimaryColor,
       unselectedLabelColor: lightGrayColor,
       labelStyle: const TextStyle(

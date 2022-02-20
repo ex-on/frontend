@@ -5,7 +5,6 @@ import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/rank_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/helpers/utils.dart';
-import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/circle.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
@@ -14,31 +13,29 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class RankWeightPage extends GetView<RankController> {
-  const RankWeightPage({Key? key}) : super(key: key);
+class RankCardioPage extends GetView<RankController> {
+  const RankCardioPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration.zero, () {
-      if (controller.weightRankData.isEmpty) {
-        controller.weightRefreshController.requestRefresh();
+      if (controller.cardioRankData.isEmpty) {
+        controller.cardioRefreshController.requestRefresh();
       }
     });
-
-    void _onHelpPressed() {}
 
     return GetBuilder<RankController>(
       builder: (_) {
         return SmartRefresher(
-          controller: controller.weightRefreshController,
-          onRefresh: controller.onWeightRefresh,
+          controller: controller.cardioRefreshController,
+          onRefresh: controller.onCardioRefresh,
           header: const MaterialClassicHeader(
-            color: darkSecondaryColor,
+            color: cardioColor,
           ),
           child: ListView(
             padding: EdgeInsets.zero,
             children: () {
-              if (_.weightRankData.isEmpty) {
+              if (_.cardioRankData.isEmpty) {
                 return <Widget>[
                   const Padding(
                     padding: EdgeInsets.only(top: 100),
@@ -61,29 +58,17 @@ class RankWeightPage extends GetView<RankController> {
                           padding: const EdgeInsets.symmetric(horizontal: 30),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const EnergyIcon(
-                                color: darkSecondaryColor,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 6, right: 5),
+                            children: const [
+                              EnergyIcon(),
+                              Padding(
+                                padding: EdgeInsets.only(left: 6),
                                 child: Text(
-                                  '이달의 총 운동 볼륨',
+                                  '이달의 칼로리 소모',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                     color: clearBlackColor,
                                   ),
-                                ),
-                              ),
-                              Material(
-                                type: MaterialType.transparency,
-                                child: HelpIconButton(
-                                  onPressed: _onHelpPressed,
-                                  size: 20,
-                                  backgroundColor: mainBackgroundColor,
-                                  overlayColor:
-                                      brightPrimaryColor.withOpacity(0.1),
                                 ),
                               ),
                             ],
@@ -107,7 +92,7 @@ class RankWeightPage extends GetView<RankController> {
                                     AuthController.to.userInfo['username'] +
                                     '님은 ' +
                                     DateFormat('yyyy년 MM월')
-                                        .format(_.weightRankSelectedMonth)
+                                        .format(_.cardioRankSelectedMonth)
                                         .toString() +
                                     '에\n총 ',
                                 style: const TextStyle(
@@ -117,17 +102,18 @@ class RankWeightPage extends GetView<RankController> {
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: getCleanTextFromDouble(
-                                        _.weightRankData['volume'].toDouble()),
+                                    text: getCleanTextFromDouble(_
+                                        .cardioRankData['calories']
+                                        .toDouble()),
                                     style: const TextStyle(
                                       fontSize: 18,
                                       height: 22 / 18,
-                                      color: darkSecondaryColor,
+                                      color: cardioColor,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   const TextSpan(
-                                    text: 'kg의 운동 볼륨을 소화했어요',
+                                    text: ' kcal를 소모했어요',
                                     style: TextStyle(
                                       fontSize: 14,
                                       height: 22 / 14,
@@ -144,24 +130,24 @@ class RankWeightPage extends GetView<RankController> {
                           padding: const EdgeInsets.symmetric(horizontal: 30),
                           child: () {
                             double _baseWidth = max<double>(
-                                    _.weightRankData['avg_volume'].toDouble(),
-                                    _.weightRankData['volume'].toDouble()) +
-                                100;
+                                    _.cardioRankData['avg_calories'].toDouble(),
+                                    _.cardioRankData['calories'].toDouble()) +
+                                50;
                             return Column(
                               children: [
                                 Row(
                                   children: [
                                     const Text(
-                                      '나의 운동 볼륨',
+                                      '나의 소모 kcal',
                                       style: TextStyle(
-                                        color: darkSecondaryColor,
+                                        color: cardioColor,
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     Container(
                                       width: (context.width - 150) *
-                                          _.weightRankData['volume'] /
+                                          _.cardioRankData['calories'] /
                                           _baseWidth,
                                       height: 18,
                                       padding: const EdgeInsets.only(right: 10),
@@ -172,15 +158,14 @@ class RankWeightPage extends GetView<RankController> {
                                       ),
                                       decoration: BoxDecoration(
                                         gradient: const LinearGradient(colors: [
-                                          darkSecondaryColor,
+                                          Color(0xff8effbb),
                                           brightPrimaryColor
                                         ]),
                                         borderRadius: BorderRadius.circular(50),
                                       ),
                                       child: Text(
-                                        getCleanTextFromDouble(_
-                                            .weightRankData['volume']
-                                            .toDouble()),
+                                        getCleanTextFromDouble(
+                                            _.cardioRankData['calories']),
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -193,7 +178,7 @@ class RankWeightPage extends GetView<RankController> {
                                 Row(
                                   children: [
                                     const Text(
-                                      '평균 운동 볼륨',
+                                      '평균 소모 kcal',
                                       style: TextStyle(
                                         color: deepGrayColor,
                                         fontSize: 12,
@@ -202,23 +187,22 @@ class RankWeightPage extends GetView<RankController> {
                                     ),
                                     Container(
                                       width: (context.width - 150) *
-                                          _.weightRankData['avg_volume'] /
+                                          _.cardioRankData['avg_calories'] /
                                           _baseWidth,
                                       height: 18,
-                                      padding: const EdgeInsets.only(right: 10),
-                                      margin: const EdgeInsets.only(left: 7),
-                                      alignment: Alignment.centerRight,
                                       constraints: const BoxConstraints(
                                         minWidth: 30,
                                       ),
+                                      padding: const EdgeInsets.only(right: 10),
+                                      margin: const EdgeInsets.only(left: 7),
+                                      alignment: Alignment.centerRight,
                                       decoration: BoxDecoration(
                                         color: mainBackgroundColor,
                                         borderRadius: BorderRadius.circular(50),
                                       ),
                                       child: Text(
-                                        getCleanTextFromDouble(_
-                                            .weightRankData['avg_volume']
-                                            .toDouble()),
+                                        getCleanTextFromDouble(
+                                            _.cardioRankData['avg_calories']),
                                         style: const TextStyle(
                                           color: deepGrayColor,
                                           fontSize: 14,
@@ -253,13 +237,13 @@ class RankWeightPage extends GetView<RankController> {
                               padding: EdgeInsets.zero,
                               iconSize: 20,
                               onPressed:
-                                  controller.subtractWeightRankSelectedMonth,
+                                  controller.subtractCardioRankSelectedMonth,
                             ),
                           ),
                           GetBuilder<RankController>(builder: (_) {
                             return Text(
                               DateFormat('yyyy년 MM월')
-                                  .format(_.weightRankSelectedMonth)
+                                  .format(_.cardioRankSelectedMonth)
                                   .toString(),
                               style: const TextStyle(
                                 color: deepGrayColor,
@@ -271,9 +255,9 @@ class RankWeightPage extends GetView<RankController> {
                             padding: const EdgeInsets.only(right: 40),
                             child: GetBuilder<RankController>(builder: (_) {
                               bool _activated =
-                                  _.weightRankSelectedMonth.year !=
+                                  _.cardioRankSelectedMonth.year !=
                                           DateTime.now().year ||
-                                      _.weightRankSelectedMonth.month !=
+                                      _.cardioRankSelectedMonth.month !=
                                           DateTime.now().month;
                               return IconButton(
                                 icon: RotatedBox(
@@ -289,7 +273,7 @@ class RankWeightPage extends GetView<RankController> {
                                 padding: EdgeInsets.zero,
                                 iconSize: 20,
                                 onPressed: _activated
-                                    ? _.addWeightRankSelectedMonth
+                                    ? _.addCardioRankSelectedMonth
                                     : null,
                               );
                             }),
@@ -308,7 +292,7 @@ class RankWeightPage extends GetView<RankController> {
                   ),
                 ];
 
-                _.weightRankData['rank_list'].asMap().forEach(
+                _.cardioRankData['rank_list'].asMap().forEach(
                   (index, data) {
                     late Widget _rankIcon;
 
@@ -365,7 +349,7 @@ class RankWeightPage extends GetView<RankController> {
                     children.add(
                       DecoratedBox(
                         decoration: BoxDecoration(
-                          color: index + 1 == _.weightRankData['rank']
+                          color: index + 1 == _.cardioRankData['rank']
                               ? brightPrimaryColor.withOpacity(0.15)
                               : null,
                         ),
@@ -413,14 +397,14 @@ class RankWeightPage extends GetView<RankController> {
                                     Text.rich(
                                       TextSpan(
                                         text: getCleanTextFromDouble(
-                                            data['volume'].toDouble()),
+                                            data['calories']),
                                         style: const TextStyle(
                                           fontSize: 16,
                                           color: clearBlackColor,
                                         ),
                                         children: const [
                                           TextSpan(
-                                            text: ' kg',
+                                            text: ' kcal',
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: clearBlackColor,
@@ -433,9 +417,10 @@ class RankWeightPage extends GetView<RankController> {
                                 ),
                               ),
                               const Divider(
-                                  thickness: 0.5,
-                                  color: lightGrayColor,
-                                  height: 0.5),
+                                thickness: 0.5,
+                                color: lightGrayColor,
+                                height: 0.5,
+                              ),
                             ],
                           ),
                         ),

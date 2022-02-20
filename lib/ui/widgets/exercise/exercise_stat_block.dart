@@ -7,6 +7,7 @@ import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:exon_app/helpers/utils.dart';
 
 class DailyExerciseStatBlock extends StatefulWidget {
   final int index;

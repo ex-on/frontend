@@ -10,6 +10,7 @@ import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:exon_app/helpers/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MonthlyStatsPage extends GetView<StatsController> {

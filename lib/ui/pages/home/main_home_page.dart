@@ -237,12 +237,17 @@ class MainHomePage extends GetView<HomeController> {
               Positioned(
                 bottom: 25,
                 left: 30,
-                child: GetBuilder<HomeController>(builder: (_) {
-                  return ExerciseTimeCounter(
-                    theme: _.theme,
-                    totalExerciseTime: _.totalExerciseTime,
-                  );
-                }),
+                child: GetBuilder<HomeController>(
+                  builder: (_) {
+                    return ExerciseTimeCounter(
+                      theme: _.theme,
+                      totalExerciseTime: (_.weekExerciseStatus.isEmpty)
+                          ? 0
+                          : _.weekExerciseStatus[DateFormat('yyyy/MM/dd')
+                              .format(_.currentDay)]['total_exercise_time'],
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -251,17 +256,19 @@ class MainHomePage extends GetView<HomeController> {
         verticalSpacer(20),
         Padding(
           padding: const EdgeInsets.only(left: 30),
-          child: GetBuilder<HomeController>(builder: (_) {
-            return Text(
-              _totalExercisePlanNumText +
-                  _.indexDayExercisePlanList.length.toString() +
-                  '개',
-              style: const TextStyle(
-                color: softGrayColor,
-                fontSize: 13.7,
-              ),
-            );
-          }),
+          child: GetBuilder<HomeController>(
+            builder: (_) {
+              return Text(
+                _totalExercisePlanNumText +
+                    _.indexDayExercisePlanList.length.toString() +
+                    '개',
+                style: const TextStyle(
+                  color: softGrayColor,
+                  fontSize: 13.7,
+                ),
+              );
+            },
+          ),
         ),
         Expanded(
           child: Stack(

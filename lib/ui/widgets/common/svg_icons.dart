@@ -11,6 +11,7 @@ const String _homeIcon = 'assets/icons/homeIcon.svg';
 const String _profileIcon = 'assets/icons/profileIcon.svg';
 const String _likeIcon = 'assets/icons/lightningIcon.svg';
 const String _commentIcon = 'assets/icons/commentIcon.svg';
+const String _commentIconTrailing = 'assets/icons/commentIconTrailing.svg';
 const String _bookmarkIcon = 'assets/icons/bookmarkIcon.svg';
 const String _proteinIcon = 'assets/icons/proteinIcon.svg';
 const String _whiteProteinIcon = 'assets/icons/whiteProteinIcon.svg';
@@ -231,6 +232,28 @@ class CommentIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _commentIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class CommentIconTrailing extends StatelessWidget {
+  final double width;
+  final double height;
+  final Color? color;
+  const CommentIconTrailing({
+    Key? key,
+    this.width = 13,
+    this.height = 13,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _commentIconTrailing,
       width: width,
       height: height,
       color: color,

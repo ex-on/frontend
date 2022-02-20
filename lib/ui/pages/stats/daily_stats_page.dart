@@ -1,6 +1,7 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
@@ -482,7 +483,7 @@ class DailyStatsPage extends GetView<StatsController> {
                                               ),
                                               Padding(
                                                 padding:
-                                                    EdgeInsets.only(top: 3),
+                                                   const EdgeInsets.only(top: 3),
                                                 child: Text.rich(
                                                   TextSpan(
                                                     text: getCleanTextFromDouble(

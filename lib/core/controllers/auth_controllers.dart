@@ -74,24 +74,24 @@ class AuthController extends GetxController {
     bool userInfoStored = await storage.containsKey(key: 'username') &&
         await storage.containsKey(key: 'activity_level') &&
         await storage.containsKey(key: 'created_at');
-    if (userInfoStored) {
-      Map<String, dynamic> storedUserInfo = {
-        'username': await storage.read(key: 'username'),
-        'activity_level': await storage.read(key: 'activity_level'),
-        'created_at': await storage.read(key: 'created_at'),
-      };
-      if (storedUserInfo['username'] != null &&
-          storedUserInfo['activity_level'] != null &&
-          storedUserInfo['created_at'] != null) {
-        userInfo = storedUserInfo;
-        update();
-        return;
-      } else {
-        storage.delete(key: 'username');
-        storage.delete(key: 'activity_level');
-        storage.delete(key: 'created_at');
-      }
-    }
+    // if (userInfoStored) {
+    //   Map<String, dynamic> storedUserInfo = {
+    //     'username': await storage.read(key: 'username'),
+    //     'activity_level': await storage.read(key: 'activity_level'),
+    //     'created_at': await storage.read(key: 'created_at'),
+    //   };
+    //   if (storedUserInfo['username'] != null &&
+    //       storedUserInfo['activity_level'] != null &&
+    //       storedUserInfo['created_at'] != null) {
+    //     userInfo = storedUserInfo;
+    //     update();
+    //     return;
+    //   } else {
+    storage.delete(key: 'username');
+    storage.delete(key: 'activity_level');
+    storage.delete(key: 'created_at');
+    //   }
+    // }
     var data = await UserApiService.getUserInfo();
     if (data != null) {
       userInfo = data;

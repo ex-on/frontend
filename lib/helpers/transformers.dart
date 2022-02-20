@@ -228,11 +228,22 @@ Map<int, String> qnaCategoryIntToStr = {
   2: '해결',
 };
 
-String getCleanTextFromDouble(double val) {
-  if (val % 1 != 0) {
-    return val.toStringAsFixed(1);
-  } else {
-    return val.toInt().toString();
+int getLevelRequiredProtein(int level) {
+  switch (level) {
+    case 1:
+      return 100;
+    case 2:
+      return 1000;
+    case 3:
+      return 10000;
+    case 4:
+      return 50000;
+    case 5:
+      return 100000;
+    case 6:
+      return 200000;
+    default:
+      return 0;
   }
 }
 

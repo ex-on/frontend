@@ -2,6 +2,7 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/index_indicator.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
@@ -199,7 +200,9 @@ class CumulativeStatsExercisePage extends GetView<StatsController> {
                   },
                   child: PageView.builder(
                     itemCount:
-                        _.cumulativeExerciseStatData['exercise_stats'].length,
+                        (_.cumulativeExerciseStatData['exercise_stats'].length /
+                                3)
+                            .ceil(),
                     onPageChanged:
                         controller.updateCurrentCumulativeExerciseIndex,
                     itemBuilder: (context, page) {

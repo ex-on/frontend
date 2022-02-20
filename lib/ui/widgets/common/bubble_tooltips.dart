@@ -83,6 +83,7 @@ class TooltipHelpIconButton extends StatelessWidget {
         color: darkSecondaryColor,
         shape: TooltipShapeBorder(
           arrowPosition: 0.8,
+          arrowHeight: 10,
         ),
       ),
       child: SizedBox(

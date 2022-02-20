@@ -1,6 +1,5 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
-import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
@@ -13,6 +12,7 @@ import 'package:exon_app/ui/widgets/exercise/set_input_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:exon_app/helpers/utils.dart';
 
 class AddExerciseDetailsPage extends StatelessWidget {
   const AddExerciseDetailsPage({Key? key}) : super(key: key);

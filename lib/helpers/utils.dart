@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 bool compareSameDate(DateTime dateTime1, DateTime dateTime2) {
   return (dateTime1.year == dateTime2.year) &&
       (dateTime1.month == dateTime2.month) &&
@@ -16,22 +18,26 @@ int getOtherExerciseType(int type) {
   }
 }
 
-int getLevelRequiredProtein(int level) {
-  switch (level) {
-    case 1:
-      return 100;
-    case 2:
-      return 1000;
-    case 3:
-      return 10000;
-    case 4:
-      return 50000;
-    case 5:
-      return 100000;
-    case 6:
-      return 200000;
-    default:
-      return 0;
+String formatNumberFromInt(int number) {
+  var f = NumberFormat("###,###", "en_US");
+  return f.format(number);
+}
+
+String formatNumberFromDouble(double number) {
+  var f = NumberFormat("###,###.#", "en_US");
+  return f.format(number);
+}
+
+String formatNumberFromStr(String number) {
+  var f = NumberFormat("###,###", "en_US");
+  return f.format(int.parse(number));
+}
+
+String getCleanTextFromDouble(num val) {
+  if (val % 1 != 0) {
+    return formatNumberFromDouble(val.toDouble());
+  } else {
+    return formatNumberFromInt(val.toInt());
   }
 }
 

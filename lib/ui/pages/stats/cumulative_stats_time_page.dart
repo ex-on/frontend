@@ -2,6 +2,7 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
@@ -265,17 +266,6 @@ class CumulativeStatsTimePage extends GetView<StatsController> {
                         color: darkSecondaryColor,
                         width: 3,
                         xValueMapper: (dynamic data, _) {
-                          // // print(data);
-                          // DateTime date = data[0];
-                          // if (date.day == 1) {
-                          //   if (date.year == DateTime.now().year) {
-                          //     return date;
-                          //   } else {
-                          //     return date;
-                          //   }
-                          // } else {
-                          //   return date;
-                          // }
                           return data[0];
                         },
                         yValueMapper: (dynamic data, _) {
