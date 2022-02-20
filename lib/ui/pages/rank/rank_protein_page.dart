@@ -545,14 +545,16 @@ class RankProteinPage extends GetView<RankController> {
                           width: 45,
                           height: 50,
                           color: index + 1 == _.proteinRankData['rank']
-                              ? brightPrimaryColor
+                              ? brightPrimaryColor.withOpacity(0.8)
                               : Colors.transparent,
                           child: Center(
                             child: Text(
                               (index + 1).toString(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
-                                color: brightPrimaryColor,
+                                color: index + 1 == _.proteinRankData['rank']
+                                    ? Colors.white
+                                    : brightPrimaryColor,
                               ),
                             ),
                           ),

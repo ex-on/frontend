@@ -25,7 +25,106 @@ class RankWeightPage extends GetView<RankController> {
       }
     });
 
-    void _onHelpPressed() {}
+    Widget _helpDialog = AlertDialog(
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                width: 40,
+                height: 40,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  children: const [
+                    EnergyIcon(
+                      color: darkSecondaryColor,
+                      width: 20,
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 6.5),
+                      child: Text(
+                        '운동 볼륨',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: clearBlackColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: IconButton(
+                  onPressed: () => Get.back(),
+                  splashRadius: 20,
+                  iconSize: 20,
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.close),
+                ),
+              )
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 8, bottom: 20),
+            child: Text(
+              '운동 볼륨 산출 방법은 다음과 같습니다.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: deepGrayColor,
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 2, bottom: 20),
+            child: Text.rich(
+              TextSpan(
+                text: '세트별 ',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: deepGrayColor,
+                ),
+                children: [
+                  TextSpan(
+                    text: '"무게 x 횟수"',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: brightPrimaryColor,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '의 총합',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: deepGrayColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    void _onHelpPressed() {
+      Get.dialog(_helpDialog);
+    }
 
     return GetBuilder<RankController>(
       builder: (_) {
@@ -347,15 +446,17 @@ class RankWeightPage extends GetView<RankController> {
                         _rankIcon = Circle(
                           width: 45,
                           height: 50,
-                          color: index + 1 == _.cardioRankData['rank']
-                              ? brightPrimaryColor
+                          color: index + 1 == _.weightRankData['rank']
+                              ? brightPrimaryColor.withOpacity(0.8)
                               : Colors.transparent,
                           child: Center(
                             child: Text(
                               (index + 1).toString(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
-                                color: brightPrimaryColor,
+                                color: index + 1 == _.weightRankData['rank']
+                                    ? Colors.white
+                                    : brightPrimaryColor,
                               ),
                             ),
                           ),

@@ -1,6 +1,5 @@
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
-import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/horizontal_number_picker.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
@@ -211,16 +210,16 @@ class RegisterPhysicalInfoPage extends StatelessWidget {
               buttonText: _startButtonText,
               onPressed: _onStartPressed,
               activated: _.height != null &&
-                  _.weight != null ||
-                  _.bodyFatPercentage != null ||
+                      _.weight != null &&
+                      _.bodyFatPercentage != null ||
                   _.muscleMass != null,
             );
           },
         ),
         verticalSpacer(5),
-        TextActionButton(
-            buttonText: _nextTimeButtonText, onPressed: _onNextTimePressed),
-        verticalSpacer(50),
+        // TextActionButton(
+        //     buttonText: _nextTimeButtonText, onPressed: _onNextTimePressed),
+        // verticalSpacer(50),
       ],
     );
   }

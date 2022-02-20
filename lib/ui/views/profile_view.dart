@@ -627,8 +627,13 @@ class ProfileView extends GetView<ProfileController> {
                                                       const EdgeInsets.only(
                                                           top: 5),
                                                   child: Text(
-                                                    getCleanTextFromDouble(
-                                                        _.profileData[
+                                                    _.profileData['physical_data']
+                                                                [
+                                                                'muscle_mass'] ==
+                                                            null
+                                                        ? '--'
+                                                        : getCleanTextFromDouble(_
+                                                                    .profileData[
                                                                 'physical_data']
                                                             ['muscle_mass']),
                                                     style: const TextStyle(
@@ -658,10 +663,16 @@ class ProfileView extends GetView<ProfileController> {
                                                       const EdgeInsets.only(
                                                           top: 5),
                                                   child: Text(
-                                                    getCleanTextFromDouble(_
-                                                                .profileData[
-                                                            'physical_data'][
-                                                        'body_fat_percentage']),
+                                                    _.profileData['physical_data']
+                                                                [
+                                                                'body_fat_percentage'] ==
+                                                            null
+                                                        ? '--'
+                                                        : getCleanTextFromDouble(_
+                                                                    .profileData[
+                                                                'physical_data']
+                                                            [
+                                                            'body_fat_percentage']),
                                                     style: const TextStyle(
                                                       fontSize: 13,
                                                       color: brightPrimaryColor,

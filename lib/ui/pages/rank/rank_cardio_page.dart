@@ -332,14 +332,16 @@ class RankCardioPage extends GetView<RankController> {
                           width: 45,
                           height: 50,
                           color: index + 1 == _.cardioRankData['rank']
-                              ? brightPrimaryColor
+                              ? brightPrimaryColor.withOpacity(0.8)
                               : Colors.transparent,
                           child: Center(
                             child: Text(
                               (index + 1).toString(),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
-                                color: brightPrimaryColor,
+                                color: index + 1 == _.cardioRankData['rank']
+                                    ? Colors.white
+                                    : brightPrimaryColor,
                               ),
                             ),
                           ),
