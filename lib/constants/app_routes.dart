@@ -9,8 +9,10 @@ import 'package:exon_app/ui/pages/community/qna/qna_write_page.dart';
 import 'package:exon_app/ui/pages/exercise/cardio_record_page.dart';
 import 'package:exon_app/ui/pages/exercise/end_exercise_summary_page.dart';
 import 'package:exon_app/ui/pages/exercise/update_exercise_details_page.dart';
+import 'package:exon_app/ui/pages/stats/exercise_bodyweight_stats_page.dart';
+import 'package:exon_app/ui/pages/stats/exercise_cardio_stats_page.dart';
 import 'package:exon_app/ui/pages/stats/exercise_stats_list_page.dart';
-import 'package:exon_app/ui/pages/stats/exercise_stats_page.dart';
+import 'package:exon_app/ui/pages/stats/exercise_weight_stats_page.dart';
 import 'package:exon_app/ui/pages/stats/physical_data_page.dart';
 import 'package:exon_app/ui/pages/stats/record_physical_data_page.dart';
 import 'package:exon_app/ui/views/add_exercise_view.dart';
@@ -70,8 +72,16 @@ class AppRoutes {
       page: () => const PhysicalDataPage(),
     ),
     GetPage(
-      name: '/stats/exercise',
-      page: () => const ExerciseStatsPage(),
+      name: '/stats/exercise/weight',
+      page: () => const ExerciseWeightStatsPage(),
+    ),
+    GetPage(
+      name: '/stats/exercise/bodyweight',
+      page: () => const ExerciseBodyweightStatsPage(),
+    ),
+    GetPage(
+      name: '/stats/exercise/cardio',
+      page: () => const ExerciseCardioStatsPage(),
     ),
     GetPage(
       name: '/stats/exercise_list',

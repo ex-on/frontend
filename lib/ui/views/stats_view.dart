@@ -54,22 +54,17 @@ class StatsView extends GetView<StatsController> {
       },
     );
 
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-      ),
-      child: Column(
-        children: [
-          _header,
-          Expanded(
-            child: GetBuilder<StatsController>(
-              builder: (_) {
-                return _pages[_.page];
-              },
-            ),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        _header,
+        Expanded(
+          child: GetBuilder<StatsController>(
+            builder: (_) {
+              return _pages[_.page];
+            },
+          ),
+        )
+      ],
     );
   }
 }

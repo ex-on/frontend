@@ -1,6 +1,6 @@
 import 'package:exon_app/core/controllers/stats_controller.dart';
+import 'package:exon_app/ui/widgets/exercise/exercise_blocks.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
-import 'package:exon_app/ui/widgets/stats/exercise_stat_block.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

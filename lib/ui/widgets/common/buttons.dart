@@ -241,9 +241,10 @@ class FloatingIconButton extends StatelessWidget {
 }
 
 class HelpIconButton extends StatelessWidget {
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final Color? overlayColor;
   final Color? backgroundColor;
+  final Color? textColor;
   final double? size;
   final double? fontSize;
   final double? splashRadius;
@@ -252,6 +253,7 @@ class HelpIconButton extends StatelessWidget {
       required this.onPressed,
       this.overlayColor,
       this.backgroundColor,
+      this.textColor,
       this.size,
       this.fontSize,
       this.splashRadius})
@@ -270,7 +272,7 @@ class HelpIconButton extends StatelessWidget {
             '?',
             style: TextStyle(
               fontSize: fontSize ?? 12,
-              color: brightPrimaryColor,
+              color: textColor ?? brightPrimaryColor,
             ),
           ),
           splashRadius: splashRadius ?? (size != null ? (size! / 2) : 10),

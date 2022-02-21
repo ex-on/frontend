@@ -52,12 +52,18 @@ class TooltipShapeBorder extends ShapeBorder {
 class TooltipHelpIconButton extends StatelessWidget {
   final String message;
   final double? size;
+  final double? arrowPosition;
   final Color? overlayColor;
+  final Color? backgroundColor;
+  final Color? iconColor;
   const TooltipHelpIconButton({
     Key? key,
     required this.message,
     this.size,
+    this.arrowPosition,
     this.overlayColor,
+    this.backgroundColor,
+    this.iconColor,
   }) : super(key: key);
 
   void _onTap(GlobalKey key) {
@@ -79,10 +85,10 @@ class TooltipHelpIconButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 16),
       preferBelow: false,
       showDuration: const Duration(seconds: 2),
-      decoration: const ShapeDecoration(
+      decoration: ShapeDecoration(
         color: darkSecondaryColor,
         shape: TooltipShapeBorder(
-          arrowPosition: 0.8,
+          arrowPosition: arrowPosition ?? 0.8,
           arrowHeight: 10,
         ),
       ),
@@ -95,7 +101,9 @@ class TooltipHelpIconButton extends StatelessWidget {
           child: HelpIconButton(
             onPressed: () => _onTap(key),
             overlayColor: overlayColor,
+            backgroundColor: backgroundColor,
             size: size,
+            textColor: iconColor,
           ),
         ),
       ),

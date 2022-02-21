@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 class IndexIndicator extends StatelessWidget {
   final int currentIndex;
   final int totalLength;
+  final Color? color;
   const IndexIndicator({
     Key? key,
     required this.currentIndex,
     required this.totalLength,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,9 @@ class IndexIndicator extends StatelessWidget {
             margin: const EdgeInsets.fromLTRB(4, 12, 4, 0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: index == currentIndex ? darkPrimaryColor : lightGrayColor,
+              color: index == currentIndex
+                  ? (color ?? darkPrimaryColor)
+                  : lightGrayColor,
             ),
           );
         },

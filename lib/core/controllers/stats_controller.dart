@@ -5,6 +5,7 @@ import 'package:exon_app/helpers/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatsController extends GetxController with SingleGetTickerProviderMixin {
@@ -12,13 +13,27 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   TabController? cumulativeStatsTabController;
   TabController? byPeriodStatsTabController;
   TextEditingController memoTextController = TextEditingController();
+  RefreshController dailyStatsRefreshController = RefreshController();
+  RefreshController weeklyStatsRefreshController = RefreshController();
+  RefreshController monthlyStatsRefreshController = RefreshController();
+  RefreshController cumulativeTimeStatsRefreshController = RefreshController();
+  RefreshController cumulativeExerciseStatsRefreshController =
+      RefreshController();
+  RefreshController exerciseStatsRefreshController = RefreshController();
   int page = 1;
   Map<String, dynamic> selectedExerciseInfo = {};
+  PageController cumulativeExercisePageController = PageController();
   int currentCumulativeExerciseIndex = 0;
   int weeklyStatsTouchIndex = -1;
   int monthlyStatsPiTouchIndex = -1;
   int cumulativeExerciseStatsPiTouchIndex = -1;
   int monthlyStatsByWeekCategory = 0;
+  int exerciseBodyweightStatsCategory = 0;
+  int exerciseBodyweightCurrentRecordsIndex = 0;
+  int exerciseWeightStatsCategory = 0;
+  int exerciseWeightCurrentRecordsIndex = 0;
+  int exerciseCardioStatsCategory = 0;
+  int exerciseCardioCurrentRecordsIndex = 0;
   bool loading = false;
   bool memoSubmitActivated = false;
   DateTime displayDate = DateTime.now();
@@ -29,6 +44,9 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   Map<String, dynamic> monthlyExerciseStatData = {};
   late TrackballBehavior monthlyStatsTrackballBehavior;
   late TrackballBehavior cumulativeTimeStatsTrackballBehavior;
+  late TrackballBehavior exerciseBodyweightStatsTrackballBehavior;
+  late TrackballBehavior exerciseWeightStatsTrackballBehavior;
+  late TrackballBehavior exerciseCardioStatsTrackballBehavior;
   late ZoomPanBehavior cumulativeTimeStatsZoomPanBehavior;
   Map<String, dynamic> cumulativeTimeStatData = {};
   Map<String, dynamic> cumulativeExerciseStatData = {};
@@ -86,6 +104,138 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
         );
       },
     );
+    exerciseBodyweightStatsTrackballBehavior = TrackballBehavior(
+      activationMode: ActivationMode.singleTap,
+      enable: true,
+      builder: (BuildContext context, TrackballDetails trackballDetails) {
+        int reps = trackballDetails.point!.yValue;
+        DateTime date =
+            DateTime.fromMillisecondsSinceEpoch(trackballDetails.point!.xValue);
+        return Container(
+          width: 85,
+          height: 55,
+          decoration: BoxDecoration(
+            color: const Color(0xff7C8C97),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                DateFormat('yyyy년\nMM월 dd일').format(date),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                reps.toString() + '회',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: lightBrightPrimaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    exerciseWeightStatsTrackballBehavior = TrackballBehavior(
+      activationMode: ActivationMode.singleTap,
+      enable: true,
+      builder: (BuildContext context, TrackballDetails trackballDetails) {
+        double weight = trackballDetails.point!.yValue;
+        DateTime date =
+            DateTime.fromMillisecondsSinceEpoch(trackballDetails.point!.xValue);
+        return Container(
+          width: 85,
+          height: 55,
+          decoration: BoxDecoration(
+            color: const Color(0xff7C8C97),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                DateFormat('yyyy년\nMM월 dd일').format(date),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                getCleanTextFromDouble(weight) + 'kg',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: lightBrightPrimaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    exerciseCardioStatsTrackballBehavior = TrackballBehavior(
+      activationMode: ActivationMode.singleTap,
+      enable: true,
+      builder: (BuildContext context, TrackballDetails trackballDetails) {
+        num val = trackballDetails.point!.yValue;
+        DateTime date =
+            DateTime.fromMillisecondsSinceEpoch(trackballDetails.point!.xValue);
+        late String _unit;
+        switch (exerciseCardioStatsCategory) {
+          case 1:
+            _unit = '';
+            break;
+          case 2:
+            _unit = 'kcal';
+            break;
+          default:
+            _unit = 'km';
+            break;
+        }
+
+        return Container(
+          width: 85,
+          height: 55,
+          decoration: BoxDecoration(
+            color: const Color(0xff7C8C97),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                DateFormat('yyyy년\nMM월 dd일').format(date),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                exerciseCardioStatsCategory == 1
+                    ? formatTimeToText(val.toInt())
+                    : (getCleanTextFromDouble(val) + _unit),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: lightBrightPrimaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
     cumulativeTimeStatsZoomPanBehavior = ZoomPanBehavior(
       enablePinching: true,
       enablePanning: true,
@@ -110,6 +260,36 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   void jumpToPage(int val) {
     page = val;
     update();
+  }
+
+  void onDailyStatsRefresh() async {
+    await getDailyExerciseStats();
+    dailyStatsRefreshController.refreshCompleted();
+  }
+
+  void onWeeklyStatsRefresh() async {
+    await getWeeklyExerciseStats();
+    weeklyStatsRefreshController.refreshCompleted();
+  }
+
+  void onMonthlyStatsRefresh() async {
+    await getMonthlyExerciseStats();
+    monthlyStatsRefreshController.refreshCompleted();
+  }
+
+  void onCumulativeTimeStatsRefresh() async {
+    await getCumulativeTimeStats();
+    cumulativeTimeStatsRefreshController.refreshCompleted();
+  }
+
+  void onCumulativeExerciseStatsRefresh() async {
+    await getCumulativeExerciseStats();
+    cumulativeExerciseStatsRefreshController.refreshCompleted();
+  }
+
+  void onExerciseStatsRefresh() async {
+    await getExerciseStats();
+    exerciseStatsRefreshController.refreshCompleted();
   }
 
   void updateCurrentCumulativeExerciseIndex(int index) {
@@ -151,8 +331,47 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
     update();
   }
 
+  void updateExerciseBodyweightStatsCategory(int val) {
+    exerciseBodyweightStatsCategory = val;
+    update();
+  }
+
+  void updateExerciseWeightStatsCategory(int val) {
+    exerciseWeightStatsCategory = val;
+    update();
+  }
+
+  void updateExerciseCardioStatsCategory(int val) {
+    exerciseCardioStatsCategory = val;
+    update();
+  }
+
+  void updateExerciseBodyweightCurrentRecordsIndex(int index) {
+    exerciseBodyweightCurrentRecordsIndex = index;
+    update();
+  }
+
+  void updateExerciseWeightCurrentRecordsIndex(int index) {
+    exerciseWeightCurrentRecordsIndex = index;
+    update();
+  }
+
+  void updateExerciseCardioCurrentRecordsIndex(int index) {
+    exerciseCardioCurrentRecordsIndex = index;
+    update();
+  }
+
   void setLoading(bool val) {
     loading = val;
+    update();
+  }
+
+  void resetExerciseStats() {
+    exerciseStatData = {};
+    exerciseBodyweightStatsCategory = 0;
+    exerciseBodyweightCurrentRecordsIndex = 0;
+    exerciseWeightStatsCategory = 0;
+    exerciseWeightCurrentRecordsIndex = 0;
     update();
   }
 

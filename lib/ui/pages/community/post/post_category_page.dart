@@ -98,8 +98,7 @@ class PostCategoryPage extends GetView<CommunityController> {
           ),
         ),
         Expanded(
-          child: Container(
-            color: Colors.white,
+          child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
             child: Column(
               children: [

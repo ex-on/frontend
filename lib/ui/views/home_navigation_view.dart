@@ -41,7 +41,6 @@ class HomeNavigationView extends StatelessWidget {
               : Colors.white,
           body: SafeArea(
             bottom: false,
-            // top: _.currentIndex == 2 ? false : true,
             maintainBottomViewPadding: false,
             child: _pages[_.currentIndex],
           ),

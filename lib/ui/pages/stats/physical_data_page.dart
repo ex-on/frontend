@@ -491,6 +491,10 @@ class PhysicalDataPage extends GetView<PhysicalDataController> {
                             width: 3,
                             markerSettings: const MarkerSettings(
                               isVisible: true,
+                              color: brightPrimaryColor,
+                              borderColor: Colors.white,
+                              width: 10,
+                              height: 10,
                             ),
                             xValueMapper: (dynamic data, _) => data[0],
                             yValueMapper: (dynamic data, _) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const String endPointUrl = 'http://1f92-123-214-62-216.ngrok.io';
+const String endPointUrl = 'http://6200-123-214-62-216.ngrok.io';
 // Colors
 const Color splashViewBackgroundColor = Colors.white;
 const Color mainBackgroundColor = Color(0xffF4F3F8);
@@ -23,6 +23,7 @@ const Color lightGrayColor = Color(0xffC4C4C4);
 
 const Color brightSecondaryColor = Color(0xffFCC000);
 const Color darkSecondaryColor = Color(0xffA38EFF);
+const Color lightDarkSecondaryColor = Color(0xff8A8AAA);
 
 const Color softGrayColor = Color(0xff959595);
 const Color softBlackColor = Color(0xff6F6F6F);
@@ -39,7 +40,6 @@ const Color dividerColor = Color(0xffCCD2E3);
 const Color selectLabelColor = Color(0xffEBEBEB);
 
 const Color chestMuscleColor = Color(0xffFFC700);
-// const Color chestMuscleColor = Color(0xffF9CE37);
 const Color backMuscleColor = Color(0xff478ECC);
 const Color shoulderMuscleColor = Color(0xff849AA9);
 const Color armMuscleColor = Color(0xff5350FC);
@@ -47,7 +47,7 @@ const Color absMuscleColor = Color(0xff00BF7F);
 const Color hipMuscleColor = Color(0xffFF6E91);
 const Color legMuscleColor = Color(0xff00B9E4);
 
-const Color cardioColor = Color(0xff47DDD0);
+const Color cardioColor = Color(0xff63EDE1);
 
 const double statsLabelFontSize = 16.52;
 
