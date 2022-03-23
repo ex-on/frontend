@@ -23,9 +23,6 @@ class Header extends StatelessWidget {
     this.icon,
   }) : super(key: key);
 
-  // @override
-  // Size get preferredSize => Size.fromHeight(this.preferredSize.height);
-
   @override
   Widget build(BuildContext context) {
     return title == null
@@ -63,6 +60,69 @@ class Header extends StatelessWidget {
   }
 }
 
+class TabBarHeader extends StatelessWidget {
+  final dynamic Function() onPressed;
+  final Color? color;
+  final String? title;
+  final List<Widget>? actions;
+  final Widget? icon;
+  final PreferredSizeWidget bottom;
+
+  const TabBarHeader({
+    Key? key,
+    required this.onPressed,
+    required this.bottom,
+    this.color = Colors.transparent,
+    this.title,
+    this.actions,
+    this.icon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return title == null
+        ? AppBar(
+            leading: IconButton(
+              icon: icon ??
+                  const Icon(Icons.arrow_back_rounded, color: Colors.black),
+              onPressed: onPressed,
+              splashRadius: 20,
+            ),
+            elevation: 0,
+            backgroundColor: color,
+            actions: actions,
+            bottom: bottom,
+            shape: const Border(
+              bottom: BorderSide(color: lightGrayColor, width: 0.5),
+            ),
+          )
+        : AppBar(
+            leading: IconButton(
+              splashRadius: 20,
+              icon: icon ??
+                  const Icon(Icons.arrow_back_rounded, color: Colors.black),
+              onPressed: onPressed,
+            ),
+            title: Text(
+              title!,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            centerTitle: true,
+            elevation: 0,
+            backgroundColor: color,
+            actions: actions,
+            bottom: bottom,
+            shape: const Border(
+              bottom: BorderSide(color: lightGrayColor, width: 0.5),
+            ),
+          );
+  }
+}
+
 class ProfileHeader extends StatelessWidget {
   final dynamic Function() onPressed;
   final Color? color;
@@ -86,28 +146,142 @@ class ProfileHeader extends StatelessWidget {
   }
 }
 
-class SearchHeader extends StatefulWidget {
+class SearchHeader extends StatelessWidget with PreferredSizeWidget {
+  final TextEditingController controller;
+  final FocusNode? focusNode;
+  final Function() onCancelPressed;
+  final void Function(String) onFieldSubmitted;
+
+  @override
+  final Size preferredSize;
+
+  SearchHeader({
+    Key? key,
+    required this.controller,
+    required this.onCancelPressed,
+    required this.onFieldSubmitted,
+    this.focusNode,
+  })  : preferredSize = const Size.fromHeight(56.0),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      shape: const Border(
+        bottom: BorderSide(color: lightGrayColor, width: 0.5),
+      ),
+      leading: const Padding(
+        padding: EdgeInsets.only(left: 6),
+        child: Icon(
+          Icons.search_rounded,
+          color: brightPrimaryColor,
+          size: 30,
+        ),
+      ),
+      title: SizedBox(
+        height: 56,
+        child: SearchInputField(
+          controller: controller,
+          focusNode: focusNode,
+          onFieldSubmitted: onFieldSubmitted,
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 6, top: 10, bottom: 10),
+          child: TextActionButton(
+            isUnderlined: false,
+            textColor: deepGrayColor,
+            buttonText: '취소',
+            onPressed: onCancelPressed,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CommunityHeader extends StatelessWidget {
+  final Widget leading;
+  final Function() onSearchPressed;
+  final bool displaySearch;
+
+  const CommunityHeader({
+    Key? key,
+    required this.leading,
+    required this.onSearchPressed,
+    this.displaySearch = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 56,
+      width: context.width,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              width: 0.5,
+              color: lightGrayColor,
+            ),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              height: 56,
+              child: leading,
+            ),
+            displaySearch
+                ? Material(
+                    type: MaterialType.transparency,
+                    child: IconButton(
+                      splashRadius: 20,
+                      icon: const Icon(
+                        Icons.search_rounded,
+                        color: darkPrimaryColor,
+                        size: 30,
+                      ),
+                      onPressed: onSearchPressed,
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AnimatedSearchHeader extends StatefulWidget {
   final Widget? leading;
   final Color? backgroundColor;
   final TextEditingController searchController;
   final Function() onSearchPressed;
   final Function() onCancelPressed;
   final FocusNode? focusNode;
-  const SearchHeader({
+  final void Function(String) onFieldSubmitted;
+  const AnimatedSearchHeader({
     Key? key,
     required this.searchController,
     required this.onSearchPressed,
     required this.onCancelPressed,
+    required this.onFieldSubmitted,
     this.leading,
     this.focusNode,
     this.backgroundColor = Colors.transparent,
   }) : super(key: key);
 
   @override
-  State<SearchHeader> createState() => _SearchHeaderState();
+  State<AnimatedSearchHeader> createState() => _AnimatedSearchHeaderState();
 }
 
-class _SearchHeaderState extends State<SearchHeader> {
+class _AnimatedSearchHeaderState extends State<AnimatedSearchHeader> {
   bool searchOpen = false;
 
   @override
@@ -143,6 +317,7 @@ class _SearchHeaderState extends State<SearchHeader> {
                 child: SearchInputField(
                   controller: widget.searchController,
                   focusNode: widget.focusNode,
+                  onFieldSubmitted: widget.onFieldSubmitted,
                 ),
               ),
             ),

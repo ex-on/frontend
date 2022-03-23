@@ -1,11 +1,11 @@
 import 'package:exon_app/core/services/community_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class CommunityController extends GetxController
-    with SingleGetTickerProviderMixin {
+    with GetTickerProviderStateMixin {
   static CommunityController to = Get.find();
-  TextEditingController searchPostTextController = TextEditingController();
   TextEditingController commentTextController = TextEditingController();
   TextEditingController postTitleTextController = TextEditingController();
   TextEditingController postContentTextController = TextEditingController();
@@ -14,19 +14,52 @@ class CommunityController extends GetxController
   TextEditingController qnaAnswerContentTextController =
       TextEditingController();
   FocusNode? commentTextFieldFocus;
-  FocusNode? searchFieldFocus;
-  TabController? communityMainTabController;
+  late TabController communityMainTabController;
+  late TabController bookmarkedListTabController;
+  late TabController postActivityListTabController;
+  late TabController qnaActivityListTabController;
   ScrollController postListScrollController = ScrollController();
   ScrollController postScrollController = ScrollController();
   ScrollController qnaListScrollController = ScrollController();
+  RefreshController postCategoryRefreshController = RefreshController();
+  RefreshController qnaCategoryRefreshController = RefreshController();
+  RefreshController postListRefreshController = RefreshController();
+  RefreshController qnaListRefreshController = RefreshController();
+  RefreshController postRefreshController = RefreshController();
+  RefreshController qnaRefreshController = RefreshController();
+  RefreshController qnaAnswerCommentsRefreshController = RefreshController();
+  RefreshController savedRefreshController = RefreshController();
+
+  RefreshController bookmarkedPostsRefreshController = RefreshController();
+  RefreshController bookmarkedQnasRefreshController = RefreshController();
+  RefreshController savedUserPostsRefreshController = RefreshController();
+  RefreshController savedUserCommentedPostsRefreshController =
+      RefreshController();
+  RefreshController savedUserQnasRefreshController = RefreshController();
+  RefreshController savedUserAnsweredQnasRefreshController =
+      RefreshController();
+  PageController bookmarkPageController = PageController();
+  PageController postActivityPageController = PageController();
+  PageController qnaActivityPageController = PageController();
   int page = 0;
   int? commentId;
   int? postId;
   int? qnaId;
   int? answerId;
   int? answerNumComments;
-  int? postType;
-  int? qnaType;
+  int? postType = 0;
+  bool? qnaSolved = false;
+  int bookmarkCategory = 0;
+  int postActivityCategory = 0;
+  int qnaActivityCategory = 0;
+  int bookmarkedPostIndex = 0;
+  int bookmarkedQnaIndex = 0;
+  int userPostsIndex = 0;
+  int userCommentedPostsIndex = 0;
+  int userQnasIndex = 0;
+  int userAnsweredQnasIndex = 0;
+  int selectedAnswerIndex = -1;
+
   RxInt postCategory = 0.obs; //0: HOT, 1: 자유, 2: 정보
   RxInt qnaCategory = 0.obs; // 0: HOT, 1: 미해결, 2: 해결
   RxInt postListStartIndex = 0.obs;
@@ -38,6 +71,8 @@ class CommunityController extends GetxController
   bool contentLoading = false;
   bool commentsLoading = false;
   bool apiPostLoading = false;
+  bool postListInitialLoad = true;
+  bool qnaListInitialLoad = true;
   bool postLiked = false;
   bool postSaved = false;
   bool qnaSaved = false;
@@ -50,30 +85,35 @@ class CommunityController extends GetxController
   List<dynamic> postCommentList = [];
   List<dynamic> qnaAnswerList = [];
   List<dynamic> qnaAnswerCommentList = [];
-  List<dynamic>? savedList;
+  Map<String, dynamic> savedData = {};
+  List<dynamic> bookmarkedPostsList = [];
+  List<dynamic> bookmarkedQnasList = [];
+  List<dynamic> savedUserPostsList = [];
+  List<dynamic> savedUserCommentedPostsList = [];
+  List<dynamic> savedUserQnasList = [];
+  List<dynamic> savedUserAnsweredQnasList = [];
 
-  dynamic postListCallback(int postCategory) {
+  Future<void> postCategoryListCallback(int postCategory) async {
     if (postCategory == 0) {
-      Future.delayed(Duration.zero, () => getHotPostPreview(5));
+      await getHotPostPreview(5);
     } else {
-      Future.delayed(Duration.zero, () => getPostPreview(5, postCategory));
+      await getPostPreview(5, postCategory);
     }
   }
 
-  dynamic qnaListCallback(int qnaCategory) {
+  Future<void> qnaCategoryListCallback(int qnaCategory) async {
     if (qnaCategory == 0) {
-      Future.delayed(Duration.zero, () => getHotQnaPreview(5));
+      await getHotQnaPreview(5);
     } else {
-      Future.delayed(Duration.zero, () => getQnaPreview(5, qnaCategory));
+      await getQnaPreview(5, qnaCategory == 1 ? false : true);
     }
   }
 
-  dynamic postListPageCallback(int listPage) {
+  Future<void> postListPageCallback(int listPage) async {
     if (postCategory.value == 0) {
-      Future.delayed(Duration.zero, () => getHotPostPreview(null));
+      await getHotPostPreview(null);
     } else {
-      Future.delayed(
-          Duration.zero, () => getPostPreview(null, postCategory.value));
+      await getPostPreview(null, postCategory.value);
     }
   }
 
@@ -81,8 +121,8 @@ class CommunityController extends GetxController
     if (qnaCategory.value == 0) {
       Future.delayed(Duration.zero, () => getHotQnaPreview(null));
     } else {
-      Future.delayed(
-          Duration.zero, () => getQnaPreview(null, qnaCategory.value));
+      Future.delayed(Duration.zero,
+          () => getQnaPreview(null, qnaCategory.value == 1 ? false : true));
     }
   }
 
@@ -90,34 +130,39 @@ class CommunityController extends GetxController
   void onInit() {
     super.onInit();
     communityMainTabController = TabController(length: 3, vsync: this);
-    postListCallback(postCategory.value);
-    qnaListCallback(qnaCategory.value);
+    bookmarkedListTabController = TabController(length: 2, vsync: this);
+    postActivityListTabController = TabController(length: 2, vsync: this);
+    qnaActivityListTabController = TabController(length: 2, vsync: this);
+    communityMainTabController.addListener(() {
+      update();
+    });
     postCategory.listen((val) {
-      postListCallback(val);
+      postCategoryRefreshController.requestRefresh(needCallback: false);
+      postCategoryListCallback(val);
+      postCategoryRefreshController.refreshCompleted();
     });
     qnaCategory.listen((val) {
-      qnaListCallback(val);
+      qnaCategoryRefreshController.requestRefresh(needCallback: false);
+      qnaCategoryListCallback(val);
+      qnaCategoryRefreshController.refreshCompleted();
     });
     postListScrollController.addListener(onPostListScroll);
     qnaListScrollController.addListener(onQnaListScroll);
     commentTextFieldFocus = FocusNode();
-    searchFieldFocus = FocusNode();
   }
 
   @override
   void onClose() {
-    if (communityMainTabController != null) {
-      communityMainTabController!.dispose();
-    }
+    communityMainTabController.dispose();
+    bookmarkedListTabController.dispose();
+    postActivityListTabController.dispose();
+    qnaActivityListTabController.dispose();
     postListScrollController.removeListener(onPostListScroll);
     postListScrollController.dispose();
     qnaListScrollController.removeListener(onQnaListScroll);
     qnaListScrollController.dispose();
     if (commentTextFieldFocus != null) {
       commentTextFieldFocus!.dispose();
-    }
-    if (searchFieldFocus != null) {
-      searchFieldFocus!.dispose();
     }
     super.onClose();
   }
@@ -154,6 +199,92 @@ class CommunityController extends GetxController
     update();
   }
 
+  void onPostCategoryRefresh() async {
+    await postCategoryListCallback(postCategory.value);
+    postCategoryRefreshController.refreshCompleted();
+  }
+
+  void onQnaCategoryRefresh() async {
+    await qnaCategoryListCallback(qnaCategory.value);
+    qnaCategoryRefreshController.refreshCompleted();
+  }
+
+  void onPostListRefresh() async {
+    postListStartIndex.value = 0;
+    await postListPageCallback(postListStartIndex.value);
+    postListRefreshController.refreshCompleted();
+  }
+
+  void onPostListLoadMore() async {
+    await postListPageCallback(postListStartIndex.value);
+    postListRefreshController.loadComplete();
+  }
+
+  void onQnaListRefresh() async {
+    qnaListStartIndex.value = 0;
+    await qnaListPageCallback(qnaListStartIndex.value);
+    qnaListRefreshController.refreshCompleted();
+  }
+
+  void onQnaListLoadMore() async {
+    await qnaListPageCallback(qnaListStartIndex.value);
+    qnaListRefreshController.loadComplete();
+  }
+
+  void onPostRefresh() async {
+    getPost(postId!);
+    getPostCount(postId!);
+    getPostComments(postId!);
+    postRefreshController.refreshCompleted();
+  }
+
+  void onQnaRefresh() async {
+    getQna(qnaId!);
+    getQnaCount(qnaId!);
+    getQnaAnswers(qnaId!);
+    qnaRefreshController.refreshCompleted();
+  }
+
+  void onQnaAnswerCommentsRefresh() async {
+    getQnaAnswerComments(answerId!);
+    qnaAnswerCommentsRefreshController.refreshCompleted();
+  }
+
+  void onSavedRefresh() async {
+    await getSaved();
+    savedRefreshController.refreshCompleted();
+  }
+
+  void onBookmarkedPostsRefresh() async {
+    await getBookmarkedPosts();
+    bookmarkedPostsRefreshController.refreshCompleted();
+  }
+
+  void onBookmarkedQnasRefresh() async {
+    await getBookmarkedQnas();
+    bookmarkedQnasRefreshController.refreshCompleted();
+  }
+
+  void onSavedUserPostsRefresh() async {
+    await getSavedUserPosts();
+    savedUserPostsRefreshController.refreshCompleted();
+  }
+
+  void onSavedUserCommentedPostsRefresh() async {
+    await getSavedUserCommentedPosts();
+    savedUserCommentedPostsRefreshController.refreshCompleted();
+  }
+
+  void onSavedUserQnasRefresh() async {
+    await getSavedUserQnas();
+    savedUserQnasRefreshController.refreshCompleted();
+  }
+
+  void onSavedUserAnsweredQnasRefresh() async {
+    await getSavedUserAnsweredQnas();
+    savedUserAnsweredQnasRefreshController.refreshCompleted();
+  }
+
   void setSearchOpen(bool val) {
     searchOpen = val;
     update();
@@ -181,6 +312,16 @@ class CommunityController extends GetxController
 
   void setApiPostLoading(bool val) {
     apiPostLoading = val;
+    update();
+  }
+
+  void setPostListInitialLoad(bool val) {
+    postListInitialLoad = val;
+    update();
+  }
+
+  void setQnaListInitialLoad(bool val) {
+    qnaListInitialLoad = val;
     update();
   }
 
@@ -214,15 +355,36 @@ class CommunityController extends GetxController
     update();
   }
 
-  void updateQnaType(int? val) {
-    qnaType = val;
+  void updateQnaSolved(bool? val) {
+    qnaSolved = val;
     update();
+  }
+
+  void onPostPageInit(int id, int type) {
+    getPost(id);
+    getPostCount(id);
+    getPostComments(id);
+    updatePostId(id);
+    updatePostType(type);
+  }
+
+  void onQnaPageInit(int id, bool solved) {
+    getQna(id);
+    getQnaCount(id);
+    getQnaAnswers(id);
+    updateQnaId(id);
+    updateQnaSolved(solved);
   }
 
   void resetContent() {
     postListStartIndex.value = 0;
     postContentList = [];
     update();
+  }
+
+  void resetPostWrite() {
+    postTitleTextController.clear();
+    postContentTextController.clear();
   }
 
   void resetQnaWrite() {
@@ -236,6 +398,59 @@ class CommunityController extends GetxController
 
   void addListPage() {
     postListStartIndex++;
+  }
+
+  void updateBookmarkCategory(int val) {
+    bookmarkCategory = val;
+    update();
+  }
+
+  void updateBookmarkedPostIndex(int val) {
+    if (bookmarkCategory == 0) {
+      bookmarkedPostIndex = val;
+    }
+    update();
+  }
+
+  void updateBookmarkedQnaIndex(int val) {
+    bookmarkedQnaIndex = val;
+    update();
+  }
+
+  void updatePostActivityCategory(int val) {
+    postActivityCategory = val;
+    update();
+  }
+
+  void updateUserPostsIndex(int val) {
+    userPostsIndex = val;
+    update();
+  }
+
+  void updateUserCommentedPostsIndex(int val) {
+    userCommentedPostsIndex = val;
+    update();
+  }
+
+  void updateQnaActivityCategory(int val) {
+    qnaActivityCategory = val;
+
+    update();
+  }
+
+  void updateUserQnasIndex(int val) {
+    userQnasIndex = val;
+    update();
+  }
+
+  void updateUserAnsweredQnasIndex(int val) {
+    userAnsweredQnasIndex = val;
+    update();
+  }
+
+  void updateSelectedAnswerIndex(int? val) {
+    selectedAnswerIndex = val!;
+    update();
   }
 
   Future<void> getPostPreview(int? indexNum, int type) async {
@@ -265,10 +480,10 @@ class CommunityController extends GetxController
     }
   }
 
-  Future<void> getQnaPreview(int? indexNum, int type) async {
+  Future<void> getQnaPreview(int? indexNum, bool solved) async {
     if (indexNum != null) {
       setLoading(true);
-      var res = await CommunityApiService.getQnaPreview(indexNum, 0, type);
+      var res = await CommunityApiService.getQnaPreview(indexNum, 0, solved);
       qnaContentList = res;
       print(qnaContentList);
       update();
@@ -276,7 +491,7 @@ class CommunityController extends GetxController
     } else {
       setListPageLoading(true);
       var res = await CommunityApiService.getQnaPreview(
-          20, qnaListStartIndex.value, type);
+          20, qnaListStartIndex.value, solved);
       if (qnaListStartIndex.value == 0) {
         qnaContentList.clear();
       }
@@ -387,6 +602,16 @@ class CommunityController extends GetxController
     }
   }
 
+  Future<void> updatePost() async {
+    if (postTitleTextController.text != '' &&
+        postContentTextController.text != '') {
+      setApiPostLoading(true);
+      var res = await CommunityApiService.updatePost(postId!,
+          postTitleTextController.text, postContentTextController.text);
+      setApiPostLoading(false);
+    }
+  }
+
   Future<void> postPostComment(String content) async {
     if (content != '') {
       setApiPostLoading(true);
@@ -425,11 +650,30 @@ class CommunityController extends GetxController
     }
   }
 
+  Future<void> updateQna() async {
+    if (qnaTitleTextController.text != '' &&
+        qnaContentTextController.text != '') {
+      setApiPostLoading(true);
+      var res = await CommunityApiService.updateQna(qnaId!,
+          qnaTitleTextController.text, qnaContentTextController.text, 1);
+      setApiPostLoading(false);
+    }
+  }
+
   Future<void> postQnaAnswer() async {
     if (qnaAnswerContentTextController.text != '') {
       setApiPostLoading(true);
       var res = await CommunityApiService.postQnaAnswer(
           qnaAnswerContentTextController.text, qnaId!);
+      setApiPostLoading(false);
+    }
+  }
+
+  Future<void> updateQnaAnswer(int answerId) async {
+    if (qnaAnswerContentTextController.text != '') {
+      setApiPostLoading(true);
+      var res = await CommunityApiService.updateQnaAnswer(
+          answerId, qnaAnswerContentTextController.text);
       setApiPostLoading(false);
     }
   }
@@ -522,7 +766,7 @@ class CommunityController extends GetxController
     postSaved = !postSaved;
     postCount['count_saved'] += (postSaved ? 1 : -1);
     update();
-    var res = await CommunityApiService.updatePostSaved(postId!, postSaved);
+    await CommunityApiService.updatePostSaved(postId!, postSaved);
     // getPostUserStatus(postId, 'saved');
     // getPostCount(postId);
   }
@@ -531,7 +775,7 @@ class CommunityController extends GetxController
     qnaSaved = !qnaSaved;
     qnaCount['count_saved'] += (qnaSaved ? 1 : -1);
     update();
-    var res = await CommunityApiService.updateQnaSaved(qnaId!, qnaSaved);
+    await CommunityApiService.updateQnaSaved(qnaId!, qnaSaved);
     // getPostUserStatus(postId, 'saved');
     // getPostCount(postId);
   }
@@ -540,6 +784,7 @@ class CommunityController extends GetxController
     var isLiked = qnaAnswerList[index]['liked'];
     qnaAnswerList[index]['liked'] = !isLiked;
     qnaAnswerList[index]['answer_count']['count_likes'] += (isLiked ? -1 : 1);
+    qnaCount['count_likes'] += (isLiked ? -1 : 1);
     var qnaAnswerId = qnaAnswerList[index]['answer_data']['id'];
     update();
     var res =
@@ -561,20 +806,91 @@ class CommunityController extends GetxController
   Future<void> getPostCount(int postId) async {
     var resData = await CommunityApiService.getPostCount(postId);
     postCount = resData;
+    if (postContentList.isNotEmpty) {
+      postContentList.firstWhere(
+          (element) => element['post_data']['id'] == postId)['count'] = resData;
+    }
     update();
   }
 
   Future<void> getQnaCount(int qnaId) async {
     var resData = await CommunityApiService.getQnaCount(qnaId);
     qnaCount = resData;
+    if (qnaContentList.isNotEmpty) {
+      qnaContentList.firstWhere(
+          (element) => element['qna_data']['id'] == qnaId)['count'] = resData;
+    }
     update();
   }
 
   Future<void> getSaved() async {
     setLoading(true);
     var resData = await CommunityApiService.getSaved();
-    savedList = resData;
+    savedData = resData;
     update();
     setLoading(false);
+  }
+
+  Future<void> getBookmarkedPosts() async {
+    var resData = await CommunityApiService.getBookmarkedPosts();
+    bookmarkedPostsList = resData;
+    update();
+  }
+
+  Future<void> getBookmarkedQnas() async {
+    var resData = await CommunityApiService.getBookmarkedQnas();
+    bookmarkedQnasList = resData;
+    update();
+  }
+
+  Future<void> getSavedUserPosts() async {
+    var resData = await CommunityApiService.getSavedUserPosts();
+    savedUserPostsList = resData;
+    update();
+  }
+
+  Future<void> getSavedUserCommentedPosts() async {
+    var resData = await CommunityApiService.getSavedUserCommentedPosts();
+    savedUserCommentedPostsList = resData;
+    update();
+  }
+
+  Future<void> getSavedUserQnas() async {
+    var resData = await CommunityApiService.getSavedUserQnas();
+    savedUserQnasList = resData;
+    update();
+  }
+
+  Future<void> getSavedUserAnsweredQnas() async {
+    var resData = await CommunityApiService.getSavedUserAnsweredQnas();
+    savedUserAnsweredQnasList = resData;
+    update();
+  }
+
+  Future<void> postQnaSelectedAnswer(int answerId) async {
+    var res = await CommunityApiService.postQnaSelectedAnswer(answerId);
+    update();
+  }
+
+  Future<dynamic> delete(int id, String category) async {
+    var resCode = await CommunityApiService.delete(id, category);
+    print(resCode);
+    if (resCode == 200) {
+      update();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<dynamic> report(int id, String category) async {
+    var resCode = await CommunityApiService.report(id, category);
+    print(resCode);
+    if (resCode == 200) {
+      update();
+      return true;
+    } else {
+      return false;
+    }
   }
 }

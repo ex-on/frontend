@@ -1,5 +1,6 @@
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/ui/widgets/common/keep_alive_wrapper.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
@@ -13,14 +14,12 @@ const String _birthDateFieldLabelText = '생년월일';
 const String _genderFieldLabelText = '성별';
 const String _nextButtonText = '다음';
 
-class RegisterBirthDateGenderPage extends StatelessWidget {
+class RegisterBirthDateGenderPage extends GetView<RegisterInfoController> {
   const RegisterBirthDateGenderPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final double _height = Get.height;
-    final controller =
-        Get.put<RegisterInfoController>(RegisterInfoController());
     String _titleText = controller.usernameController.text + '님에 대해 알려주세요😀';
 
     void _onBackPressed() {
@@ -47,6 +46,7 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
 
     void _onGenderChanged(Gender? gender) {
       controller.updateGender(gender);
+      print(controller.gender);
     }
 
     return Column(
@@ -88,14 +88,18 @@ class RegisterBirthDateGenderPage extends StatelessWidget {
                   verticalSpacer(30),
                   GetBuilder<RegisterInfoController>(
                     builder: (_) {
-                      return InputFieldDisplay(
-                        labelText: _birthDateFieldLabelText,
-                        inputText: dateTimeToDisplayString(_.birthDate),
-                        onPressed: _onBirthDateFieldPressed,
-                        isToggled: _.isBirthDateFieldOpen,
-                        inputWidgetHeight: 300,
-                        inputWidget:
-                            DatePicker(onBirthDateChanged: _onBirthDateChanged),
+                      return KeepAliveWrapper(
+                        child: InputFieldDisplay(
+                          labelText: _birthDateFieldLabelText,
+                          onPressed: _onBirthDateFieldPressed,
+                          isToggled: _.isBirthDateFieldOpen,
+                          inputWidgetHeight: 300,
+                          inputWidget: DatePicker(
+                            onBirthDateChanged: _onBirthDateChanged,
+                          ),
+                          inputText: dateTimeToDisplayString(_.birthDate),
+                          keepAlive: true,
+                        ),
                       );
                     },
                   ),

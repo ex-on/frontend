@@ -1,9 +1,11 @@
+import 'package:exon_app/core/controllers/connection_controller.dart';
 import 'package:exon_app/core/services/rank_api_service.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class RankController extends GetxController with SingleGetTickerProviderMixin {
+class RankController extends GetxController
+    with GetTickerProviderStateMixin {
   static RankController to = Get.find<RankController>();
   RefreshController proteinRefreshController = RefreshController();
   RefreshController cardioRefreshController = RefreshController();
@@ -73,17 +75,20 @@ class RankController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future<void> getProteinRank() async {
+    ConnectionController.to.updateRefreshCategory(0);
     proteinRankData = await RankApiService.getProteinRank();
     update();
   }
 
   Future<void> getCardioRank() async {
+    ConnectionController.to.updateRefreshCategory(1);
     cardioRankData =
         await RankApiService.getCardioRank(cardioRankSelectedMonth.month);
     update();
   }
 
   Future<void> getWeightRank() async {
+    ConnectionController.to.updateRefreshCategory(2);
     weightRankData =
         await RankApiService.getWeightRank(weightRankSelectedMonth.month);
     update();

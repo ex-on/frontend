@@ -1,3 +1,5 @@
+import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,22 +8,30 @@ import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PostCategoryPage extends GetView<CommunityController> {
   const PostCategoryPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () {
+      if (controller.postContentList.isEmpty) {
+        controller.postCategoryRefreshController.requestRefresh();
+      }
+    });
+
     const String _expandPostViewButtonText = '더보기 >';
 
     void _onCategoryButtonPressed(int index) {
       controller.postCategory.value = index;
+      controller.updatePostType(index);
       controller.update();
     }
 
     void _onExpandPostViewPressed() {
+      controller.setPostListInitialLoad(true);
       Get.toNamed('/community/post/list');
-      controller.postListPageCallback(controller.postListStartIndex.value);
     }
 
     return Column(
@@ -65,7 +75,7 @@ class PostCategoryPage extends GetView<CommunityController> {
                                 child: const Padding(
                                   padding: EdgeInsets.all(3),
                                   child: CircleAvatar(
-                                    backgroundColor: Color(0xffF3F4F6),
+                                    backgroundColor: mainBackgroundColor,
                                     radius: 28.5,
                                   ),
                                 ),
@@ -99,7 +109,8 @@ class PostCategoryPage extends GetView<CommunityController> {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
+            padding:
+                EdgeInsets.fromLTRB(0, 15, 0, context.mediaQueryPadding.bottom),
             child: Column(
               children: [
                 Padding(
@@ -134,32 +145,31 @@ class PostCategoryPage extends GetView<CommunityController> {
                   ),
                 ),
                 verticalSpacer(10),
-                GetBuilder<CommunityController>(builder: (_) {
-                  if (_.loading) {
-                    return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                            color: brightPrimaryColor),
-                      ),
-                    );
-                  } else {
+                GetBuilder<CommunityController>(
+                  builder: (_) {
                     return Expanded(
-                      child: ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return PostContentPreviewBuilder(
-                              data: _.postContentList[index]);
-                        },
-                        separatorBuilder: (context, index) => const Divider(
-                          color: lightGrayColor,
-                          thickness: 0.5,
-                          height: 0.5,
+                      child: SmartRefresher(
+                        controller: _.postCategoryRefreshController,
+                        onRefresh: _.onPostCategoryRefresh,
+                        header: const CustomRefreshHeader(),
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return PostContentPreviewBuilder(
+                                displayType: _.postCategory.value == 0,
+                                data: _.postContentList[index]);
+                          },
+                          separatorBuilder: (context, index) => const Divider(
+                            color: lightGrayColor,
+                            thickness: 0.5,
+                            height: 0.5,
+                          ),
+                          itemCount: _.loading ? 0 : _.postContentList.length,
                         ),
-                        itemCount: _.postContentList.length,
                       ),
                     );
-                  }
-                })
+                  },
+                ),
               ],
             ),
           ),

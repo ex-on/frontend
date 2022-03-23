@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const String endPointUrl = 'http://6200-123-214-62-216.ngrok.io';
+const String endPointUrl = 'http://5179-221-139-39-186.ngrok.io';
 // Colors
 const Color splashViewBackgroundColor = Colors.white;
 const Color mainBackgroundColor = Color(0xffF4F3F8);
@@ -9,7 +9,7 @@ const Color kakaoLoginColor = Color(0xffFAE100);
 const Color facebookLoginColor = Color(0xff4F66A5);
 
 const Color textFieldFillColor = Color(0xffF4F3F8);
-const Color deepGrayColor = Color(0xff777777);
+const Color deepGrayColor = Color(0xff777777); 
 
 const Color lightBrightPrimaryColor = Color(0xff9AD9E8);
 const Color brightPrimaryColor = Color(0xff00B9E4);
@@ -27,7 +27,7 @@ const Color lightDarkSecondaryColor = Color(0xff8A8AAA);
 
 const Color softGrayColor = Color(0xff959595);
 const Color softBlackColor = Color(0xff6F6F6F);
-
+      
 const Color clearBlackColor = Color(0xff292E3C);
 
 const Color softRedColor = Color(0xffD63E6C);

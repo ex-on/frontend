@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:exon_app/core/controllers/home_navigation_controller.dart';
+import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/core/services/user_api_service.dart';
 import 'package:exon_app/helpers/parse_jwt.dart';
@@ -44,9 +46,13 @@ class AuthController extends GetxController {
   }
 
   Future<void> asyncMethod() async {
-    await getUserInfo();
     HomeNavigationController.to.reset();
-    Get.offNamed('/home');
+    await RegisterInfoController.to.checkUserInfo();
+    if (!RegisterInfoController.to.userInfoExists) {
+      Get.offAllNamed('/register_info');
+    } else {
+      Get.offAllNamed('/home');
+    }
   }
 
   Future<dynamic> getAccessToken() async {
@@ -70,36 +76,50 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<dynamic> readIdToken() async {
+    var idToken = await storage.read(key: 'id_token');
+    if (idToken != null) {
+      Map<String, dynamic> data = parseJwt(idToken);
+      log(data.toString());
+      String cognitoGroup = data['cognito:groups'][0];
+      late String authProvider;
+      switch (cognitoGroup) {
+        case 'ManualSignUp':
+          authProvider = 'Manual';
+          break;
+        case 'ap-northeast-2_EuYr8s0Rp_Facebook':
+          authProvider = 'Social';
+          break;
+        case 'ap-northeast-2_EuYr8s0Rp_Google':
+          authProvider = 'Google';
+          break;
+        default:
+          authProvider = cognitoGroup;
+          break;
+      }
+      return {
+        'phone_number': data['phone_number'],
+        'email': data['email'],
+        'auth_provider': authProvider,
+      };
+    } else {
+      return;
+    }
+  }
+
   Future<void> getUserInfo() async {
-    bool userInfoStored = await storage.containsKey(key: 'username') &&
-        await storage.containsKey(key: 'activity_level') &&
-        await storage.containsKey(key: 'created_at');
-    // if (userInfoStored) {
-    //   Map<String, dynamic> storedUserInfo = {
-    //     'username': await storage.read(key: 'username'),
-    //     'activity_level': await storage.read(key: 'activity_level'),
-    //     'created_at': await storage.read(key: 'created_at'),
-    //   };
-    //   if (storedUserInfo['username'] != null &&
-    //       storedUserInfo['activity_level'] != null &&
-    //       storedUserInfo['created_at'] != null) {
-    //     userInfo = storedUserInfo;
-    //     update();
-    //     return;
-    //   } else {
-    storage.delete(key: 'username');
-    storage.delete(key: 'activity_level');
-    storage.delete(key: 'created_at');
-    //   }
-    // }
     var data = await UserApiService.getUserInfo();
     if (data != null) {
-      userInfo = data;
+      if (data == false) {
+        Get.toNamed('/register_info', arguments: 'Manual');
+      } else {
+        userInfo = data;
+      }
     }
     update();
-    await storage.write(key: 'username', value: userInfo['username']);
-    await storage.write(
-        key: 'activity_level', value: userInfo['activity_level'].toString());
-    await storage.write(key: 'created_at', value: userInfo['created_at']);
+    // await storage.write(key: 'username', value: userInfo['username']);
+    // await storage.write(
+    //     key: 'activity_level', value: userInfo['activity_level'].toString());
+    // await storage.write(key: 'created_at', value: userInfo['created_at']);
   }
 }

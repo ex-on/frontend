@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_flutter/amplify.dart';
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:exon_app/amplifyconfiguration.dart';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:dio/dio.dart';
@@ -28,7 +28,9 @@ class AmplifyService {
     bool _amplifyConfigured = false;
 
     if (!_amplifyConfigured) {
-      Amplify.addPlugins([auth, analytics, api]);
+      Amplify.addPlugins([auth, 
+      analytics, 
+      api]);
       try {
         await Amplify.configure(amplifyconfig);
         _amplifyConfigured = true;
@@ -125,7 +127,7 @@ class AmplifyService {
 
   static Future<bool> signUpWithPhoneNum(Map<String, String> userInfo) async {
     var signUpOptions = CognitoSignUpOptions(userAttributes: {
-      'phone_number': userInfo['phone_number']!,
+      CognitoUserAttributeKey.phoneNumber: userInfo['phone_number']!,
     });
     try {
       var response = await Amplify.Auth.signUp(

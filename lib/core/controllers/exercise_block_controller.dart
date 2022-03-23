@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class ExerciseBlockController extends GetxController
-    with SingleGetTickerProviderMixin {
+    with GetTickerProviderStateMixin {
   static ExerciseBlockController to = Get.find();
   late AnimationController timerAnimationController;
 

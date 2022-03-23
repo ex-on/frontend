@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/core/services/user_api_service.dart';
+import 'package:exon_app/helpers/parse_jwt.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:intl/intl.dart';
@@ -236,6 +239,10 @@ class RegisterInfoController extends GetxController {
   static RegisterInfoController to = Get.find();
   final formKey = GlobalKey<FormState>();
   TextEditingController usernameController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController muscleMassController = TextEditingController();
+  TextEditingController bodyFatPercentageController = TextEditingController();
   int page = 0;
   String authProvider = 'Social';
   DateTime? birthDate;
@@ -256,16 +263,28 @@ class RegisterInfoController extends GetxController {
   bool isWeightFieldOpen = false;
   bool isBodyFatPercentageFieldOpen = false;
   bool isMuscleMassFieldOpen = false;
+  late FocusNode heightFocusNode;
+  late FocusNode weightFocusNode;
+  late FocusNode muscleMassFocusNode;
+  late FocusNode bodyFatPercentageFocusNode;
 
   @override
   void onInit() async {
     // todo: implement onInit
+    heightFocusNode = FocusNode();
+    weightFocusNode = FocusNode();
+    muscleMassFocusNode = FocusNode();
+    bodyFatPercentageFocusNode = FocusNode();
     reset();
     super.onInit();
   }
 
   @override
   void onClose() {
+    heightFocusNode.dispose();
+    weightFocusNode.dispose();
+    muscleMassFocusNode.dispose();
+    bodyFatPercentageFocusNode.dispose();
     reset();
     super.onClose();
   }
@@ -376,18 +395,22 @@ class RegisterInfoController extends GetxController {
   Future<void> checkUserInfo() async {
     setUserInfoLoading(true);
     userInfoExists = await UserApiService.checkUserInfo();
+    print(userInfoExists);
     update();
     setUserInfoLoading(false);
   }
 
-  void postUserInfo() async {
+  Future<void> postUserInfo() async {
     String? phoneNumber;
     String? email;
-    print('Auth provider:');
-    print(authProvider);
+    Map<String, dynamic> idTokenData = await AuthController.to.readIdToken();
+    setAuthProvider(idTokenData['auth_provider']);
     if (authProvider == 'Manual') {
-      phoneNumber = RegisterController.to.phoneNumController.text;
-      email = RegisterController.to.emailController.text;
+      Map<String, dynamic> idTokenData = await AuthController.to.readIdToken();
+      phoneNumber = idTokenData['phone_number'].substring(3);
+      email = idTokenData['email'];
+    } else if (authProvider == 'Kakao') {
+      email = idTokenData['email'];
     }
     var res = await UserApiService.registerUserInfo(
       authProvider,
@@ -399,9 +422,16 @@ class RegisterInfoController extends GetxController {
     );
   }
 
-  void postUserPhysicalInfo() async {
+  Future<void> postUserPhysicalInfo() async {
     UserApiService.postUserPhysicalInfo(
-        height, weight, muscleMass, bodyFatPercentage);
+        double.parse(heightController.text),
+        double.parse(weightController.text),
+        muscleMassController.text != ''
+            ? double.parse(muscleMassController.text)
+            : null,
+        bodyFatPercentageController.text != ''
+            ? double.parse(bodyFatPercentageController.text)
+            : null);
   }
 
   // reset

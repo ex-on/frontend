@@ -31,26 +31,30 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  amplify_flutter: '<1.0.0'
-  amplify_api: '<1.0.0'
-  amplify_analytics_pinpoint: '<1.0.0'
-  amplify_auth_cognito: '<1.0.0'
+  amplify_flutter: ^0.4.0
+  amplify_api: ^0.4.0
+  amplify_analytics_pinpoint: ^0.4.0
+  amplify_auth_cognito: ^0.4.0
   get: ^4.3.8
-  webview_flutter: ^2.1.2
+  webview_flutter: ^3.0.0
   url_launcher: ^6.0.12
   uni_links: ^0.5.1
-  kakao_flutter_sdk: ^0.8.2
+  kakao_flutter_sdk: ^0.9.0
   amazon_cognito_identity_dart_2: ^1.0.3
   dio: ^4.0.1
-  flutter_svg: ^0.23.0+1
+  flutter_svg: ^1.0.3
   intl: ^0.17.0
   flutter_secure_storage: ^5.0.2
-  fl_chart: ^0.40.6
+  fl_chart: ^0.45.0
   liquid_progress_indicator: ^0.4.0
   confetti: ^0.6.0
   syncfusion_flutter_charts: ^19.4.47
   percent_indicator: ^4.0.0
   pull_to_refresh: ^2.0.0
+  connectivity_plus: ^2.2.1
+  wrapped_korean_text: ^0.0.2
+  shimmer: ^2.0.0
+  # smart_select: ^4.3.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -87,7 +91,6 @@ flutter:
     - assets/completeIcon.svg
     - assets/loadingLogo.svg
     - assets/exonIconLogo.svg
-    - assets/searchCharacter.svg
     - assets/DaytimeIcon.svg
     - assets/NighttimeIcon.svg
     - assets/maleAvatar.svg
@@ -117,11 +120,14 @@ flutter:
     - assets/icons/checkIcon.svg
     - assets/icons/incompleteIcon.svg
     - assets/icons/fistIcon.svg
+    - assets/characters/searchCharacter.svg
+    - assets/characters/blankSearchCharacter.svg
     - assets/characters/excitedCharacter.svg
     - assets/characters/tiredCharacter.svg
     - assets/characters/jumpingExcitedCharacter.svg
     - assets/characters/dumbellCharacter.svg
     - assets/characters/privacyCharacter.svg
+    - assets/characters/emptyBoxCharacter.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

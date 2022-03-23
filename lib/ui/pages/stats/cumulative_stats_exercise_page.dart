@@ -230,71 +230,63 @@ class CumulativeStatsExercisePage extends GetView<StatsController> {
                               TiredCharacter(),
                             ],
                           )
-                        : NotificationListener(
-                            onNotification:
-                                (OverscrollIndicatorNotification overscroll) {
-                              overscroll.disallowGlow();
-                              return true;
-                            },
-                            child: PageView.builder(
-                              controller: _.cumulativeExercisePageController,
-                              itemCount: (_
+                        : PageView.builder(
+                            physics: const ClampingScrollPhysics(),
+                            controller: _.cumulativeExercisePageController,
+                            itemCount:
+                                (_.cumulativeExerciseStatData['exercise_stats']
+                                            .length /
+                                        3)
+                                    .ceil(),
+                            onPageChanged:
+                                controller.updateCurrentCumulativeExerciseIndex,
+                            itemBuilder: (context, page) {
+                              int lastPageItemNum = (_
+                                              .cumulativeExerciseStatData[
+                                                  'exercise_stats']
+                                              .length %
+                                          3 ==
+                                      0)
+                                  ? 3
+                                  : (_
                                           .cumulativeExerciseStatData[
                                               'exercise_stats']
-                                          .length /
-                                      3)
-                                  .ceil(),
-                              onPageChanged: controller
-                                  .updateCurrentCumulativeExerciseIndex,
-                              itemBuilder: (context, page) {
-                                int lastPageItemNum = (_
-                                                .cumulativeExerciseStatData[
-                                                    'exercise_stats']
-                                                .length %
-                                            3 ==
-                                        0)
-                                    ? 3
-                                    : (_
-                                            .cumulativeExerciseStatData[
-                                                'exercise_stats']
-                                            .length %
-                                        3);
-                                List<Widget> children = List.generate(
-                                  (_.cumulativeExerciseStatData['exercise_stats']
-                                                          .length /
-                                                      3)
-                                                  .ceil() -
-                                              1 ==
-                                          page
-                                      ? lastPageItemNum
-                                      : 3,
-                                  (index) => ExerciseStatBlock(
-                                    exerciseId: _.cumulativeExerciseStatData[
-                                            'exercise_stats'][page * 3 + index]
-                                        ['exercise']['id'],
-                                    exerciseName: _.cumulativeExerciseStatData[
-                                            'exercise_stats'][page * 3 + index]
-                                        ['exercise']['name'],
-                                    targetMuscle: _.cumulativeExerciseStatData[
-                                            'exercise_stats'][page * 3 + index]
-                                        ['exercise']['target_muscle'],
-                                    exerciseMethod: _
-                                                .cumulativeExerciseStatData[
-                                            'exercise_stats'][page * 3 + index]
-                                        ['exercise']['exercise_method'],
-                                    count: _.cumulativeExerciseStatData[
-                                            'exercise_stats'][page * 3 + index]
-                                        ['count'],
-                                    time: _.cumulativeExerciseStatData[
-                                            'exercise_stats'][page * 3 + index]
-                                        ['time'],
-                                  ),
-                                );
-                                return Column(
-                                  children: children,
-                                );
-                              },
-                            ),
+                                          .length %
+                                      3);
+                              List<Widget> children = List.generate(
+                                (_.cumulativeExerciseStatData['exercise_stats']
+                                                        .length /
+                                                    3)
+                                                .ceil() -
+                                            1 ==
+                                        page
+                                    ? lastPageItemNum
+                                    : 3,
+                                (index) => ExerciseStatBlock(
+                                  exerciseId: _.cumulativeExerciseStatData[
+                                          'exercise_stats'][page * 3 + index]
+                                      ['exercise']['id'],
+                                  exerciseName: _.cumulativeExerciseStatData[
+                                          'exercise_stats'][page * 3 + index]
+                                      ['exercise']['name'],
+                                  targetMuscle: _.cumulativeExerciseStatData[
+                                          'exercise_stats'][page * 3 + index]
+                                      ['exercise']['target_muscle'],
+                                  exerciseMethod: _.cumulativeExerciseStatData[
+                                          'exercise_stats'][page * 3 + index]
+                                      ['exercise']['exercise_method'],
+                                  count: _.cumulativeExerciseStatData[
+                                          'exercise_stats'][page * 3 + index]
+                                      ['count'],
+                                  time: _.cumulativeExerciseStatData[
+                                          'exercise_stats'][page * 3 + index]
+                                      ['time'],
+                                ),
+                              );
+                              return Column(
+                                children: children,
+                              );
+                            },
                           ),
                   ),
                   GetBuilder<StatsController>(

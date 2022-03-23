@@ -612,7 +612,7 @@ class ExerciseWeightStatsPage extends GetView<StatsController> {
                               ),
                             ),
                             SizedBox(
-                              height: 190,
+                              height: 200,
                               child: NotificationListener(
                                 onNotification: (OverscrollIndicatorNotification
                                     overscroll) {

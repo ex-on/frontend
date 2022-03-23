@@ -1,4 +1,5 @@
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/core/controllers/connection_controller.dart';
 import 'package:exon_app/core/services/stats_api_service.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/helpers/utils.dart';
@@ -8,7 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class StatsController extends GetxController with SingleGetTickerProviderMixin {
+class StatsController extends GetxController
+    with GetTickerProviderStateMixin {
   static StatsController to = Get.find<StatsController>();
   TabController? cumulativeStatsTabController;
   TabController? byPeriodStatsTabController;
@@ -394,6 +396,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future<void> getDailyExerciseStats() async {
+    ConnectionController.to.updateRefreshCategory(4);
     setLoading(true);
     var resData = await StatsApiService.getDailyExerciseStats(selectedDate);
     dailyExerciseStatData = resData;
@@ -407,6 +410,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future<void> getWeeklyExerciseStats() async {
+    ConnectionController.to.updateRefreshCategory(5);
     setLoading(true);
     var resData = await StatsApiService.getWeeklyExerciseStats(
         selectedDate.firstDateOfWeek);
@@ -415,6 +419,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future<void> getMonthlyExerciseStats() async {
+    ConnectionController.to.updateRefreshCategory(6);
     setLoading(true);
     DateTime previousMonthDate =
         DateTime(selectedDate.year, selectedDate.month - 1, 1);
@@ -430,6 +435,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future<void> postDailyStatsMemo() async {
+    ConnectionController.to.updateRefreshCategory(4);
     setLoading(true);
     if (memoTextController.text != '') {
       var resData = await StatsApiService.postDailyStatsMemo(
@@ -441,6 +447,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future<void> getCumulativeTimeStats() async {
+    ConnectionController.to.updateRefreshCategory(7);
     setLoading(true);
     var resData = await StatsApiService.getCumulativeTimeStats();
     cumulativeTimeStatData = resData;
@@ -448,6 +455,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future<void> getCumulativeExerciseStats() async {
+    ConnectionController.to.updateRefreshCategory(8);
     setLoading(true);
     var resData = await StatsApiService.getCumulativeExerciseStats();
     cumulativeExerciseStatData = resData;
@@ -455,6 +463,7 @@ class StatsController extends GetxController with SingleGetTickerProviderMixin {
   }
 
   Future<void> getExerciseStats() async {
+    ConnectionController.to.updateRefreshCategory(9);
     setLoading(true);
     var resData =
         await StatsApiService.getExerciseStats(selectedExerciseInfo['id']);

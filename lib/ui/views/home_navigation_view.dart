@@ -4,10 +4,10 @@ import 'package:exon_app/core/controllers/profile_controller.dart';
 import 'package:exon_app/core/controllers/rank_controller.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/ui/pages/home/main_home_page.dart';
-import 'package:exon_app/ui/views/community_tab_view.dart';
+import 'package:exon_app/ui/views/community/community_tab_view.dart';
 import 'package:exon_app/ui/views/profile_view.dart';
 import 'package:exon_app/ui/views/rank_tab_view.dart';
-import 'package:exon_app/ui/views/stats_view.dart';
+import 'package:exon_app/ui/views/stats/stats_view.dart';
 import 'package:flutter/material.dart';
 import 'package:exon_app/core/controllers/home_navigation_controller.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
@@ -44,21 +44,15 @@ class HomeNavigationView extends StatelessWidget {
             maintainBottomViewPadding: false,
             child: _pages[_.currentIndex],
           ),
-          bottomNavigationBar: GetBuilder<CommunityController>(
-            builder: (__) {
-              return AnimatedSize(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeOut,
-                child: HomeNavigationBar(
-                    currentIndex: _.currentIndex,
-                    onIconTap: _.onIconTap,
-                    height: __.searchOpen
-                        ? 0
-                        : 60 + context.mediaQueryPadding.bottom,
-                    bottomPadding:
-                        __.searchOpen ? 0 : context.mediaQueryPadding.bottom),
-              );
-            },
+          bottomNavigationBar: AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            child: HomeNavigationBar(
+              currentIndex: _.currentIndex,
+              onIconTap: _.onIconTap,
+              height: 60 + context.mediaQueryPadding.bottom,
+              bottomPadding: context.mediaQueryPadding.bottom,
+            ),
           ),
         );
       },

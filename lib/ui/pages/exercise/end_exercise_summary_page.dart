@@ -89,8 +89,8 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
                       padding: const EdgeInsets.all(40),
                       alignment: Alignment.center,
                       child: Text(
-                        activityLevelIntToStr[int.parse(AuthController
-                                .to.userInfo['activity_level'])]! +
+                        activityLevelIntToStr[
+                                AuthController.to.userInfo['activity_level']]! +
                             ' ' +
                             AuthController.to.userInfo['username'] +
                             '님\n 아주 칭찬해~',

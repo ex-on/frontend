@@ -52,12 +52,12 @@ class RegisterPhoneAuthPage extends GetView<RegisterController> {
       FocusScope.of(context).previousFocus();
     }
 
-    void _onNextPressed() {
+    void _onNextPressed() async {
       FocusScope.of(context).unfocus();
-      Get.toNamed('/register_info', arguments: 'Manual');
-      AmplifyService.signInWithUsernameAndPassword(
+      await AmplifyService.signInWithUsernameAndPassword(
           controller.emailController.text,
           controller.passwordCheckController.text);
+      Get.toNamed('/register_info', arguments: 'Manual');
       controller.reset();
     }
 

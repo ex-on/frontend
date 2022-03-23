@@ -1,65 +1,77 @@
 PODS:
-  - Amplify (1.15.6):
-    - Amplify/Default (= 1.15.6)
-  - Amplify/Default (1.15.6)
+  - Amplify (1.19.0):
+    - Amplify/Default (= 1.19.0)
+  - Amplify/Default (1.19.0)
   - amplify_analytics_pinpoint (0.0.1):
-    - Amplify (~> 1.15.5)
+    - Amplify (= 1.19.0)
     - amplify_core
-    - AmplifyPlugins/AWSPinpointAnalyticsPlugin (~> 1.15.5)
+    - AmplifyPlugins/AWSPinpointAnalyticsPlugin (= 1.19.0)
     - Flutter
+    - SwiftFormat/CLI
+    - SwiftLint
   - amplify_api (0.0.1):
-    - Amplify (~> 1.15.5)
+    - Amplify (= 1.19.0)
     - amplify_core
-    - AmplifyPlugins/AWSAPIPlugin (~> 1.15.5)
+    - AmplifyPlugins/AWSAPIPlugin (= 1.19.0)
     - Flutter
+    - SwiftFormat/CLI
+    - SwiftLint
   - amplify_auth_cognito (0.0.1):
-    - Amplify (~> 1.15.5)
+    - Amplify (= 1.19.0)
     - amplify_core
-    - AmplifyPlugins/AWSCognitoAuthPlugin (~> 1.15.5)
+    - AmplifyPlugins/AWSCognitoAuthPlugin (= 1.19.0)
     - Flutter
     - ObjectMapper
   - amplify_core (0.0.1):
     - Flutter
+    - SwiftFormat/CLI
+    - SwiftLint
   - amplify_flutter (0.0.1):
-    - Amplify (~> 1.15.5)
+    - Amplify (= 1.19.0)
     - amplify_core
-    - AmplifyPlugins/AWSCognitoAuthPlugin (~> 1.15.5)
-    - AWSPluginsCore (~> 1.15.5)
+    - AmplifyPlugins/AWSCognitoAuthPlugin (= 1.19.0)
+    - AWSPluginsCore (= 1.19.0)
     - Flutter
-  - AmplifyPlugins/AWSAPIPlugin (1.15.6):
+    - SwiftFormat/CLI
+    - SwiftLint
+  - AmplifyPlugins/AWSAPIPlugin (1.19.0):
     - AppSyncRealTimeClient (~> 1.4)
-    - AWSCore (~> 2.26.1)
-    - AWSPluginsCore (= 1.15.6)
-  - AmplifyPlugins/AWSCognitoAuthPlugin (1.15.6):
-    - AWSAuthCore (~> 2.26.1)
-    - AWSCognitoIdentityProvider (~> 2.26.1)
-    - AWSCognitoIdentityProviderASF (~> 2.26.1)
-    - AWSCore (~> 2.26.1)
-    - AWSMobileClient (~> 2.26.1)
-    - AWSPluginsCore (= 1.15.6)
-  - AmplifyPlugins/AWSPinpointAnalyticsPlugin (1.15.6):
-    - AWSCore (~> 2.26.1)
-    - AWSPinpoint (~> 2.26.1)
-    - AWSPluginsCore (= 1.15.6)
-  - AppSyncRealTimeClient (1.6.0):
-    - Starscream (~> 3.1.1)
-  - AWSAuthCore (2.26.5):
-    - AWSCore (= 2.26.5)
-  - AWSCognitoIdentityProvider (2.26.5):
-    - AWSCognitoIdentityProviderASF (= 2.26.5)
-    - AWSCore (= 2.26.5)
-  - AWSCognitoIdentityProviderASF (2.26.5)
-  - AWSCore (2.26.5)
-  - AWSMobileClient (2.26.5):
-    - AWSAuthCore (= 2.26.5)
-    - AWSCognitoIdentityProvider (= 2.26.5)
-    - AWSCognitoIdentityProviderASF (= 2.26.5)
-    - AWSCore (= 2.26.5)
-  - AWSPinpoint (2.26.5):
-    - AWSCore (= 2.26.5)
-  - AWSPluginsCore (1.15.6):
-    - Amplify (= 1.15.6)
-    - AWSCore (~> 2.26.1)
+    - AWSCore (~> 2.27.0)
+    - AWSPluginsCore (= 1.19.0)
+  - AmplifyPlugins/AWSCognitoAuthPlugin (1.19.0):
+    - AWSAuthCore (~> 2.27.0)
+    - AWSCognitoIdentityProvider (~> 2.27.0)
+    - AWSCognitoIdentityProviderASF (~> 2.27.0)
+    - AWSCore (~> 2.27.0)
+    - AWSMobileClient (~> 2.27.0)
+    - AWSPluginsCore (= 1.19.0)
+  - AmplifyPlugins/AWSPinpointAnalyticsPlugin (1.19.0):
+    - AWSCore (~> 2.27.0)
+    - AWSPinpoint (~> 2.27.0)
+    - AWSPluginsCore (= 1.19.0)
+  - AppSyncRealTimeClient (1.8.1):
+    - Starscream (~> 4.0.4)
+  - AWSAuthCore (2.27.1):
+    - AWSCore (= 2.27.1)
+  - AWSCognitoIdentityProvider (2.27.1):
+    - AWSCognitoIdentityProviderASF (= 2.27.1)
+    - AWSCore (= 2.27.1)
+  - AWSCognitoIdentityProviderASF (2.27.1):
+    - AWSCore (= 2.27.1)
+  - AWSCore (2.27.1)
+  - AWSMobileClient (2.27.1):
+    - AWSAuthCore (= 2.27.1)
+    - AWSCognitoIdentityProvider (= 2.27.1)
+    - AWSCognitoIdentityProviderASF (= 2.27.1)
+    - AWSCore (= 2.27.1)
+  - AWSPinpoint (2.27.1):
+    - AWSCore (= 2.27.1)
+  - AWSPluginsCore (1.19.0):
+    - Amplify (= 1.19.0)
+    - AWSCore (~> 2.27.0)
+  - connectivity_plus (0.0.1):
+    - Flutter
+    - ReachabilitySwift
   - Firebase/CoreOnly (8.11.0):
     - FirebaseCore (= 8.11.0)
   - Firebase/Messaging (8.11.0):
@@ -76,12 +88,12 @@ PODS:
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
-  - FirebaseCoreDiagnostics (8.11.0):
+  - FirebaseCoreDiagnostics (8.12.0):
     - GoogleDataTransport (~> 9.1)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseInstallations (8.11.0):
+  - FirebaseInstallations (8.12.0):
     - FirebaseCore (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/UserDefaults (~> 7.7)
@@ -121,7 +133,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
-  - kakao_flutter_sdk (0.8.2):
+  - kakao_flutter_sdk (0.9.0):
     - Flutter
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
@@ -132,12 +144,15 @@ PODS:
   - package_info_plus (0.4.5):
     - Flutter
   - PromisesObjC (2.0.0)
+  - ReachabilitySwift (5.0.0)
   - shared_preferences_ios (0.0.1):
     - Flutter
-  - Starscream (3.1.1)
+  - Starscream (4.0.4)
+  - SwiftFormat/CLI (0.49.4)
+  - SwiftLint (0.46.2)
   - uni_links (0.0.1):
     - Flutter
-  - url_launcher (0.0.1):
+  - url_launcher_ios (0.0.1):
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
@@ -148,6 +163,7 @@ DEPENDENCIES:
   - amplify_auth_cognito (from `.symlinks/plugins/amplify_auth_cognito/ios`)
   - amplify_core (from `.symlinks/plugins/amplify_core/ios`)
   - amplify_flutter (from `.symlinks/plugins/amplify_flutter/ios`)
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
@@ -157,7 +173,7 @@ DEPENDENCIES:
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
-  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
@@ -182,7 +198,10 @@ SPEC REPOS:
     - nanopb
     - ObjectMapper
     - PromisesObjC
+    - ReachabilitySwift
     - Starscream
+    - SwiftFormat
+    - SwiftLint
 
 EXTERNAL SOURCES:
   amplify_analytics_pinpoint:
@@ -195,6 +214,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/amplify_core/ios"
   amplify_flutter:
     :path: ".symlinks/plugins/amplify_flutter/ios"
+  connectivity_plus:
+    :path: ".symlinks/plugins/connectivity_plus/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -213,50 +234,54 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
-  url_launcher:
-    :path: ".symlinks/plugins/url_launcher/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
-  Amplify: d6ec04316dd74852f6a968d89c0f8cab9947d4d5
-  amplify_analytics_pinpoint: 1c3059353f8a8cfc811ac321bc41e888b18f24bb
-  amplify_api: d2e245623799af22ef371b9bcc960277c965ebb4
-  amplify_auth_cognito: af3d562913c44b5508a68ed73105a0488a56bf36
-  amplify_core: 8b38d20089fe4f225c14db6892f586bd03824a42
-  amplify_flutter: 372e5d0210d6de0cbf7be025dbd20cc21831ab24
-  AmplifyPlugins: 7cfe5a34e97c6091855c10d83ccda538fb371cd1
-  AppSyncRealTimeClient: 8b5ec94085b8ee9bb6fb9d9d76a157beb538ec6f
-  AWSAuthCore: ac6f2bf01b136251f816ca99a21f142d4a1a17ef
-  AWSCognitoIdentityProvider: c7983af57977cf463041e818e3e0414add5dd02b
-  AWSCognitoIdentityProviderASF: e34812b1308d41a0d026ab5d54693fdc93e412b3
-  AWSCore: e84c89bded6fae98ae9c297c71f10f2c87eedc3d
-  AWSMobileClient: 29692a65143c9262e37a2a1c4d4c58c6bc2a85c3
-  AWSPinpoint: 26e73d71cb7b2b7e2b0ee12882331f4876fc5369
-  AWSPluginsCore: 46b75ee57b0a1f10d64f4fa6b3b4153f5900dd4f
+  Amplify: 7906ce8bc77c2c9a97545581024eb90ec6f2e03a
+  amplify_analytics_pinpoint: 56c8611f6c0b971ab5209f02628e2af7c0b6578e
+  amplify_api: 746a987380d7b6666155a13205e4b7e6379e78f0
+  amplify_auth_cognito: 7069f7c928b8e68dbc4d3feea002cb01e30086d3
+  amplify_core: e67fe0c53845db08aced670bfc7370b1329d2798
+  amplify_flutter: 565399b1213f406463a5d99443ea5973a78f494c
+  AmplifyPlugins: 3f43645652234700ee62aba927a67ff4eebacf46
+  AppSyncRealTimeClient: f691c741b89b4db58e97becd79d33fcd296999f2
+  AWSAuthCore: 9528c60ccdac6df6024fb0af1ed6a43782fd2d3d
+  AWSCognitoIdentityProvider: 4de7f96340be72c1dca35c0ba835c6b9b69a28c0
+  AWSCognitoIdentityProviderASF: 727f7c1c80d667a2da79e408c8c8745eac981d58
+  AWSCore: f859f6955a8e52dcb3e79fac95fef058639d1049
+  AWSMobileClient: 9c1edcbe7088b3c9b910aaf6faf2db43a8f1568d
+  AWSPinpoint: 72300265c5009066dfd6fb952f12ef88ea68c5f8
+  AWSPluginsCore: a74522db575247a0156f97d868713627099f3297
+  connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e
   Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
   firebase_core: 443bccfd6aa6b42f07be365b500773dc69db2d87
   firebase_messaging: 8dc3a6f069774a0bf4dac04dd79fdaffcb62e145
   FirebaseCore: 2f4f85b453cc8fea4bb2b37e370007d2bcafe3f0
-  FirebaseCoreDiagnostics: 64d9709d804a6c25bd77841371c1fcfd909d5601
-  FirebaseInstallations: 044eede8a049bce71c4541ee68d6e4364fcbe774
+  FirebaseCoreDiagnostics: 3b40dfadef5b90433a60ae01f01e90fe87aa76aa
+  FirebaseInstallations: 25764cf322e77f99449395870a65b2bef88e1545
   FirebaseMessaging: 02e248e8997f71fa8cc9d78e9d49ec1a701ba14a
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
-  kakao_flutter_sdk: 99c58edf8b0996fb735cbe9e610096555ef7472e
+  kakao_flutter_sdk: bb7397452b15fb550037aea8e6d347143488af71
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
-  shared_preferences_ios: aef470a42dc4675a1cdd50e3158b42e3d1232b32
-  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
+  SwiftFormat: 8acc16efcecb563206cbe90b4cb047cfdf9aafdb
+  SwiftLint: 6bc52a21f0fd44cab9aa2dc8e534fb9f5e3ec507
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
-  url_launcher: b6e016d912f04be9f5bf6e8e82dc599b7ba59649
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   webview_flutter_wkwebview: 005fbd90c888a42c5690919a1527ecc6649e1162
 
-PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
+PODFILE CHECKSUM: 695a3940b3bb9a80182cd7b8b16e38419cfd44ff
 
 COCOAPODS: 1.11.2

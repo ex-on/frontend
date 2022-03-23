@@ -1,13 +1,17 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
+import 'package:exon_app/core/controllers/community_search_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
+import 'package:exon_app/ui/widgets/common/custom_refresh_footer.dart';
+import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/floating_write_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PostListPage extends StatelessWidget {
   const PostListPage({Key? key}) : super(key: key);
@@ -16,14 +20,18 @@ class PostListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put<CommunityController>(CommunityController());
 
-    controller.postListStartIndex.listen((val) {
-      controller.postListPageCallback(val);
+    Future.delayed(Duration.zero, () {
+      if (controller.postContentList.isEmpty ||
+          controller.postListInitialLoad) {
+        controller.postListRefreshController.requestRefresh();
+        controller.setPostListInitialLoad(false);
+      }
     });
 
     void _onBackPressed() {
       controller.resetContent();
+      controller.postCategoryRefreshController.requestRefresh();
       Get.back();
-      controller.postListCallback(controller.postCategory.value);
     }
 
     void _onWritePressed() {
@@ -35,51 +43,67 @@ class PostListPage extends StatelessWidget {
           duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
     }
 
+    void _onSearchPressed() {
+      late int _searchCategory;
+      switch (controller.postCategory.value) {
+        case 1:
+          _searchCategory = 2;
+          break;
+        case 2:
+          _searchCategory = 3;
+          break;
+        default:
+          _searchCategory = 1;
+          break;
+      }
+      CommunitySearchController.to.updateSearchCategory(_searchCategory);
+      Get.toNamed('/community/search');
+    }
+
     return Scaffold(
-      body: GetBuilder<CommunityController>(
-        builder: (_) {
-          return Column(
-            children: [
-              Header(
-                onPressed: _onBackPressed,
-                title: (postCategoryIntToStr[controller.postCategory.value] ??
-                        '') +
-                    ' 게시판',
-              ),
-              Expanded(
-                child: GetBuilder<CommunityController>(
-                  builder: (_) {
-                    if (_.loading) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                            color: brightPrimaryColor),
-                      );
-                    } else {
+      body: SafeArea(
+        child: GetBuilder<CommunityController>(
+          builder: (_) {
+            return Column(
+              children: [
+                Header(
+                  onPressed: _onBackPressed,
+                  title: (postCategoryIntToStr[controller.postCategory.value] ??
+                          '') +
+                      ' 게시판',
+                  actions: [
+                    IconButton(
+                      splashRadius: 20,
+                      icon: const Icon(
+                        Icons.search_rounded,
+                        color: darkPrimaryColor,
+                        size: 30,
+                      ),
+                      onPressed: _onSearchPressed,
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: GetBuilder<CommunityController>(
+                    builder: (_) {
                       return Stack(
                         alignment: Alignment.topCenter,
                         children: [
-                          NotificationListener<OverscrollIndicatorNotification>(
-                            onNotification:
-                                (OverscrollIndicatorNotification overscroll) {
-                              overscroll.disallowGlow();
-                              return true;
-                            },
+                          SmartRefresher(
+                            controller: _.postListRefreshController,
+                            onRefresh: _.onPostListRefresh,
+                            onLoading: _.onPostListLoadMore,
+                            enablePullUp: true,
+                            header: const CustomRefreshHeader(),
+                            footer: const CustomRefreshFooter(),
                             child: ListView.separated(
+                              physics: const ClampingScrollPhysics(),
                               controller: _.postListScrollController,
                               shrinkWrap: true,
                               padding: EdgeInsets.zero,
                               itemBuilder: (context, index) {
-                                if (index == _.postContentList.length) {
-                                  return const Center(
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 20),
-                                      child: CircularProgressIndicator(
-                                          color: brightPrimaryColor),
-                                    ),
-                                  );
-                                }
                                 return PostContentPreviewBuilder(
+                                    displayType: _.postCategory.value == 0,
                                     data: _.postContentList[index]);
                               },
                               separatorBuilder: (context, index) =>
@@ -88,8 +112,7 @@ class PostListPage extends StatelessWidget {
                                 thickness: 0.5,
                                 height: 0.5,
                               ),
-                              itemCount: _.postContentList.length +
-                                  (_.listPageLoading ? 1 : 0),
+                              itemCount: _.postContentList.length,
                             ),
                           ),
                           controller.postCategory.value != 0
@@ -131,13 +154,14 @@ class PostListPage extends StatelessWidget {
                           ),
                         ],
                       );
-                    }
-                  },
+                      // }
+                    },
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/helpers/enums.dart';
+import 'package:exon_app/ui/widgets/common/bubble_tooltips.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,7 +51,7 @@ class ElevatedRouteButton extends StatelessWidget {
                       radix: 16) <
                   int.parse('800000', radix: 16))
               ? Colors.white
-              : Colors.black,
+              : deepGrayColor,
         ),
       ),
       onPressed: onPressed,
@@ -165,10 +166,10 @@ class ElevatedActionButton extends StatelessWidget {
     this.width,
     this.backgroundColor = brightPrimaryColor,
     this.overlayColor,
-    this.disabledColor,
+    this.disabledColor = mainBackgroundColor,
     this.borderRadius = 30,
     this.borderSide,
-    this.textStyle = const TextStyle(color: Colors.white),
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -198,7 +199,18 @@ class ElevatedActionButton extends StatelessWidget {
       width: width,
       height: height,
       child: ElevatedButton(
-        child: Text(buttonText, style: textStyle),
+        child: Text(
+          buttonText,
+          style: textStyle ??
+              TextStyle(
+                color: (int.parse(backgroundColor.toString().substring(10, 16),
+                            radix: 16) <
+                        int.parse('800000', radix: 16))
+                    ? Colors.white
+                    : deepGrayColor,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
         onPressed: activated == null || activated! ? onPressed : null,
         style: style,
       ),
@@ -470,26 +482,33 @@ class _SlidableButtonState extends State<SlidableButton>
               alignment: Alignment((_controller.value * 2.0) - 1.0, 0.0),
               child: child,
             ),
-            child: Container(
-              key: _positionedKey,
-              width: widget.buttonWidth,
-              height: widget.buttonHeight,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                borderRadius: widget.borderRadius,
-                color: widget.onChanged == null
-                    ? widget.disabledColor ?? Colors.grey
-                    : widget.buttonColor,
+            child: ReverseBubbleTooltip(
+              message: '목표와 기록이 일치하나요?',
+              backgroundColor: Colors.white,
+              margin: const EdgeInsets.only(bottom: 15),
+              arrowHeight: 10,
+              textColor: brightPrimaryColor,
+              child: Container(
+                key: _positionedKey,
+                width: widget.buttonWidth,
+                height: widget.buttonHeight,
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: widget.borderRadius,
+                  color: widget.onChanged == null
+                      ? widget.disabledColor ?? Colors.grey
+                      : widget.buttonColor,
+                ),
+                child: widget.onChanged == null
+                    ? Center()
+                    : GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onHorizontalDragStart: _onDragStart,
+                        onHorizontalDragUpdate: _onDragUpdate,
+                        onHorizontalDragEnd: _onDragEnd,
+                        child: Center(),
+                      ),
               ),
-              child: widget.onChanged == null
-                  ? Center()
-                  : GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onHorizontalDragStart: _onDragStart,
-                      onHorizontalDragUpdate: _onDragUpdate,
-                      onHorizontalDragEnd: _onDragEnd,
-                      child: Center(),
-                    ),
             ),
           ),
         ],

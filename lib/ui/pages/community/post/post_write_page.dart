@@ -16,6 +16,7 @@ class PostWritePage extends GetView<CommunityController> {
     const String _submitButtonText = '등록';
 
     void _onBackPressed() {
+      controller.resetPostWrite();
       Get.back();
     }
 
@@ -23,95 +24,98 @@ class PostWritePage extends GetView<CommunityController> {
       await controller.postPost();
       controller.postListStartIndex.value = 0;
       Get.back();
+      controller.resetPostWrite();
       controller.getPostPreview(null, controller.postCategory.value);
     }
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: GetBuilder<CommunityController>(builder: (_) {
-        return Stack(
-          children: [
-            Column(
-              children: [
-                Header(
-                  onPressed: _onBackPressed,
-                  title: _headerTitle,
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 5),
-                      child: TextActionButton(
-                        buttonText: _submitButtonText,
-                        onPressed: _onSubmitPressed,
-                        fontSize: 16,
-                        textColor: brightPrimaryColor,
-                        isUnderlined: false,
-                      ),
-                    )
-                  ],
-                ),
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.only(top: 15, left: 30, right: 30),
-                    children: [
-                      TitleInputField(
-                        controller: controller.postTitleTextController,
-                      ),
+      body: SafeArea(
+        child: GetBuilder<CommunityController>(builder: (_) {
+          return Stack(
+            children: [
+              Column(
+                children: [
+                  Header(
+                    onPressed: _onBackPressed,
+                    title: _headerTitle,
+                    actions: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: ContentInputField(
-                          controller: controller.postContentTextController,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 5),
+                        child: TextActionButton(
+                          buttonText: _submitButtonText,
+                          onPressed: _onSubmitPressed,
+                          fontSize: 16,
+                          textColor: brightPrimaryColor,
+                          isUnderlined: false,
                         ),
-                      ),
-                      Divider(
-                        thickness: 0.5,
-                        height: 0.5,
-                        color: Color(0xffAEADAD),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: mainBackgroundColor,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  '엑손 게시판 이용규칙',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w300,
-                                    color: Color(0xffA1A0A0),
+                      )
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.only(top: 15, left: 30, right: 30),
+                      children: [
+                        TitleInputField(
+                          controller: controller.postTitleTextController,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: ContentInputField(
+                            controller: controller.postContentTextController,
+                          ),
+                        ),
+                        Divider(
+                          thickness: 0.5,
+                          height: 0.5,
+                          color: Color(0xffAEADAD),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: mainBackgroundColor,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '엑손 게시판 이용규칙',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w300,
+                                      color: Color(0xffA1A0A0),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Text(
-                            '1. 욕설 및 비방 금지',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w300,
-                              color: Color(0xffA1A0A0),
+                            Text(
+                              '1. 욕설 및 비방 금지',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w300,
+                                color: Color(0xffA1A0A0),
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            _.apiPostLoading
-                ? const LoadingIndicator()
-                : const SizedBox.shrink(),
-          ],
-        );
-      }),
+                ],
+              ),
+              _.apiPostLoading
+                  ? const LoadingIndicator()
+                  : const SizedBox.shrink(),
+            ],
+          );
+        }),
+      ),
     );
   }
 }

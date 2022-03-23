@@ -52,7 +52,11 @@ class UserApiService extends ApiService {
     String path = '/user/get_user_info';
     var res = await ApiService.get(path, null);
     if (res != null) {
-      return res.data;
+      if (res.data != null) {
+        return res.data;
+      } else {
+        return res;
+      }
     }
   }
 

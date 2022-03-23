@@ -38,6 +38,20 @@ class MainHomePage extends GetView<HomeController> {
     const String _daytimeIcon = 'assets/DaytimeIcon.svg';
     const String _nighttimeIcon = 'assets/NighttimeIcon.svg';
 
+    Future.delayed(
+      Duration.zero,
+      () {
+        if (AuthController.to.userInfo.isEmpty) {
+          AuthController.to.getUserInfo();
+        }
+        if (controller.weekExerciseStatus.isEmpty) {
+          controller.refreshController.requestRefresh();
+        } else {
+          controller.refreshController.refreshCompleted();
+        }
+      },
+    );
+
     String _dayNightIcon = isDaytime ? _daytimeIcon : _nighttimeIcon;
     Color backgroundColor =
         isDaytime ? lightBrightPrimaryColor : darkPrimaryColor;
@@ -61,16 +75,16 @@ class MainHomePage extends GetView<HomeController> {
               color: Colors.white,
             ),
           ),
-          Text(
-            AuthController.to.userInfo.isNotEmpty
-                ? AuthController.to.userInfo['username'] + '님,'
-                : '',
-            style: const TextStyle(
-              fontWeight: FontWeight.w300,
-              color: Colors.white,
-              fontSize: 27.15,
-            ),
-          ),
+          GetBuilder<AuthController>(builder: (_) {
+            return Text(
+              _.userInfo.isNotEmpty ? _.userInfo['username'] + '님,' : '',
+              style: const TextStyle(
+                fontWeight: FontWeight.w300,
+                color: Colors.white,
+                fontSize: 27.15,
+              ),
+            );
+          }),
           Text(
             _welcomeText,
             style: const TextStyle(
@@ -243,8 +257,10 @@ class MainHomePage extends GetView<HomeController> {
                       theme: _.theme,
                       totalExerciseTime: (_.weekExerciseStatus.isEmpty)
                           ? 0
-                          : _.weekExerciseStatus[DateFormat('yyyy/MM/dd')
-                              .format(_.currentDay)]['total_exercise_time'],
+                          :
+                          // _.weekExerciseStatus[DateFormat('yyyy/MM/dd')
+                          //     .format(_.currentDay)]['total_exercise_time'],
+                          _.totalExerciseTime,
                     );
                   },
                 ),
@@ -302,6 +318,10 @@ class MainHomePage extends GetView<HomeController> {
                     },
                   );
 
+                  if (!_isEmpty) {
+                    _.refreshController.refreshCompleted();
+                  }
+
                   return SmartRefresher(
                     controller: _.refreshController,
                     onRefresh: _.onRefresh,
@@ -355,7 +375,6 @@ class MainHomePage extends GetView<HomeController> {
                     Icons.add_rounded,
                     size: 50,
                   ),
-                  // SvgPicture.asset(_addIcon, color: Colors.white),
                 ),
               ),
             ],

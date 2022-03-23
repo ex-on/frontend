@@ -164,9 +164,14 @@ class PhysicalDataPage extends GetView<PhysicalDataController> {
                                           padding:
                                               const EdgeInsets.only(top: 5),
                                           child: Text(
-                                            getCleanTextFromDouble(_
-                                                    .physicalStatData[
-                                                'current_stat']['muscle_mass']),
+                                            _.physicalStatData['current_stat']
+                                                        ['muscle_mass'] ==
+                                                    null
+                                                ? '--'
+                                                : getCleanTextFromDouble(
+                                                    _.physicalStatData[
+                                                            'current_stat']
+                                                        ['muscle_mass']),
                                             style: const TextStyle(
                                               fontSize: 13,
                                               color: brightPrimaryColor,
@@ -193,8 +198,12 @@ class PhysicalDataPage extends GetView<PhysicalDataController> {
                                           padding:
                                               const EdgeInsets.only(top: 5),
                                           child: Text(
-                                            getCleanTextFromDouble(
-                                                _.physicalStatData[
+                                            _.physicalStatData['current_stat'][
+                                                        'body_fat_percentage'] ==
+                                                    null
+                                                ? '--'
+                                                : getCleanTextFromDouble(_
+                                                            .physicalStatData[
                                                         'current_stat']
                                                     ['body_fat_percentage']),
                                             style: const TextStyle(
@@ -463,10 +472,10 @@ class PhysicalDataPage extends GetView<PhysicalDataController> {
                         // ),
                         primaryYAxis: NumericAxis(
                           axisLabelFormatter: (AxisLabelRenderDetails args) {
-                            int label = args.value as int;
+                            num label = args.value;
 
                             return ChartAxisLabel(
-                              label.toString() +
+                              getCleanTextFromDouble(label) +
                                   getPhysicalStatsUnit(_.physicalStatsCategory),
                               const TextStyle(
                                 fontSize: 12,
@@ -491,8 +500,7 @@ class PhysicalDataPage extends GetView<PhysicalDataController> {
                             width: 3,
                             markerSettings: const MarkerSettings(
                               isVisible: true,
-                              color: brightPrimaryColor,
-                              borderColor: Colors.white,
+                              borderColor: brightPrimaryColor,
                               width: 10,
                               height: 10,
                             ),

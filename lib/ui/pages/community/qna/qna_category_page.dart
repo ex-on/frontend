@@ -1,4 +1,4 @@
-import 'package:exon_app/core/controllers/home_navigation_controller.dart';
+import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/floating_write_button.dart';
 import 'package:flutter/material.dart';
@@ -8,22 +8,43 @@ import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class QnaCategoryPage extends GetView<CommunityController> {
   const QnaCategoryPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () {
+      if (controller.qnaContentList.isEmpty) {
+        controller.qnaCategoryRefreshController.requestRefresh();
+      }
+    });
+
     const String _expandQnaViewButtonText = '더보기 >';
 
     void _onCategoryButtonPressed(int index) {
+      late bool? _solved;
+      switch (index) {
+        case 1:
+          _solved = false;
+          break;
+        case 2:
+          _solved = true;
+          break;
+        default:
+          _solved = null;
+          break;
+      }
+
       controller.qnaCategory.value = index;
+      controller.updateQnaSolved(_solved);
       controller.update();
     }
 
     void _onExpandQnaViewPressed() {
+      controller.setQnaListInitialLoad(true);
       Get.toNamed('/community/qna/list');
-      controller.qnaListPageCallback(controller.qnaListStartIndex.value);
     }
 
     void _onWritePressed() {
@@ -104,12 +125,12 @@ class QnaCategoryPage extends GetView<CommunityController> {
           ),
         ),
         Expanded(
-          child: Stack(
-            children: [
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
-                child: Column(
+          child: Padding(
+            padding: EdgeInsets.only(
+                top: 15, bottom: context.mediaQueryPadding.bottom),
+            child: Stack(
+              children: [
+                Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -145,20 +166,18 @@ class QnaCategoryPage extends GetView<CommunityController> {
                     verticalSpacer(10),
                     GetBuilder<CommunityController>(
                       builder: (_) {
-                        if (_.loading) {
-                          return const Expanded(
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                  color: brightPrimaryColor),
-                            ),
-                          );
-                        } else {
-                          return Expanded(
+                        return Expanded(
+                          child: SmartRefresher(
+                            controller: _.qnaCategoryRefreshController,
+                            onRefresh: _.onQnaCategoryRefresh,
+                            header: const CustomRefreshHeader(),
                             child: ListView.separated(
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return QnaContentPreviewBuilder(
-                                    data: _.qnaContentList[index]);
+                                  displaySolved: _.qnaCategory.value == 0,
+                                  data: _.qnaContentList[index],
+                                );
                               },
                               separatorBuilder: (context, index) =>
                                   const Divider(
@@ -166,21 +185,22 @@ class QnaCategoryPage extends GetView<CommunityController> {
                                 thickness: 0.5,
                                 height: 0.5,
                               ),
-                              itemCount: _.qnaContentList.length,
+                              itemCount:
+                                  _.loading ? 0 : _.qnaContentList.length,
                             ),
-                          );
-                        }
+                          ),
+                        );
                       },
                     ),
                   ],
                 ),
-              ),
-              Positioned(
-                bottom: 35 + context.mediaQueryPadding.bottom,
-                right: 35,
-                child: FloatingWriteButton(onPressed: _onWritePressed),
-              )
-            ],
+                Positioned(
+                  bottom: 35,
+                  right: 35,
+                  child: FloatingWriteButton(onPressed: _onWritePressed),
+                )
+              ],
+            ),
           ),
         ),
       ],

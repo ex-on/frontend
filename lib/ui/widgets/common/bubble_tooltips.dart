@@ -222,6 +222,7 @@ class ReverseBubbleTooltip extends StatelessWidget {
             arrowPosition: arrowPosition ?? 0.5,
             arrowHeight: arrowHeight ?? 0,
           ),
+          shadows: [BoxShadow(color: lightGrayColor.withOpacity(0.2))],
         ),
         child: GestureDetector(onTap: _.deactivateTooltip, child: child),
       );

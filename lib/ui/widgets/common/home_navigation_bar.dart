@@ -89,7 +89,7 @@ class HomeNavigationBar extends StatelessWidget {
         ),
         color: Colors.white,
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10)
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10),
         ],
       ),
       alignment: Alignment.topCenter,

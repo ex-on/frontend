@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:exon_app/core/controllers/connection_controller.dart';
 import 'package:exon_app/core/services/exercise_api_service.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:get/get.dart';
@@ -40,9 +41,9 @@ class HomeController extends GetxController {
         currentDateTime = currentDateTime.add(const Duration(seconds: 1));
         if (previousTime.day != currentDateTime.day) {
           currentDay = currentDateTime;
-          updateRefreshMode(false);
+          updateRefreshModeWeek(false);
           refreshController.requestRefresh();
-          updateRefreshMode(true);
+          updateRefreshModeWeek(true);
           updateSelectedDay(currentDay);
         }
         if (currentDateTime.hour < 18 && currentDateTime.hour > 5) {
@@ -67,7 +68,7 @@ class HomeController extends GetxController {
     }
   }
 
-  void updateRefreshMode(bool week) {
+  void updateRefreshModeWeek(bool week) {
     refreshModeWeek = week;
   }
 
@@ -87,10 +88,10 @@ class HomeController extends GetxController {
     indexDayExerciseRecordList =
         weekExerciseStatus[DateFormat('yyyy/MM/dd').format(day)]['records'];
     update();
-    // getDailyExerciseStatus();
   }
 
   Future<void> getTodayExerciseStatus() async {
+    ConnectionController.to.updateRefreshCategory(3);
     DateTime now = DateTime.now();
 
     var res = await ExerciseApiService.getExerciseStatusDate(now);
@@ -107,6 +108,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> getWeekExerciseStatus() async {
+    ConnectionController.to.updateRefreshCategory(3);
     var res = await ExerciseApiService.getExerciseStatusWeek(selectedDay);
     if (res != null) {
       weekExerciseStatus = res;

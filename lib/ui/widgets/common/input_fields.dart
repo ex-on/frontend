@@ -257,6 +257,7 @@ class PrefixLabelTextField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final String? unit;
+  final void Function(String)? onChanged;
 
   const PrefixLabelTextField({
     Key? key,
@@ -264,6 +265,7 @@ class PrefixLabelTextField extends StatelessWidget {
     required this.controller,
     required this.focusNode,
     this.unit,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -300,6 +302,7 @@ class PrefixLabelTextField extends StatelessWidget {
                   child: TextField(
                     controller: controller,
                     focusNode: focusNode,
+                    onChanged: onChanged,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
@@ -328,6 +331,7 @@ class InputFieldDisplay extends StatefulWidget {
   final bool isToggled;
   final double inputWidgetHeight;
   final Widget inputWidget;
+  final bool? keepAlive;
 
   final TextEditingController? controller;
   final String? suffixText;
@@ -341,6 +345,7 @@ class InputFieldDisplay extends StatefulWidget {
     required this.inputWidget,
     this.controller,
     this.suffixText,
+    this.keepAlive = false,
   }) : super(key: key);
 
   @override
@@ -362,7 +367,7 @@ class _InputFieldDisplayState extends State<InputFieldDisplay> {
       duration: const Duration(milliseconds: 300),
       onEnd: onEnd,
       width: 330,
-      height: widget.isToggled ? widget.inputWidgetHeight + 46 : 46,
+      height: widget.isToggled ? widget.inputWidgetHeight + 46.0001 : 46.0001,
       decoration: BoxDecoration(
         color: textFieldFillColor,
         borderRadius: BorderRadius.circular(20),
@@ -379,12 +384,23 @@ class _InputFieldDisplayState extends State<InputFieldDisplay> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
-                        top: 15, left: 15, right: 10, bottom: 15),
+                        top: 15, left: 15, right: 15, bottom: 15),
                     child: Text(
                       widget.labelText,
                       style: const TextStyle(
                         height: 1,
                         color: deepGrayColor,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: Text(
+                      widget.inputText,
+                      style: const TextStyle(
+                        height: 1,
+                        color: clearBlackColor,
                         fontSize: 15,
                       ),
                     ),
@@ -408,22 +424,25 @@ class _InputFieldDisplayState extends State<InputFieldDisplay> {
                   //           ),
                   //         ),
                   //       ),
-                  SizedBox(
-                    height: 25,
-                    width: 80,
-                    child: TextField(
-                      controller: widget.controller,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        suffixText: widget.suffixText,
-                        contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide.none,
+                  widget.controller == null
+                      ? const SizedBox.shrink()
+                      : SizedBox(
+                          height: 25,
+                          width: 80,
+                          child: TextField(
+                            controller: widget.controller,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              suffixText: widget.suffixText,
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              // border: InputBorder.none,
+                            ),
+                          ),
                         ),
-                        // border: InputBorder.none,
-                      ),
-                    ),
-                  ),
                   const Expanded(child: SizedBox()),
                   Padding(
                     padding: const EdgeInsets.only(right: 15),
@@ -442,12 +461,19 @@ class _InputFieldDisplayState extends State<InputFieldDisplay> {
                 ],
               ),
             ),
-            widget.isToggled || isOpen
-                ? widget.inputWidget
-                : const SizedBox(
-                    height: 0,
-                    width: 0,
-                  ),
+            if (widget.keepAlive ?? false)
+              SizedBox(
+                  height: (widget.isToggled || isOpen)
+                      ? widget.inputWidgetHeight
+                      : 0.0001,
+                  child: widget.inputWidget)
+            else
+              widget.isToggled || isOpen
+                  ? widget.inputWidget
+                  : const SizedBox(
+                      height: 0,
+                      width: 0,
+                    ),
           ],
         ),
       ),
@@ -492,7 +518,7 @@ class GenderPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 310,
-      height: 120,
+      // height: 120,
       child: Column(
         children: <Widget>[
           ListTile(
@@ -500,7 +526,7 @@ class GenderPicker extends StatelessWidget {
               '남성',
               style: TextStyle(fontSize: 15),
             ),
-            leading: Radio<Gender?>(
+            leading: Radio<Gender>(
               value: Gender.male,
               groupValue: selectedValue,
               onChanged: onChanged,
@@ -511,7 +537,7 @@ class GenderPicker extends StatelessWidget {
               '여성',
               style: TextStyle(fontSize: 15),
             ),
-            leading: Radio<Gender?>(
+            leading: Radio<Gender>(
               value: Gender.female,
               groupValue: selectedValue,
               onChanged: onChanged,
@@ -705,9 +731,11 @@ class MemoInputField extends StatelessWidget {
 class SearchInputField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;
+  final void Function(String) onFieldSubmitted;
   const SearchInputField({
     Key? key,
     required this.controller,
+    required this.onFieldSubmitted,
     this.focusNode,
   }) : super(key: key);
 
@@ -715,9 +743,10 @@ class SearchInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       focusNode: focusNode,
+      controller: controller,
       decoration: const InputDecoration(
         contentPadding: EdgeInsets.only(
-          left: 2,
+          left: 0,
           // bottom: 15,
         ),
         border: InputBorder.none,
@@ -732,6 +761,7 @@ class SearchInputField extends StatelessWidget {
           color: lightGrayColor,
         ),
       ),
+      onFieldSubmitted: onFieldSubmitted,
       maxLines: 1,
       style: const TextStyle(
         fontSize: 14,

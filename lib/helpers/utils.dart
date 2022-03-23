@@ -78,3 +78,30 @@ extension DateTimeExtension on DateTime {
     return date.lastDateOfMonth.weekOfMonth;
   }
 }
+
+bool hasBottomConsonant(String input) {
+  if (isKorean(input)) {
+    if (((input.runes.last - 0xAC00) / (28 * 21)) < 0
+        ? false
+        : (((input.runes.last - 0xAC00) % 28 != 0) ? true : false)) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+bool isKorean(String input) {
+  bool isKorean = false;
+  int inputToUniCode = input.codeUnits[0];
+
+  isKorean = (inputToUniCode >= 12593 && inputToUniCode <= 12643)
+      ? true
+      : (inputToUniCode >= 44032 && inputToUniCode <= 55203)
+          ? true
+          : false;
+
+  return isKorean;
+}

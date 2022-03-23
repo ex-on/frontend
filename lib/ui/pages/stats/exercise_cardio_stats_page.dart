@@ -451,6 +451,7 @@ class ExerciseCardioStatsPage extends GetView<StatsController> {
                                     isVisible: true,
                                     borderColor: brightPrimaryColor,
                                     height: 10,
+                                    width: 10,
                                   ),
                                   xValueMapper: (dynamic data, _) => data[0],
                                   yValueMapper: (dynamic data, _) {

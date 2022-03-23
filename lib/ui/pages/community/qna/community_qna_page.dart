@@ -1,7 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
-import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
@@ -9,9 +8,11 @@ import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/comment_badge.dart';
+import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class CommunityQnaPage extends GetView<CommunityController> {
   const CommunityQnaPage({Key? key}) : super(key: key);
@@ -20,6 +21,9 @@ class CommunityQnaPage extends GetView<CommunityController> {
   Widget build(BuildContext context) {
     const String _commentLabelText = '답변';
     const String _answerButtonText = '답변하기';
+    const String _answerButtonLabelText = '답변이 채택되면 프로틴을 얻을 수 있어요';
+    const String _selectAnswerButtonText = '답변 채택하기';
+    const String _selectAnswerButtonLabelText = '궁금증이 해결되셨다면 답변을 채택해 주세요';
 
     Future.delayed(Duration.zero, () => controller.getQnaUserStatus());
 
@@ -46,56 +50,163 @@ class CommunityQnaPage extends GetView<CommunityController> {
       Get.toNamed('community/qna/answer/write');
     }
 
-    void _onDeletePressed() {}
-    void _onReportPressed() {}
+    void _onSelectAnswerPressed() {
+      Get.toNamed('community/qna/select_answer');
+    }
 
-    void _onMenuPressed(bool isSelf) {
+    void _onEditPressed(int id, String category) {
+      Get.back();
+      if (category == 'qna') {
+        controller.qnaTitleTextController.text =
+            controller.qnaContent['qna']['title'];
+        controller.qnaContentTextController.text =
+            controller.qnaContent['qna']['content'];
+        Get.toNamed('community/qna/edit');
+      } else if (category == 'qna_answer') {
+        // controller.qnaAnswerContentTextController.text = controller.qnaAnswerCommentList[];
+        controller.updateAnswerId(id);
+        controller.qnaAnswerContentTextController.text =
+            controller.qnaAnswerList.firstWhere((element) =>
+                element['answer_data']['id'] == id)['answer_data']['content'];
+        Get.toNamed('community/qna/answer/edit');
+      }
+    }
+
+    void _onDeletePressed(int id, String category) async {
+      var success = await controller.delete(id, category);
+      if (success) {
+        if (category == 'qna') {
+          Get.back(closeOverlays: true);
+          Get.showSnackbar(
+            GetSnackBar(
+              messageText: const Text(
+                'Q&A를 성공적으로 삭제했습니다',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              borderRadius: 10,
+              margin: const EdgeInsets.only(left: 10, right: 10),
+              duration: const Duration(seconds: 2),
+              isDismissible: false,
+              backgroundColor: darkSecondaryColor.withOpacity(0.8),
+            ),
+          );
+          if (Get.currentRoute == '/community/qna/list') {
+            // controller.postListRefreshController.requestRefresh();
+            controller.qnaContentList.removeWhere(
+                (element) => element['qna_data']['id'] == controller.qnaId!);
+          } else {
+            controller.qnaCategoryRefreshController.requestRefresh();
+          }
+        } else if (category == 'qna_answer') {
+          Get.back();
+          Get.showSnackbar(
+            GetSnackBar(
+              messageText: const Text(
+                '답변을 성공적으로 삭제했습니다',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              borderRadius: 10,
+              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+              duration: const Duration(seconds: 2),
+              isDismissible: false,
+              backgroundColor: darkSecondaryColor.withOpacity(0.8),
+            ),
+          );
+          controller.qnaRefreshController.requestRefresh(needCallback: false);
+          controller.getQnaCount(controller.qnaId!);
+          controller.getQnaAnswers(controller.qnaId!);
+          controller.qnaRefreshController.refreshCompleted();
+        }
+      }
+    }
+
+    void _onReportPressed(int id, String category) async {
+      var success = await controller.report(id, category);
+      if (success) {
+        Get.back();
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              '신고가 완료되었습니다',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      }
+    }
+
+    void _onMenuPressed(bool isSelf, int id, String category) {
       if (isSelf) {
-        Get.bottomSheet(CupertinoActionSheet(
-          actions: [
-            CupertinoActionSheetAction(
-              onPressed: _onDeletePressed,
+        Get.bottomSheet(
+          CupertinoActionSheet(
+            actions: [
+              CupertinoActionSheetAction(
+                onPressed: () => _onDeletePressed(id, category),
+                child: const Text(
+                  '삭제',
+                  style: TextStyle(
+                    color: cancelRedColor,
+                  ),
+                ),
+              ),
+              if (category == 'qna' || category == 'qna_answer')
+                CupertinoActionSheetAction(
+                  onPressed: () => _onEditPressed(id, category),
+                  child: const Text(
+                    '수정',
+                    style: TextStyle(
+                        // color: cancelRedColor,
+                        ),
+                  ),
+                ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              onPressed: () => Get.back(),
               child: const Text(
-                '삭제',
+                '취소',
                 style: TextStyle(
                   color: clearBlackColor,
                 ),
               ),
             ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            onPressed: () => Get.back(),
-            child: const Text(
-              '취소',
-              style: TextStyle(
-                color: clearBlackColor,
-              ),
-            ),
           ),
-        ));
+        );
       } else {
-        Get.bottomSheet(CupertinoActionSheet(
-          actions: [
-            CupertinoActionSheetAction(
-              onPressed: _onReportPressed,
+        Get.bottomSheet(
+          CupertinoActionSheet(
+            actions: [
+              CupertinoActionSheetAction(
+                onPressed: () => _onReportPressed(id, category),
+                child: const Text(
+                  '신고',
+                  style: TextStyle(
+                    color: clearBlackColor,
+                  ),
+                ),
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              onPressed: () => Get.back(),
               child: const Text(
-                '신고',
+                '취소',
                 style: TextStyle(
                   color: clearBlackColor,
                 ),
               ),
             ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            onPressed: () => Get.back(),
-            child: const Text(
-              '취소',
-              style: TextStyle(
-                color: clearBlackColor,
-              ),
-            ),
           ),
-        ));
+        );
       }
     }
 
@@ -108,11 +219,7 @@ class CommunityQnaPage extends GetView<CommunityController> {
             if (_.contentLoading) {
               return const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: brightPrimaryColor,
-                  ),
-                ),
+                child: LoadingContentBlock(),
               );
             } else {
               return Column(
@@ -137,7 +244,10 @@ class CommunityQnaPage extends GetView<CommunityController> {
                           ),
                           Text(
                             formatDateTimeRawString(
-                                _.qnaContent['qna']['created_at']),
+                                    _.qnaContent['qna']['created_at']) +
+                                ((_.qnaContent['qna']['modified'] == true)
+                                    ? ' (수정됨)'
+                                    : ''),
                             style: const TextStyle(
                               fontSize: 10,
                               color: lightGrayColor,
@@ -257,23 +367,71 @@ class CommunityQnaPage extends GetView<CommunityController> {
                       ],
                     ),
                   ),
-                  Center(
-                    child: SizedBox(
-                      width: 300,
-                      height: 60,
-                      child: ElevatedActionButton(
-                        buttonText: _answerButtonText,
-                        onPressed: _onAnswerPressed,
-                        backgroundColor: mainBackgroundColor,
-                        width: 300,
-                        textStyle: const TextStyle(
-                          color: darkSecondaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  if (_.qnaContent['qna']['solved'] == false)
+                    Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 300,
+                            height: 60,
+                            child: () {
+                              if (controller.qnaContent['user_data']
+                                      ['username'] ==
+                                  AuthController.to.userInfo['username']) {
+                                return ElevatedActionButton(
+                                  buttonText: _selectAnswerButtonText,
+                                  onPressed: _onSelectAnswerPressed,
+                                  backgroundColor: mainBackgroundColor,
+                                  width: 300,
+                                  textStyle: const TextStyle(
+                                    color: darkSecondaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              } else {
+                                return ElevatedActionButton(
+                                  buttonText: _answerButtonText,
+                                  onPressed: _onAnswerPressed,
+                                  backgroundColor: mainBackgroundColor,
+                                  width: 300,
+                                  textStyle: const TextStyle(
+                                    color: darkSecondaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              }
+                            }(),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: () {
+                              if (controller.qnaContent['user_data']
+                                      ['username'] ==
+                                  AuthController.to.userInfo['username']) {
+                                return const Text(
+                                  _selectAnswerButtonLabelText,
+                                  style: TextStyle(
+                                    color: Color(0xff007793),
+                                    fontSize: 10,
+                                    height: 1.3,
+                                  ),
+                                );
+                              } else {
+                                return const Text(
+                                  _answerButtonLabelText,
+                                  style: TextStyle(
+                                    color: Color(0xff007793),
+                                    fontSize: 10,
+                                    height: 1.3,
+                                  ),
+                                );
+                              }
+                            }(),
+                          ),
+                          verticalSpacer(20),
+                        ],
                       ),
                     ),
-                  ),
-                  verticalSpacer(20),
                 ],
               );
             }
@@ -283,23 +441,17 @@ class CommunityQnaPage extends GetView<CommunityController> {
     );
 
     Widget _answerBlockBuilder(int index) {
-      return GetBuilder<CommunityController>(builder: (_) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color:
-                // (_.commentId ==
-                //             _.postCommentList[index]['comments']['comment_data']
-                //                 ['id'] &&
-                //         _.commentTextFieldFocus!.hasFocus)
-                //     ? const Color(0xffEDFCFF)
-                //     :
-                Colors.transparent,
-          ),
-          child: Padding(
+      return GetBuilder<CommunityController>(
+        builder: (_) {
+          return Padding(
             padding: const EdgeInsets.fromLTRB(20, 5, 25, 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (_.qnaAnswerList[index]['answer_data']['selected_type'] ==
+                        1 ||
+                    _.qnaAnswerList[index]['answer_data']['selected_type'] == 3)
+                  const SelectedAnswerBadge(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -317,9 +469,13 @@ class CommunityQnaPage extends GetView<CommunityController> {
                             color: clearBlackColor,
                           ),
                         ),
-                        if (_.qnaAnswerList[index]['user_data']['username'] ==
-                            _.qnaContent['user_data']['username'])
-                          const CommentBadge(text: '질문자'),
+                        if (_.qnaAnswerList[index]['answer_data']
+                                    ['selected_type'] ==
+                                2 ||
+                            _.qnaAnswerList[index]['answer_data']
+                                    ['selected_type'] ==
+                                3)
+                          const CommentBadge(text: 'BEST'),
                       ],
                     ),
                     DecoratedBox(
@@ -412,7 +568,9 @@ class CommunityQnaPage extends GetView<CommunityController> {
                                 onTap: () => _onMenuPressed(
                                     _.qnaAnswerList[index]['user_data']
                                             ['username'] ==
-                                        AuthController.to.userInfo['username']),
+                                        AuthController.to.userInfo['username'],
+                                    _.qnaAnswerList[index]['answer_data']['id'],
+                                    'qna_answer'),
                                 child: const SizedBox(
                                   height: 30,
                                   width: 30,
@@ -499,9 +657,9 @@ class CommunityQnaPage extends GetView<CommunityController> {
                 ),
               ],
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
     }
 
     Widget _answerListBuilder(int index) {
@@ -578,10 +736,9 @@ class CommunityQnaPage extends GetView<CommunityController> {
               builder: (_) {
                 if (_.commentsLoading) {
                   return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30),
+                    padding: EdgeInsets.symmetric(vertical: 30, horizontal: 25),
                     child: Center(
-                      child:
-                          CircularProgressIndicator(color: brightPrimaryColor),
+                      child: LoadingContentBlock(),
                     ),
                   );
                 } else {
@@ -603,50 +760,67 @@ class CommunityQnaPage extends GetView<CommunityController> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(children: [
-        Column(
+      body: SafeArea(
+        child: Stack(
           children: [
-            Header(
-              onPressed: _onBackPressed,
-              title:
-                  (qnaCategoryIntToStr[controller.qnaCategory] ?? '') + ' Q&A',
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.more_vert_rounded,
-                    color: clearBlackColor,
+            Column(
+              children: [
+                Header(
+                  onPressed: _onBackPressed,
+                  title:
+                      (qnaSolvedBoolToStr[controller.qnaSolved] ?? '') + ' Q&A',
+                  actions: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.more_vert_rounded,
+                        color: clearBlackColor,
+                      ),
+                      splashRadius: 20,
+                      onPressed: () => _onMenuPressed(
+                          controller.qnaContent['user_data']['username'] ==
+                              AuthController.to.userInfo['username'],
+                          controller.qnaId!,
+                          'qna'),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SmartRefresher(
+                    controller: controller.qnaRefreshController,
+                    onRefresh: controller.onQnaRefresh,
+                    header: const MaterialClassicHeader(
+                      color: brightPrimaryColor,
+                    ),
+                    child: ListView(
+                      controller: controller.postScrollController,
+                      physics: const ClampingScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      children: [
+                        _qnaContent,
+                        const Divider(
+                          color: mainBackgroundColor,
+                          height: 20,
+                          thickness: 20,
+                        ),
+                        _qnaAnswers,
+                      ],
+                    ),
                   ),
-                  splashRadius: 20,
-                  onPressed: () => _onMenuPressed(
-                      controller.qnaContent['user_data']['username'] ==
-                          AuthController.to.userInfo['username']),
                 ),
               ],
             ),
-            Expanded(
-              child: DisableGlowListView(
-                controller: controller.postScrollController,
-                padding: EdgeInsets.zero,
-                children: [
-                  _qnaContent,
-                  Container(
-                    color: mainBackgroundColor,
-                    height: 20,
-                  ),
-                  _qnaAnswers,
-                ],
-              ),
-            ),
+            GetBuilder<CommunityController>(
+              builder: (_) {
+                if (_.apiPostLoading) {
+                  return const LoadingIndicator();
+                } else {
+                  return horizontalSpacer(0);
+                }
+              },
+            )
           ],
         ),
-        GetBuilder<CommunityController>(builder: (_) {
-          if (_.apiPostLoading) {
-            return const LoadingIndicator();
-          } else {
-            return horizontalSpacer(0);
-          }
-        })
-      ]),
+      ),
     );
   }
 }

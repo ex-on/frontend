@@ -1,18 +1,18 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
-import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
-import 'package:exon_app/ui/widgets/community/comment_badge.dart';
+import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class CommunityPostPage extends GetView<CommunityController> {
   const CommunityPostPage({Key? key}) : super(key: key);
@@ -20,7 +20,6 @@ class CommunityPostPage extends GetView<CommunityController> {
   @override
   Widget build(BuildContext context) {
     const String _commentLabelText = '댓글';
-    const String _commentInputLabelText = '댓글을 입력하세요';
     const String _replyArrowIcon = 'assets/icons/replyArrowIcon.svg';
 
     Future.delayed(Duration.zero, () => controller.getPostUserStatus('all'));
@@ -50,39 +49,130 @@ class CommunityPostPage extends GetView<CommunityController> {
       FocusScope.of(context).requestFocus(controller.commentTextFieldFocus);
     }
 
-    void _onDeletePressed() {}
+    void _onDeletePressed(int id, String category) async {
+      var success = await controller.delete(id, category);
+      if (category == 'post') {
+        if (success) {
+          Get.back(closeOverlays: true);
+          Get.showSnackbar(
+            GetSnackBar(
+              messageText: const Text(
+                '게시글을 성공적으로 삭제했습니다',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              borderRadius: 10,
+              margin: const EdgeInsets.only(left: 10, right: 10),
+              duration: const Duration(seconds: 2),
+              isDismissible: false,
+              backgroundColor: darkSecondaryColor.withOpacity(0.8),
+            ),
+          );
+          if (Get.currentRoute == '/community/post/list') {
+            // controller.postListRefreshController.requestRefresh();
+            controller.postContentList.removeWhere(
+                (element) => element['post_data']['id'] == controller.postId!);
+          } else {
+            controller.postCategoryRefreshController.requestRefresh();
+          }
+        }
+      } else if (category == 'post_comment' ||
+          category == 'post_comment_reply') {
+        if (success) {
+          Get.back();
+          Get.showSnackbar(
+            GetSnackBar(
+              messageText: const Text(
+                '댓글을 성공적으로 삭제했습니다',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              borderRadius: 10,
+              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+              duration: const Duration(seconds: 2),
+              isDismissible: false,
+              backgroundColor: darkSecondaryColor.withOpacity(0.8),
+            ),
+          );
+          controller.postRefreshController.requestRefresh(needCallback: false);
+          controller.getPostCount(controller.postId!);
+          controller.getPostComments(controller.postId!);
+          controller.postRefreshController.refreshCompleted();
+        }
+      }
+    }
 
-    void _onReportPressed() {}
+    void _onEditPressed() {
+      Get.back();
+      controller.postTitleTextController.text =
+          controller.postContent['post']['title'];
+      controller.postContentTextController.text =
+          controller.postContent['post']['content'];
+      Get.toNamed('community/post/edit');
+    }
 
-    void _onMenuPressed(bool isSelf) {
+    void _onReportPressed(int id, String category) async {
+      var success = await controller.report(id, category);
+      if (success) {
+        Get.back();
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              '신고가 완료되었습니다',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      }
+    }
+
+    void _onMenuPressed(bool isSelf, int id, String category) {
       if (isSelf) {
-        Get.bottomSheet(CupertinoActionSheet(
-          actions: [
-            CupertinoActionSheetAction(
-              onPressed: _onDeletePressed,
+        Get.bottomSheet(
+          CupertinoActionSheet(
+            actions: [
+              CupertinoActionSheetAction(
+                onPressed: () => _onDeletePressed(id, category),
+                child: const Text(
+                  '삭제',
+                  style: TextStyle(
+                    color: cancelRedColor,
+                  ),
+                ),
+              ),
+              if (category == 'post')
+                CupertinoActionSheetAction(
+                  onPressed: () => _onEditPressed(),
+                  child: const Text(
+                    '수정',
+                  ),
+                ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              onPressed: () => Get.back(),
               child: const Text(
-                '삭제',
+                '취소',
                 style: TextStyle(
                   color: clearBlackColor,
                 ),
               ),
             ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            onPressed: () => Get.back(),
-            child: const Text(
-              '취소',
-              style: TextStyle(
-                color: clearBlackColor,
-              ),
-            ),
           ),
-        ));
+        );
       } else {
         Get.bottomSheet(CupertinoActionSheet(
           actions: [
             CupertinoActionSheetAction(
-              onPressed: _onReportPressed,
+              onPressed: () => _onReportPressed(id, category),
               child: const Text(
                 '신고',
                 style: TextStyle(
@@ -126,9 +216,7 @@ class CommunityPostPage extends GetView<CommunityController> {
               return const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Center(
-                  child: CircularProgressIndicator(
-                    color: brightPrimaryColor,
-                  ),
+                  child: LoadingContentBlock(),
                 ),
               );
             } else {
@@ -154,7 +242,10 @@ class CommunityPostPage extends GetView<CommunityController> {
                           ),
                           Text(
                             formatDateTimeRawString(
-                                _.postContent['post']['created_at']),
+                                    _.postContent['post']['created_at']) +
+                                ((_.postContent['post']['modified'] == true)
+                                    ? ' (수정됨)'
+                                    : ''),
                             style: const TextStyle(
                               fontSize: 10,
                               color: lightGrayColor,
@@ -342,8 +433,9 @@ class CommunityPostPage extends GetView<CommunityController> {
                     Row(
                       children: [
                         Text(
-                          activityLevelIntToStr[_.postCommentList[index]['comments']
-                                  ['user_data']['activity_level']]! +
+                          activityLevelIntToStr[_.postCommentList[index]
+                                      ['comments']['user_data']
+                                  ['activity_level']]! +
                               ' ' +
                               _.postCommentList[index]['comments']['user_data']
                                   ['username'],
@@ -356,7 +448,16 @@ class CommunityPostPage extends GetView<CommunityController> {
                         if (controller.postCommentList[index]['comments']
                                 ['user_data']['username'] ==
                             AuthController.to.userInfo['username'])
-                          const CommentBadge(text: '글쓴이'),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: Text(
+                              '글쓴이',
+                              style: TextStyle(
+                                color: brightPrimaryColor,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                     DecoratedBox(
@@ -457,10 +558,14 @@ class CommunityPostPage extends GetView<CommunityController> {
                                   topRight: Radius.circular(6),
                                   bottomRight: Radius.circular(6),
                                 ),
-                                onTap: () => _onMenuPressed(controller
-                                            .postCommentList[index]['comments']
-                                        ['user_data']['username'] ==
-                                    AuthController.to.userInfo['username']),
+                                onTap: () => _onMenuPressed(
+                                    controller.postCommentList[index]
+                                                ['comments']['user_data']
+                                            ['username'] ==
+                                        AuthController.to.userInfo['username'],
+                                    controller.postCommentList[index]
+                                        ['comments']['comment_data']['id'],
+                                    'post_comment'),
                                 child: const SizedBox(
                                   height: 30,
                                   width: 30,
@@ -560,8 +665,9 @@ class CommunityPostPage extends GetView<CommunityController> {
                       children: [
                         Text(
                           activityLevelIntToStr[replyList[index]['user_data']
-                                    ['activity_level']]! +
-                                ' ' + replyList[index]['user_data']['username'],
+                                  ['activity_level']]! +
+                              ' ' +
+                              replyList[index]['user_data']['username'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -570,7 +676,14 @@ class CommunityPostPage extends GetView<CommunityController> {
                         ),
                         if (replyList[index]['user_data']['username'] ==
                             AuthController.to.userInfo['username'])
-                          const CommentBadge(text: '글쓴이'),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: Text(
+                              '글쓴이',
+                              style: TextStyle(
+                                  color: brightPrimaryColor, fontSize: 10),
+                            ),
+                          ),
                       ],
                     ),
                     DecoratedBox(
@@ -629,9 +742,11 @@ class CommunityPostPage extends GetView<CommunityController> {
                                   topRight: Radius.circular(6),
                                   bottomRight: Radius.circular(6),
                                 ),
-                                onTap: () => _onMenuPressed(replyList[index]
-                                        ['user_data']['username'] ==
-                                    AuthController.to.userInfo['username']),
+                                onTap: () => _onMenuPressed(
+                                    replyList[index]['user_data']['username'] ==
+                                        AuthController.to.userInfo['username'],
+                                    replyList[index]['reply_data']['id'],
+                                    'post_comment_reply'),
                                 child: const SizedBox(
                                   height: 30,
                                   width: 30,
@@ -798,11 +913,8 @@ class CommunityPostPage extends GetView<CommunityController> {
               builder: (_) {
                 if (_.commentsLoading) {
                   return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30),
-                    child: Center(
-                      child:
-                          CircularProgressIndicator(color: brightPrimaryColor),
-                    ),
+                    padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                    child: LoadingCommentBlock(),
                   );
                 } else {
                   return Column(
@@ -823,59 +935,74 @@ class CommunityPostPage extends GetView<CommunityController> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(children: [
-        Column(
+      body: SafeArea(
+        child: Stack(
           children: [
-            Header(
-              onPressed: _onBackPressed,
-              title: (postCategoryIntToStr[controller.postCategory] ?? '') +
-                  ' 게시판',
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.more_vert_rounded,
-                    color: clearBlackColor,
+            Column(
+              children: [
+                Header(
+                  onPressed: _onBackPressed,
+                  title: (postTypeIntToStr[controller.postType] ?? '') + ' 게시판',
+                  actions: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.more_vert_rounded,
+                        color: clearBlackColor,
+                      ),
+                      splashRadius: 20,
+                      onPressed: () => _onMenuPressed(
+                          controller.postContent['user_data']['username'] ==
+                              AuthController.to.userInfo['username'],
+                          controller.postId!,
+                          'post'),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SmartRefresher(
+                    controller: controller.postRefreshController,
+                    onRefresh: controller.onPostRefresh,
+                    header: const MaterialClassicHeader(
+                      color: brightPrimaryColor,
+                    ),
+                    child: ListView(
+                      physics: const ClampingScrollPhysics(),
+                      controller: controller.postScrollController,
+                      padding: EdgeInsets.zero,
+                      children: [
+                        _postContent,
+                        Container(
+                          color: mainBackgroundColor,
+                          height: 20,
+                        ),
+                        _postComments,
+                      ],
+                    ),
                   ),
-                  splashRadius: 20,
-                  onPressed: () => _onMenuPressed(
-                      controller.qnaContent['user_data']['username'] ==
-                          AuthController.to.userInfo['username']),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: CommentInputTextField(
+                    focusNode: controller.commentTextFieldFocus,
+                    onSendPressed: _onSendPressed,
+                    controller: controller.commentTextController,
+                    width: context.width - 30,
+                  ),
                 ),
               ],
             ),
-            Expanded(
-              child: DisableGlowListView(
-                controller: controller.postScrollController,
-                padding: EdgeInsets.zero,
-                children: [
-                  _postContent,
-                  Container(
-                    color: mainBackgroundColor,
-                    height: 20,
-                  ),
-                  _postComments,
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: CommentInputTextField(
-                focusNode: controller.commentTextFieldFocus,
-                onSendPressed: _onSendPressed,
-                controller: controller.commentTextController,
-                width: context.width - 30,
-              ),
-            ),
+            GetBuilder<CommunityController>(
+              builder: (_) {
+                if (_.apiPostLoading) {
+                  return const LoadingIndicator();
+                } else {
+                  return horizontalSpacer(0);
+                }
+              },
+            )
           ],
         ),
-        GetBuilder<CommunityController>(builder: (_) {
-          if (_.apiPostLoading) {
-            return const LoadingIndicator();
-          } else {
-            return horizontalSpacer(0);
-          }
-        })
-      ]),
+      ),
     );
   }
 }

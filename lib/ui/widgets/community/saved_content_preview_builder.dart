@@ -14,7 +14,7 @@ class SavedContentPreviewBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<CommunityController>(
       builder: (_) {
-        var isPost = _.savedList![index]['post_data'] != null;
+        var isPost = _.savedData[index]['post_data'] != null;
 
         return DecoratedBox(
           decoration: BoxDecoration(
@@ -24,14 +24,14 @@ class SavedContentPreviewBuilder extends StatelessWidget {
             type: MaterialType.transparency,
             child: InkWell(
               onTap: () {
-                if (_.savedList![index]['post_data'] != null) {
-                  var id = _.savedList![index]['post_data']['id'];
+                if (_.savedData[index]['post_data'] != null) {
+                  var id = _.savedData[index]['post_data']['id'];
                   _.getPost(id);
                   _.getPostCount(id);
                   _.getPostComments(id);
                   Get.toNamed('/community/post', arguments: id);
-                } else if (_.savedList![index]['qna_data'] != null) {
-                  var id = _.savedList![index]['qna_data']['id'];
+                } else if (_.savedData[index]['qna_data'] != null) {
+                  var id = _.savedData[index]['qna_data']['id'];
                   _.getQna(id);
                   _.getQnaCount(id);
                   _.getQnaAnswers(id);
@@ -52,7 +52,9 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            isPost ? _.savedList![index]['post_data']['title'] : _.savedList![index]['qna_data']['title'],
+                            isPost
+                                ? _.savedData[index]['post_data']['title']
+                                : _.savedData[index]['qna_data']['title'],
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -60,7 +62,11 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            isPost ? _.savedList![index]['post_data']['creation_date'] : _.savedList![index]['qna_data']['creation_date'],
+                            isPost
+                                ? _.savedData[index]['post_data']
+                                    ['creation_date']
+                                : _.savedData[index]['qna_data']
+                                    ['creation_date'],
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 12,
@@ -73,7 +79,9 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
-                          isPost ? _.savedList![index]['post_data']['content'] : _.savedList![index]['qna_data']['content'],
+                          isPost
+                              ? _.savedData[index]['post_data']['content']
+                              : _.savedData[index]['qna_data']['content'],
                           textAlign: TextAlign.start,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(

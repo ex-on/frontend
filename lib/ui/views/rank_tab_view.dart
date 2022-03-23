@@ -35,21 +35,24 @@ class RankTabView extends GetView<RankController> {
       ],
     );
 
-    return Column(
-      children: [
-        CustomLeadingHeader(leading: _tabBar),
-        Expanded(
-          child: TabBarView(
-            physics: const BouncingScrollPhysics(),
-            controller: controller.rankMainTabController,
-            children: const <Widget>[
-              RankProteinPage(),
-              RankCardioPage(),
-              RankWeightPage(),
-            ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: context.mediaQueryPadding.bottom),
+      child: Column(
+        children: [
+          CustomLeadingHeader(leading: _tabBar),
+          Expanded(
+            child: TabBarView(
+              physics: const BouncingScrollPhysics(),
+              controller: controller.rankMainTabController,
+              children: const <Widget>[
+                RankProteinPage(),
+                RankCardioPage(),
+                RankWeightPage(),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

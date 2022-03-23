@@ -1,10 +1,10 @@
 import 'dart:developer';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:exon_app/constants/constants.dart';
-import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/helpers/dio_auth_interceptor.dart';
-import 'package:exon_app/helpers/parse_jwt.dart';
+import 'package:exon_app/helpers/dio_connectivity_request_retrier.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 Dio customDio() {
@@ -14,7 +14,14 @@ Dio customDio() {
     receiveTimeout: 8000,
   );
   Dio dio = Dio(dioOptions);
-  dio.interceptors.add(DioAuthInterceptor());
+  dio.interceptors.add(
+    DioAuthInterceptor(
+      requestRetrier: DioConnectivityRequestRetrier(
+        dio: dio,
+        connectivity: Connectivity(),
+      ),
+    ),
+  );
 
   return dio;
 }
@@ -74,6 +81,9 @@ abstract class ApiService {
       if (response.statusCode == 200) {
         log(response.toString());
         return response;
+      } else if (response.data == null) {
+        print(response.statusCode);
+        // Get.dialog(const ConnectionErrorDialog());
       }
     } on DioError catch (e) {
       print(e);

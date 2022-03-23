@@ -32,7 +32,10 @@ class AuthLandingView extends GetView<AuthController> {
       var token = await KakaoService.loginWithKakao();
       accessToken = token['access_token'];
     }
+    print(accessToken);
     bool success = await AmplifyService.signUserInWithKakaoLogin(accessToken);
+    print('success:');
+    print(success);
     AuthController.to.setLoading(false);
     if (success) {
       await RegisterInfoController.to.checkUserInfo();

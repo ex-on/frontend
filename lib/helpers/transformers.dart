@@ -222,11 +222,18 @@ Map<int, String> postCategoryIntToStr = {
   2: '정보',
 };
 
+Map<int, String> postTypeIntToStr = {
+  1: '자유',
+  2: '정보',
+};
+
 Map<int, String> qnaCategoryIntToStr = {
   0: 'HOT',
-  1: '미해결',
+  1: '진행중',
   2: '해결',
 };
+
+Map<bool?, String> qnaSolvedBoolToStr = {null: '', true: '해결', false: '진행중'};
 
 int getLevelRequiredProtein(int level) {
   switch (level) {
@@ -312,4 +319,15 @@ Map<int, Color> profileExerciseStatusIntToColor = {
   1: brightPrimaryColor.withOpacity(0.1),
   2: brightPrimaryColor.withOpacity(0.37),
   3: brightPrimaryColor,
+};
+
+Map<int, String> searchCategoryIntToStr = {
+  0: '전체 게시판',
+  1: 'HOT 게시판',
+  2: '자유 게시판',
+  3: '정보 게시판',
+  4: '전체 Q&A',
+  5: 'HOT Q&A',
+  6: '진행중 Q&A',
+  7: '해결 Q&A',
 };

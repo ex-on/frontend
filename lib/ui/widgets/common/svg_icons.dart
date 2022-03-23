@@ -26,12 +26,16 @@ const String _addIcon = 'assets/icons/addIcon.svg';
 const String _subtractIcon = 'assets/icons/subtractIcon.svg';
 const String _scrollUpIcon = 'assets/icons/arrowDropUp.svg';
 
+const String _searchCharacter = 'assets/characters/searchCharacter.svg';
+const String _blankSearchCharacter =
+    'assets/characters/blankSearchCharacter.svg';
 const String _excitedCharacter = 'assets/characters/excitedCharacter.svg';
 const String _tiredCharacter = 'assets/characters/tiredCharacter.svg';
 const String _jumpingExcitedCharacter =
     'assets/characters/jumpingExcitedCharacter.svg';
 const String _dumbellCharacter = 'assets/characters/dumbellCharacter.svg';
 const String _privacyCharacter = 'assets/characters/privacyCharacter.svg';
+const String _emptyBoxCharacter = 'assets/characters/emptyBoxCharacter.svg';
 
 const String _completeIcon = 'assets/completeIcon.svg';
 const String _incompleteIcon = 'assets/icons/incompleteIcon.svg';
@@ -548,6 +552,50 @@ class ScrollUpIcon extends StatelessWidget {
 }
 
 // Characters
+class SearchCharacter extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const SearchCharacter({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _searchCharacter,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class BlankSearchCharacter extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const BlankSearchCharacter({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _blankSearchCharacter,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
 class ExcitedCharacter extends StatelessWidget {
   final double? width;
   final double? height;
@@ -651,6 +699,28 @@ class PrivacyCharacter extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _privacyCharacter,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class EmptyBoxCharacter extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const EmptyBoxCharacter({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _emptyBoxCharacter,
       width: width,
       height: height,
       color: color,

@@ -43,7 +43,7 @@ class RegisterInfoView extends GetView<RegisterInfoController> {
       controller.setAuthProvider(authProvider);
     }
 
-    controller.checkUserInfo();
+    // controller.checkUserInfo();
 
     List<Widget> _pages = [
       const RegisterUsernamePage(),
@@ -56,19 +56,19 @@ class RegisterInfoView extends GetView<RegisterInfoController> {
 
     return GetBuilder<RegisterInfoController>(
       builder: (_) {
-        if (_.userInfoLoading) {
-          return const LoadingIndicator(
-            route: true,
-          );
-        } else {
-          if (_.userInfoExists) {
-            return HomeNavigationView();
-          } else {
-            return Scaffold(
-              body: _pages[_.page],
-            );
-          }
-        }
+        // if (_.userInfoLoading) {
+        //   return const LoadingIndicator(
+        //     route: true,
+        //   );
+        // } else {
+        //   if (_.userInfoExists) {
+        //     return HomeNavigationView();
+        //   } else {
+        return Scaffold(
+          body: SafeArea(child: _pages[_.page]),
+        );
+        //     }
+        //   }
       },
     );
   }

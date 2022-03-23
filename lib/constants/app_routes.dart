@@ -1,11 +1,19 @@
+import 'package:exon_app/ui/pages/community/community_search_page.dart';
+import 'package:exon_app/ui/pages/community/post/post_edit_page.dart';
 import 'package:exon_app/ui/pages/community/post/post_list_page.dart';
 import 'package:exon_app/ui/pages/community/post/community_post_page.dart';
 import 'package:exon_app/ui/pages/community/qna/community_qna_page.dart';
 import 'package:exon_app/ui/pages/community/post/post_write_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_answer_comments_page.dart';
+import 'package:exon_app/ui/pages/community/qna/qna_answer_edit_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_answer_write_page.dart';
+import 'package:exon_app/ui/pages/community/qna/qna_edit_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_list_page.dart';
+import 'package:exon_app/ui/pages/community/qna/qna_select_answer_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_write_page.dart';
+import 'package:exon_app/ui/views/community/bookmarked_tab_view.dart';
+import 'package:exon_app/ui/views/community/post_activity_tab_view.dart';
+import 'package:exon_app/ui/views/community/qna_activity_tab_view.dart';
 import 'package:exon_app/ui/pages/exercise/cardio_record_page.dart';
 import 'package:exon_app/ui/pages/exercise/end_exercise_summary_page.dart';
 import 'package:exon_app/ui/pages/exercise/update_exercise_details_page.dart';
@@ -15,10 +23,10 @@ import 'package:exon_app/ui/pages/stats/exercise_stats_list_page.dart';
 import 'package:exon_app/ui/pages/stats/exercise_weight_stats_page.dart';
 import 'package:exon_app/ui/pages/stats/physical_data_page.dart';
 import 'package:exon_app/ui/pages/stats/record_physical_data_page.dart';
-import 'package:exon_app/ui/views/add_exercise_view.dart';
+import 'package:exon_app/ui/views/exercise/add_exercise_view.dart';
 import 'package:exon_app/ui/views/auth_landing_view.dart';
-import 'package:exon_app/ui/views/exercise_cardio_block_view.dart';
-import 'package:exon_app/ui/views/exercise_weight_block_view.dart';
+import 'package:exon_app/ui/views/exercise/exercise_cardio_block_view.dart';
+import 'package:exon_app/ui/views/exercise/exercise_weight_block_view.dart';
 import 'package:exon_app/ui/pages/exercise_info_page.dart';
 import 'package:exon_app/ui/views/home_navigation_view.dart';
 import 'package:exon_app/ui/views/login_view.dart';
@@ -53,20 +61,42 @@ class AppRoutes {
         name: '/exercise_cardio_record', page: () => const CardioRecordPage()),
     GetPage(
         name: '/exercise_summary', page: () => const EndExerciseSummaryPage()),
+    GetPage(
+      name: '/community/search',
+      page: () => const CommunitySearchPage(),
+      transition: Transition.rightToLeft,
+    ),
     GetPage(name: '/community/post/list', page: () => const PostListPage()),
     GetPage(name: '/community/post', page: () => const CommunityPostPage()),
     GetPage(name: '/community/post/write', page: () => const PostWritePage()),
+    GetPage(name: '/community/post/edit', page: () => const PostEditPage()),
     GetPage(name: '/community/qna', page: () => const CommunityQnaPage()),
     GetPage(name: '/community/qna/list', page: () => const QnaListPage()),
     GetPage(name: '/community/qna/write', page: () => const QnaWritePage()),
+    GetPage(name: '/community/qna/edit', page: () => const QnaEditPage()),
+    GetPage(
+        name: '/community/qna/select_answer',
+        page: () => const QnaSelectAnswerPage()),
     GetPage(
       name: '/community/qna/answer/write',
       page: () => const QnaAnswerWritePage(),
     ),
     GetPage(
+        name: '/community/qna/answer/edit',
+        page: () => const QnaAnswerEditPage()),
+    GetPage(
       name: '/community/qna/answer_comments',
       page: () => const QnaAnswerCommentsPage(),
     ),
+    GetPage(
+        name: '/community/saved/bookmarks',
+        page: () => const BookmarkedTabView()),
+    GetPage(
+        name: '/community/saved/post_activity',
+        page: () => const PostActivityTabView()),
+    GetPage(
+        name: '/community/saved/qna_activity',
+        page: () => const QnaActivityTabView()),
     GetPage(
       name: '/stats/physical_data',
       page: () => const PhysicalDataPage(),

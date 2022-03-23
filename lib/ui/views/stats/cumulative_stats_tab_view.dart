@@ -10,7 +10,7 @@ class CumulativeStatsTabView extends GetView<StatsController> {
   @override
   Widget build(BuildContext context) {
     return TabBarView(
-      physics: const BouncingScrollPhysics(),
+      physics: const ClampingScrollPhysics(),
       controller: controller.cumulativeStatsTabController,
       children: const [
         CumulativeStatsTimePage(),

@@ -1,11 +1,11 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
+import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/keep_alive_wrapper.dart';
-import 'package:exon_app/ui/widgets/common/sliver_app_bar_delegate.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/exercise/set_input_bottom_sheet.dart';
@@ -48,6 +48,8 @@ class AddExerciseDetailsPage extends StatelessWidget {
         controller.postExerciseCardioPlan();
       }
       controller.resetExerciseDetails();
+      HomeController.to.updateRefreshModeWeek(false);
+      HomeController.to.refreshController.requestRefresh();
       Get.back();
     }
 

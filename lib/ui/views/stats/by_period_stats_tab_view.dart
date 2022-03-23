@@ -51,7 +51,7 @@ class ByPeriodStatsTabView extends GetView<StatsController> {
         ];
       },
       body: TabBarView(
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         controller: controller.byPeriodStatsTabController,
         children: const [
           DailyStatsPage(),
