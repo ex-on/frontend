@@ -24,26 +24,28 @@ class ExerciseStatsListPage extends StatelessWidget {
           title: _headerTitle,
         ),
       ),
-      body: GetBuilder<StatsController>(
-        builder: (_) {
-          return ListView.builder(
-            itemCount: _.cumulativeExerciseStatData['exercise_stats'].length,
-            itemBuilder: (context, index) => ExerciseStatBlock(
-              exerciseId: _.cumulativeExerciseStatData['exercise_stats'][index]
-                  ['exercise']['id'],
-              exerciseName: _.cumulativeExerciseStatData['exercise_stats']
-                  [index]['exercise']['name'],
-              targetMuscle: _.cumulativeExerciseStatData['exercise_stats']
-                  [index]['exercise']['target_muscle'],
-              exerciseMethod: _.cumulativeExerciseStatData['exercise_stats']
-                  [index]['exercise']['exercise_method'],
-              count: _.cumulativeExerciseStatData['exercise_stats'][index]
-                  ['count'],
-              time: _.cumulativeExerciseStatData['exercise_stats'][index]
-                  ['time'],
-            ),
-          );
-        },
+      body: SafeArea(
+        child: GetBuilder<StatsController>(
+          builder: (_) {
+            return ListView.builder(
+              itemCount: _.cumulativeExerciseStatData['exercise_stats'].length,
+              itemBuilder: (context, index) => ExerciseStatBlock(
+                exerciseId: _.cumulativeExerciseStatData['exercise_stats']
+                    [index]['exercise']['id'],
+                exerciseName: _.cumulativeExerciseStatData['exercise_stats']
+                    [index]['exercise']['name'],
+                targetMuscle: _.cumulativeExerciseStatData['exercise_stats']
+                    [index]['exercise']['target_muscle'],
+                exerciseMethod: _.cumulativeExerciseStatData['exercise_stats']
+                    [index]['exercise']['exercise_method'],
+                count: _.cumulativeExerciseStatData['exercise_stats'][index]
+                    ['count'],
+                time: _.cumulativeExerciseStatData['exercise_stats'][index]
+                    ['time'],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -2,7 +2,6 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/rank_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
-import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/circle.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
@@ -21,7 +20,6 @@ class RankProteinPage extends GetView<RankController> {
         controller.proteinRefreshController.requestRefresh();
       }
     });
-
 
     void _onHelpPressed() {
       Get.dialog(const ActivityLevelInfoDialog());
@@ -223,7 +221,9 @@ class RankProteinPage extends GetView<RankController> {
                               Container(
                                 width: (context.width - 60) *
                                     _currentProtein /
-                                    _nextLevelLeftProtein,
+                                    getLevelRequiredProtein(
+                                        _.proteinRankData['activity_level'] +
+                                            1),
                                 height: 20,
                                 constraints: const BoxConstraints(minWidth: 40),
                                 padding: const EdgeInsets.only(right: 10),
@@ -256,18 +256,20 @@ class RankProteinPage extends GetView<RankController> {
                               left: 30, right: 30, top: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Text(
-                                '헬스세포',
-                                style: TextStyle(
+                                activityLevelIntToStr[
+                                    _.proteinRankData['activity_level']]!,
+                                style: const TextStyle(
                                   color: brightPrimaryColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
-                                '헬린이',
-                                style: TextStyle(
+                                activityLevelIntToStr[
+                                    _.proteinRankData['activity_level'] + 1]!,
+                                style: const TextStyle(
                                   color: lightGrayColor,
                                   fontSize: 12,
                                 ),

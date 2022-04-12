@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
@@ -19,24 +21,31 @@ class BookmarkedPostsListPage extends GetView<CommunityController> {
 
     return GetBuilder<CommunityController>(
       builder: (_) {
+        print(_.postRefreshController.isRefresh);
+        inspect(_.postRefreshController.headerStatus);
         return SmartRefresher(
           controller: _.bookmarkedPostsRefreshController,
           onRefresh: _.onBookmarkedPostsRefresh,
           header: const CustomRefreshHeader(),
-          child: ListView.separated(
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              itemBuilder: (context, index) {
-                return PostContentPreviewBuilder(
-                    displayType: true, data: _.bookmarkedPostsList[index]);
-              },
-              separatorBuilder: (context, index) => const Divider(
-                    color: lightGrayColor,
-                    thickness: 0.5,
-                    height: 0.5,
-                  ),
-              itemCount: _.bookmarkedPostsList.length),
+          child: (_.bookmarkedPostsList.isEmpty &&
+                  !_.loading)
+              ? const Center(
+                  child: Text('북마크가 없습니다'),
+                )
+              : ListView.separated(
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    return PostContentPreviewBuilder(
+                        displayType: true, data: _.bookmarkedPostsList[index]);
+                  },
+                  separatorBuilder: (context, index) => const Divider(
+                        color: lightGrayColor,
+                        thickness: 0.5,
+                        height: 0.5,
+                      ),
+                  itemCount: _.bookmarkedPostsList.length),
         );
       },
     );

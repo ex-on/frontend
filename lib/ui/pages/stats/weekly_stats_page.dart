@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
-import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +16,12 @@ class WeeklyStatsPage extends GetView<StatsController> {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () {
+      if (controller.weeklyExerciseStatData.isEmpty) {
+        controller.weeklyStatsRefreshController.requestRefresh();
+      }
+    });
+
     return Builder(
       builder: (context) {
         return SafeArea(
@@ -69,7 +74,7 @@ class WeeklyStatsPage extends GetView<StatsController> {
                     builder: (_) {
                       if (_.loading) {
                         return const SizedBox();
-                      } else if (_.weeklyExerciseStatData.isEmpty) {
+                      } else if (_.weeklyExerciseStatData['empty'] != false) {
                         return const Padding(
                           padding: EdgeInsets.symmetric(vertical: 50),
                           child: Text(

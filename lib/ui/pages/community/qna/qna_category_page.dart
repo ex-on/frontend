@@ -1,6 +1,7 @@
 import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/floating_write_button.dart';
+import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/constants/constants.dart';
@@ -171,23 +172,28 @@ class QnaCategoryPage extends GetView<CommunityController> {
                             controller: _.qnaCategoryRefreshController,
                             onRefresh: _.onQnaCategoryRefresh,
                             header: const CustomRefreshHeader(),
-                            child: ListView.separated(
-                              physics: const BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return QnaContentPreviewBuilder(
-                                  displaySolved: _.qnaCategory.value == 0,
-                                  data: _.qnaContentList[index],
-                                );
-                              },
-                              separatorBuilder: (context, index) =>
-                                  const Divider(
-                                color: lightGrayColor,
-                                thickness: 0.5,
-                                height: 0.5,
-                              ),
-                              itemCount:
-                                  _.loading ? 0 : _.qnaContentList.length,
-                            ),
+                            child: _.loading
+                                ? const Padding(
+                                    padding: EdgeInsets.only(left: 20),
+                                    child: LoadingCommentBlock(),
+                                  )
+                                : ListView.separated(
+                                    physics: const BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return QnaContentPreviewBuilder(
+                                        displaySolved: _.qnaCategory.value == 0,
+                                        data: _.qnaContentList[index],
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) =>
+                                        const Divider(
+                                      color: lightGrayColor,
+                                      thickness: 0.5,
+                                      height: 0.5,
+                                    ),
+                                    itemCount:
+                                        _.loading ? 0 : _.qnaContentList.length,
+                                  ),
                           ),
                         );
                       },

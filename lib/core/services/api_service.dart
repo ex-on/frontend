@@ -10,8 +10,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 Dio customDio() {
   var dioOptions = BaseOptions(
     baseUrl: endPointUrl,
-    connectTimeout: 10000,
-    receiveTimeout: 8000,
+    connectTimeout: 20000,
+    receiveTimeout: 20000,
   );
   Dio dio = Dio(dioOptions);
   dio.interceptors.add(

@@ -3,7 +3,6 @@ import 'package:exon_app/core/controllers/settings_controller.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,7 +44,7 @@ class SettingsView extends StatelessWidget {
 
     Widget _getSettingsLabelItem(String labelText) {
       return SizedBox(
-        height: 40,
+        height: 50,
         child: Align(
           alignment: Alignment.centerLeft,
           child: Padding(
@@ -66,7 +65,7 @@ class SettingsView extends StatelessWidget {
     Widget _getSettingsMenuItem(Function() onTap, String labelText,
         {Widget trailing = const SizedBox()}) {
       return SizedBox(
-        height: 40,
+        height: 50,
         width: context.width,
         child: InkWell(
           onTap: onTap,
@@ -87,8 +86,11 @@ class SettingsView extends StatelessWidget {
       );
     }
 
-    Widget _divider =
-        Divider(color: Colors.grey[200], thickness: 2, height: 16);
+    Widget _divider = Divider(
+      color: Colors.grey[200],
+      thickness: 2,
+      height: 2,
+    );
 
     return Scaffold(
       backgroundColor: Colors.white,

@@ -242,10 +242,6 @@ class StatsController extends GetxController
       enablePinching: true,
       enablePanning: true,
     );
-    getMonthlyExerciseDates(selectedDate);
-    getDailyExerciseStats();
-    getWeeklyExerciseStats();
-    getMonthlyExerciseStats();
   }
 
   @override
@@ -400,7 +396,7 @@ class StatsController extends GetxController
     setLoading(true);
     var resData = await StatsApiService.getDailyExerciseStats(selectedDate);
     dailyExerciseStatData = resData;
-    if (dailyExerciseStatData.isNotEmpty) {
+    if (dailyExerciseStatData['empty'] == false) {
       if (dailyExerciseStatData['stats']['memo'] != '') {
         memoTextController.text = dailyExerciseStatData['stats']['memo'];
         update();

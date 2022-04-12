@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const String endPointUrl = 'http://5179-221-139-39-186.ngrok.io';
+const String endPointUrl = 'http://ab61-14-36-44-229.ngrok.io';
 // Colors
 const Color splashViewBackgroundColor = Colors.white;
 const Color mainBackgroundColor = Color(0xffF4F3F8);
@@ -9,7 +9,7 @@ const Color kakaoLoginColor = Color(0xffFAE100);
 const Color facebookLoginColor = Color(0xff4F66A5);
 
 const Color textFieldFillColor = Color(0xffF4F3F8);
-const Color deepGrayColor = Color(0xff777777); 
+const Color deepGrayColor = Color(0xff777777);
 
 const Color lightBrightPrimaryColor = Color(0xff9AD9E8);
 const Color brightPrimaryColor = Color(0xff00B9E4);
@@ -27,12 +27,13 @@ const Color lightDarkSecondaryColor = Color(0xff8A8AAA);
 
 const Color softGrayColor = Color(0xff959595);
 const Color softBlackColor = Color(0xff6F6F6F);
-      
+
 const Color clearBlackColor = Color(0xff292E3C);
 
 const Color softRedColor = Color(0xffD63E6C);
 const Color softBlueColor = Color(0xff0D92DD);
 const Color cancelRedColor = Color(0xffD9433A);
+const Color brightRedColor = Color(0xffFF5146);
 
 const Color communityTitleTextColor = Color(0xff263238);
 const Color unselectedIconColor = Color(0xffD9D9D9);
@@ -55,7 +56,7 @@ const double statsLabelFontSize = 16.52;
 const cognitoClientId = '6mf91uqnj2jj25et5hsrdbg8ur';
 const cognitoPoolId = 'ap-northeast-2_EuYr8s0Rp';
 const cognitoPoolUrl = 'exon.auth.ap-northeast-2';
-const redirectUri = 'exon://register_info';
+const redirectUri = 'exon://home';
 
 //Kakao Login
 const kakaoClientId = '9289c2192aae86a9837cf14e90664ffd';

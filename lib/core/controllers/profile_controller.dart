@@ -1,3 +1,4 @@
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/connection_controller.dart';
 import 'package:exon_app/core/services/user_api_service.dart';
 import 'package:get/get.dart';
@@ -16,6 +17,7 @@ class ProfileController extends GetxController
   Map<String, dynamic> profileData = {};
 
   void onRefresh() async {
+    await AuthController.to.getUserInfo();
     await getProfileStats();
     refreshController.refreshCompleted();
   }

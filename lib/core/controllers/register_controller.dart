@@ -270,7 +270,6 @@ class RegisterInfoController extends GetxController {
 
   @override
   void onInit() async {
-    // todo: implement onInit
     heightFocusNode = FocusNode();
     weightFocusNode = FocusNode();
     muscleMassFocusNode = FocusNode();

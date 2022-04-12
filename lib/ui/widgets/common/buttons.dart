@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/helpers/enums.dart';
 import 'package:exon_app/ui/widgets/common/bubble_tooltips.dart';
-import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/physics.dart';
@@ -203,11 +202,13 @@ class ElevatedActionButton extends StatelessWidget {
           buttonText,
           style: textStyle ??
               TextStyle(
-                color: (int.parse(backgroundColor.toString().substring(10, 16),
-                            radix: 16) <
-                        int.parse('800000', radix: 16))
-                    ? Colors.white
-                    : deepGrayColor,
+                color: (activated != null ? activated! : true)
+                    ? ((int.parse(backgroundColor.toString().substring(10, 16),
+                                radix: 16) <
+                            int.parse('800000', radix: 16))
+                        ? Colors.white
+                        : deepGrayColor)
+                    : lightGrayColor,
                 fontWeight: FontWeight.bold,
               ),
         ),

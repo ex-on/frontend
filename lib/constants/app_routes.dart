@@ -11,6 +11,7 @@ import 'package:exon_app/ui/pages/community/qna/qna_edit_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_list_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_select_answer_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_write_page.dart';
+import 'package:exon_app/ui/pages/home/notification_page.dart';
 import 'package:exon_app/ui/views/community/bookmarked_tab_view.dart';
 import 'package:exon_app/ui/views/community/post_activity_tab_view.dart';
 import 'package:exon_app/ui/views/community/qna_activity_tab_view.dart';
@@ -46,6 +47,7 @@ class AppRoutes {
     GetPage(name: '/register_info', page: () => const RegisterInfoView()),
     GetPage(name: '/login', page: () => const LoginView()),
     GetPage(name: '/home', page: () => HomeNavigationView()),
+    GetPage(name: '/notification', page: () => const NotificationPage()),
     GetPage(name: '/add_exercise', page: () => AddExerciseView()),
     GetPage(
         name: '/add_exercise/update',

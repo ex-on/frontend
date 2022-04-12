@@ -23,20 +23,24 @@ class SavedUserPostsListPage extends GetView<CommunityController> {
           controller: _.savedUserPostsRefreshController,
           onRefresh: _.onSavedUserPostsRefresh,
           header: const CustomRefreshHeader(),
-          child: ListView.separated(
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              itemBuilder: (context, index) {
-                return PostContentPreviewBuilder(
-                    displayType: true, data: _.savedUserPostsList[index]);
-              },
-              separatorBuilder: (context, index) => const Divider(
-                    color: lightGrayColor,
-                    thickness: 0.5,
-                    height: 0.5,
-                  ),
-              itemCount: _.savedUserPostsList.length),
+          child: (_.savedUserPostsList.isEmpty && !_.loading)
+              ? const Center(
+                  child: Text('쓴 글이 없습니다'),
+                )
+              : ListView.separated(
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    return PostContentPreviewBuilder(
+                        displayType: true, data: _.savedUserPostsList[index]);
+                  },
+                  separatorBuilder: (context, index) => const Divider(
+                        color: lightGrayColor,
+                        thickness: 0.5,
+                        height: 0.5,
+                      ),
+                  itemCount: _.savedUserPostsList.length),
         );
       },
     );

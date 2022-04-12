@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
@@ -508,6 +509,52 @@ class CommentsHeader extends StatelessWidget {
       centerTitle: true,
       elevation: 0,
       backgroundColor: color,
+    );
+  }
+}
+
+class NotificationHeader extends StatelessWidget {
+  final dynamic Function() onPressed;
+  final int numNotifications;
+
+  const NotificationHeader({
+    Key? key,
+    required this.onPressed,
+    required this.numNotifications,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        splashRadius: 20,
+        icon: const Icon(Icons.arrow_back_rounded, color: Colors.black),
+        onPressed: onPressed,
+      ),
+      title: Text.rich(
+        TextSpan(
+          text: '알림 ',
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          children: [
+            TextSpan(
+              text: numNotifications.toString(),
+              style: const TextStyle(
+                color: brightPrimaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                height: 1.3,
+              ),
+            ),
+          ],
+        ),
+      ),
+      centerTitle: true,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
     );
   }
 }

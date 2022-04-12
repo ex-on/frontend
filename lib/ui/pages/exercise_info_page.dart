@@ -1,5 +1,4 @@
 import 'package:exon_app/constants/constants.dart';
-import 'package:exon_app/dummy_data_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/color_labels.dart';
@@ -15,7 +14,7 @@ class ExerciseInfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final String _exerciseName = Get.arguments;
     const String _headerTitle = '운동 상세보기';
-    const String _crashText = '존재하지 않는 운동입니다';
+    const String _crashText = '아직 준비중인 기능입니다';
     const String _targetMuscleLabelText = '부위';
     const String _exerciseMethodLabelText = '종류';
     const String _recommendedTimeMinLabelText = '권장';
@@ -23,8 +22,7 @@ class ExerciseInfoPage extends StatelessWidget {
     const double _imageWidthHeight = 250;
     const _image = 'assets/benchpress.png';
 
-    final Map<String, dynamic> _data =
-        DummyDataController.to.exerciseInfoList[_exerciseName] ?? {};
+    final Map<String, dynamic> _data = {};
 
     void _onBackPressed() {
       Get.back();
@@ -45,7 +43,10 @@ class ExerciseInfoPage extends StatelessWidget {
             child: DisableGlowListView(
               children: _data.isEmpty
                   ? [
-                      const Text(_crashText),
+                      const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Center(child: Text(_crashText)),
+                      ),
                     ]
                   : [
                       Column(

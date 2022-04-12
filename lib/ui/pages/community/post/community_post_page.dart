@@ -115,13 +115,37 @@ class CommunityPostPage extends GetView<CommunityController> {
 
     void _onReportPressed(int id, String category) async {
       var success = await controller.report(id, category);
-      if (success) {
+      if (success == true) {
         Get.back();
         Get.showSnackbar(
           GetSnackBar(
             messageText: const Text(
               '신고가 완료되었습니다',
               style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      } else if (success == 208) {
+        Get.back();
+        late String messageText;
+
+        if (category == 'post') {
+          messageText = '이미 신고한 게시글입니다';
+        } else {
+          messageText = '이미 신고한 댓글입니다';
+        }
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: Text(
+              messageText,
+              style: const TextStyle(
                 color: Colors.white,
               ),
             ),
@@ -445,9 +469,9 @@ class CommunityPostPage extends GetView<CommunityController> {
                             color: clearBlackColor,
                           ),
                         ),
-                        if (controller.postCommentList[index]['comments']
-                                ['user_data']['username'] ==
-                            AuthController.to.userInfo['username'])
+                        if (_.postCommentList[index]['comments']['user_data']
+                                ['username'] ==
+                            _.postContent['user_data']['username'])
                           const Padding(
                             padding: EdgeInsets.only(left: 5),
                             child: Text(
@@ -675,7 +699,7 @@ class CommunityPostPage extends GetView<CommunityController> {
                           ),
                         ),
                         if (replyList[index]['user_data']['username'] ==
-                            AuthController.to.userInfo['username'])
+                            controller.postContent['user_data']['username'])
                           const Padding(
                             padding: EdgeInsets.only(left: 5),
                             child: Text(

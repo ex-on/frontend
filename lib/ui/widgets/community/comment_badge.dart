@@ -60,7 +60,7 @@ class SelectedAnswerBadge extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: SizedBox(
-        width: 75,
+        width: 80,
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: darkSecondaryColor,

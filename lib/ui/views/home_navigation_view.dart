@@ -3,6 +3,7 @@ import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/core/controllers/profile_controller.dart';
 import 'package:exon_app/core/controllers/rank_controller.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
+import 'package:exon_app/core/controllers/tooltip_controller.dart';
 import 'package:exon_app/ui/pages/home/main_home_page.dart';
 import 'package:exon_app/ui/views/community/community_tab_view.dart';
 import 'package:exon_app/ui/views/profile_view.dart';
@@ -32,6 +33,7 @@ class HomeNavigationView extends StatelessWidget {
     Get.put<HomeController>(HomeController());
     Get.put<StatsController>(StatsController());
     Get.put<ProfileController>(ProfileController());
+    Get.put<TooltipController>(TooltipController());
     return GetBuilder<HomeNavigationController>(
       builder: (_) {
         return Scaffold(

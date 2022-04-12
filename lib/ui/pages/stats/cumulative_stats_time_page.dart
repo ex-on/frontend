@@ -318,6 +318,13 @@ class CumulativeStatsTimePage extends GetView<StatsController> {
                                     dataSource: exerciseTimeStatData,
                                     color: darkSecondaryColor,
                                     width: 3,
+                                    markerSettings: const MarkerSettings(
+                                      isVisible: true,
+                                      // color: brightPrimaryColor,
+                                      // borderColor: Colors.white,
+                                      width: 10,
+                                      height: 10,
+                                    ),
                                     xValueMapper: (dynamic data, _) {
                                       return data[0];
                                     },

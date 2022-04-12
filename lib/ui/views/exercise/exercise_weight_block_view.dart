@@ -987,139 +987,143 @@ class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
             SizedBox(
               height: 70,
               width: 280,
-              child: GetBuilder<ExerciseBlockController>(builder: (_) {
-                if (!_.exercisePaused) {
-                  return ElevatedActionButton(
-                    buttonText: _.currentSet.toString() + '세트 완료',
-                    onPressed: _onCompleteSetPressed,
-                    textStyle: const TextStyle(
-                      color: mainBackgroundColor,
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    borderRadius: 100,
-                  );
-                } else if (_.recordingExerciseSet) {
-                  return _.inputSetRecordDone
-                      ? ElevatedActionButton(
-                          buttonText: '기록 완료',
-                          textStyle: const TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: mainBackgroundColor,
-                          ),
-                          borderRadius: 100,
-                          onPressed: _onCompleteSetRecordPressed,
-                        )
-                      : Stack(
-                          alignment: Alignment.centerRight,
-                          children: [
-                            SizedBox(
-                              height: 70,
-                              width: 280,
-                              child: ElevatedActionButton(
-                                borderRadius: 100,
-                                backgroundColor: Colors.white,
-                                overlayColor:
-                                    brightPrimaryColor.withOpacity(0.1),
-                                textStyle: const TextStyle(
+              child: GetBuilder<ExerciseBlockController>(
+                builder: (_) {
+                  if (!_.exercisePaused) {
+                    return ElevatedActionButton(
+                      buttonText: _.currentSet.toString() + '세트 완료',
+                      onPressed: _onCompleteSetPressed,
+                      textStyle: const TextStyle(
+                        color: mainBackgroundColor,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      borderRadius: 100,
+                    );
+                  } else if (_.recordingExerciseSet) {
+                    return _.inputSetRecordDone
+                        ? ElevatedActionButton(
+                            buttonText: '기록 완료',
+                            textStyle: const TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: mainBackgroundColor,
+                            ),
+                            borderRadius: 100,
+                            onPressed: _onCompleteSetRecordPressed,
+                          )
+                        : Stack(
+                            alignment: Alignment.centerRight,
+                            children: [
+                              SizedBox(
+                                height: 70,
+                                width: 280,
+                                child: ElevatedActionButton(
+                                  borderRadius: 100,
+                                  backgroundColor: Colors.white,
+                                  overlayColor:
+                                      brightPrimaryColor.withOpacity(0.1),
+                                  textStyle: const TextStyle(
+                                    color: brightPrimaryColor,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Manrope',
+                                  ),
+                                  buttonText:
+                                      (_.exerciseData['exercise_method'] == 1
+                                              ? ''
+                                              : (_.inputSetValues![0].text +
+                                                  'kg X ')) +
+                                          _.inputSetValues![1].text +
+                                          '회',
+                                  onPressed: _onInputExerciseRecordPressed,
+                                ),
+                              ),
+                              const Positioned(
+                                right: 20,
+                                child: Icon(
+                                  Icons.edit_rounded,
                                   color: brightPrimaryColor,
-                                  fontSize: 26,
+                                ),
+                              ),
+                            ],
+                          );
+                  } else if (_.resting) {
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.white,
+                      ),
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: _onSubtractTotalRestPressed,
+                                highlightColor:
+                                    darkSecondaryColor.withOpacity(0.2),
+                                splashColor:
+                                    darkSecondaryColor.withOpacity(0.2),
+                                icon: const SubtractIcon(
+                                  color: darkSecondaryColor,
+                                  width: 50,
+                                  height: 50,
+                                ),
+                              ),
+                              const Text(
+                                '10초',
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
+                                  color: darkSecondaryColor,
+                                  fontSize: 26,
                                   fontFamily: 'Manrope',
                                 ),
-                                buttonText:
-                                    (_.exerciseData['exercise_method'] == 1
-                                            ? ''
-                                            : (_.inputSetValues![0].text +
-                                                'kg X ')) +
-                                        _.inputSetValues![1].text +
-                                        '회',
-                                onPressed: _onInputExerciseRecordPressed,
                               ),
-                            ),
-                            const Positioned(
-                              right: 20,
-                              child: Icon(
-                                Icons.edit_rounded,
-                                color: brightPrimaryColor,
+                              IconButton(
+                                highlightColor:
+                                    darkSecondaryColor.withOpacity(0.2),
+                                splashColor:
+                                    darkSecondaryColor.withOpacity(0.2),
+                                onPressed: _onAddTotalRestPressed,
+                                icon: const AddIcon(
+                                  color: darkSecondaryColor,
+                                  width: 50,
+                                  height: 50,
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                } else if (_.resting) {
-                  return DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    Future.delayed(Duration.zero, () => TooltipController.to.activateTooltip());
+                    return SlidableButton(
+                      width: 280,
+                      height: 70,
                       color: Colors.white,
-                    ),
-                    child: Material(
-                      type: MaterialType.transparency,
+                      buttonColor: brightPrimaryColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(100),
                       child: Padding(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              onPressed: _onSubtractTotalRestPressed,
-                              highlightColor:
-                                  darkSecondaryColor.withOpacity(0.2),
-                              splashColor: darkSecondaryColor.withOpacity(0.2),
-                              icon: const SubtractIcon(
-                                color: darkSecondaryColor,
-                                width: 50,
-                                height: 50,
-                              ),
-                            ),
-                            const Text(
-                              '10초',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: darkSecondaryColor,
-                                fontSize: 26,
-                                fontFamily: 'Manrope',
-                              ),
-                            ),
-                            IconButton(
-                              highlightColor:
-                                  darkSecondaryColor.withOpacity(0.2),
-                              splashColor: darkSecondaryColor.withOpacity(0.2),
-                              onPressed: _onAddTotalRestPressed,
-                              icon: const AddIcon(
-                                color: darkSecondaryColor,
-                                width: 50,
-                                height: 50,
-                              ),
-                            ),
+                          children: const [
+                            XIcon(),
+                            CheckIcon(),
                           ],
                         ),
                       ),
-                    ),
-                  );
-                } else {
-                  TooltipController.to.activateTooltip();
-                  return SlidableButton(
-                    width: 280,
-                    height: 70,
-                    color: Colors.white,
-                    buttonColor: brightPrimaryColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(100),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          XIcon(),
-                          CheckIcon(),
-                        ],
-                      ),
-                    ),
-                    buttonWidth: 50,
-                    buttonHeight: 50,
-                    onChanged: _onSlidableButtonPositionChanged,
-                  );
-                }
-              }),
+                      buttonWidth: 50,
+                      buttonHeight: 50,
+                      onChanged: _onSlidableButtonPositionChanged,
+                    );
+                  }
+                },
+              ),
             ),
             GetBuilder<ExerciseBlockController>(builder: (_) {
               if (_.exercisePaused &&

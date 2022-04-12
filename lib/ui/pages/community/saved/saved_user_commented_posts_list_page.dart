@@ -23,21 +23,25 @@ class SavedUserCommentedPostsListPage extends GetView<CommunityController> {
           controller: _.savedUserCommentedPostsRefreshController,
           onRefresh: _.onSavedUserCommentedPostsRefresh,
           header: const CustomRefreshHeader(),
-          child: ListView.separated(
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              itemBuilder: (context, index) {
-                return PostCommentContentPreviewBuilder(
-                    displayType: true,
-                    data: _.savedUserCommentedPostsList[index]);
-              },
-              separatorBuilder: (context, index) => const Divider(
-                    color: lightGrayColor,
-                    thickness: 0.5,
-                    height: 0.5,
-                  ),
-              itemCount: _.savedUserCommentedPostsList.length),
+          child: (_.savedUserCommentedPostsList.isEmpty && !_.loading)
+              ? const Center(
+                  child: Text('댓글 단 글이 없습니다'),
+                )
+              : ListView.separated(
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    return PostCommentContentPreviewBuilder(
+                        displayType: true,
+                        data: _.savedUserCommentedPostsList[index]);
+                  },
+                  separatorBuilder: (context, index) => const Divider(
+                        color: lightGrayColor,
+                        thickness: 0.5,
+                        height: 0.5,
+                      ),
+                  itemCount: _.savedUserCommentedPostsList.length),
         );
       },
     );

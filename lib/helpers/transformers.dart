@@ -316,6 +316,7 @@ String getPhysicalStatsUnit(int category) {
 }
 
 Map<int, Color> profileExerciseStatusIntToColor = {
+  0: mainBackgroundColor,
   1: brightPrimaryColor.withOpacity(0.1),
   2: brightPrimaryColor.withOpacity(0.37),
   3: brightPrimaryColor,

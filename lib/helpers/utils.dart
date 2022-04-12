@@ -41,6 +41,13 @@ String getCleanTextFromDouble(num val) {
   }
 }
 
+extension BoolParsing on String {
+  bool get parseBool {
+    var string = this;
+    return string.toLowerCase() == 'true';
+  }
+}
+
 extension DateTimeExtension on DateTime {
   int get firstWeekdayOfMonth {
     var date = this;

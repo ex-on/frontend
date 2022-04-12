@@ -3,20 +3,18 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/core/controllers/app_controller.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
-import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/core/controllers/community_search_controller.dart';
 import 'package:exon_app/core/controllers/connection_controller.dart';
 import 'package:exon_app/core/controllers/deep_link_controller.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
 import 'package:exon_app/core/controllers/home_navigation_controller.dart';
 import 'package:exon_app/core/controllers/login_controller.dart';
+import 'package:exon_app/core/controllers/notification_controller.dart';
 import 'package:exon_app/core/controllers/physical_data_controller.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/controllers/settings_controller.dart';
-import 'package:exon_app/dummy_data_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart';
 import 'package:kakao_flutter_sdk/link.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,7 +26,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Get.put<AppController>(AppController());
-  Get.put<DummyDataController>(DummyDataController());
   Get.put<RegisterController>(RegisterController());
   Get.put<RegisterInfoController>(RegisterInfoController());
   Get.put<LoginController>(LoginController());
@@ -37,6 +34,7 @@ void main() async {
   Get.put<AddExerciseController>(AddExerciseController());
   Get.put<ExerciseBlockController>(ExerciseBlockController());
   Get.put<HomeNavigationController>(HomeNavigationController());
+  Get.put<NotificationController>(NotificationController());
   Get.put<PhysicalDataController>(PhysicalDataController());
   Get.put<ConnectionController>(ConnectionController());
   Get.put<CommunitySearchController>(CommunitySearchController());
@@ -51,6 +49,7 @@ class MyApp extends GetView<AppController> {
   @override
   Widget build(BuildContext context) {
     Get.put(DeepLinkController());
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);

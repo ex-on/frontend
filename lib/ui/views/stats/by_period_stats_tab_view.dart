@@ -13,6 +13,12 @@ class ByPeriodStatsTabView extends GetView<StatsController> {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () {
+      if (controller.monthlyExerciseDates.isEmpty) {
+        controller.getMonthlyExerciseDates(controller.selectedDate);
+      }
+    });
+
     TabBar _byPeriodStatsTabBar = TabBar(
       controller: controller.byPeriodStatsTabController,
       indicatorColor: darkPrimaryColor,

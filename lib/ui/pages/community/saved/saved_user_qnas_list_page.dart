@@ -23,21 +23,25 @@ class SavedUserQnasListPage extends GetView<CommunityController> {
           controller: _.savedUserQnasRefreshController,
           onRefresh: _.onSavedUserQnasRefresh,
           header: const CustomRefreshHeader(),
-          child: ListView.separated(
-            physics: const ClampingScrollPhysics(),
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            itemBuilder: (context, index) {
-              return QnaContentPreviewBuilder(
-                  displaySolved: true, data: _.savedUserQnasList[index]);
-            },
-            separatorBuilder: (context, index) => const Divider(
-              color: lightGrayColor,
-              thickness: 0.5,
-              height: 0.5,
-            ),
-            itemCount: _.savedUserQnasList.length,
-          ),
+          child: (_.savedUserQnasList.isEmpty && !_.loading)
+              ? const Center(
+                  child: Text('쓴 질문이 없습니다'),
+                )
+              : ListView.separated(
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    return QnaContentPreviewBuilder(
+                        displaySolved: true, data: _.savedUserQnasList[index]);
+                  },
+                  separatorBuilder: (context, index) => const Divider(
+                    color: lightGrayColor,
+                    thickness: 0.5,
+                    height: 0.5,
+                  ),
+                  itemCount: _.savedUserQnasList.length,
+                ),
         );
       },
     );

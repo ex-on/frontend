@@ -16,6 +16,12 @@ class DailyStatsPage extends GetView<StatsController> {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () {
+      if (controller.dailyExerciseStatData.isEmpty) {
+        controller.dailyStatsRefreshController.requestRefresh();
+      }
+    });
+    
     void _onMemoCompletePressed() {
       controller.postDailyStatsMemo();
       Get.back();
@@ -32,7 +38,7 @@ class DailyStatsPage extends GetView<StatsController> {
     }
 
     Widget getMemoDialog() {
-      if (controller.dailyExerciseStatData.isNotEmpty) {
+      if (controller.dailyExerciseStatData['empty'] == false) {
         if (controller.dailyExerciseStatData['stats']['memo'] != '') {
           controller.memoTextController.text =
               controller.dailyExerciseStatData['stats']['memo'];
@@ -113,15 +119,29 @@ class DailyStatsPage extends GetView<StatsController> {
                           height: 45,
                           child: GetBuilder<StatsController>(
                             builder: (_) {
+                              late bool isActivated;
+                              if (_.memoTextController.text != '') {
+                                if (_.dailyExerciseStatData['empty'] == false) {
+                                  if (_.dailyExerciseStatData['stats']
+                                          ['memo'] ==
+                                      _.memoTextController.text) {
+                                    isActivated = false;
+                                  } else {
+                                    isActivated = true;
+                                  }
+                                } else {
+                                  isActivated = true;
+                                }
+                              } else {
+                                isActivated = false;
+                              }
+
                               return ElevatedActionButton(
                                 buttonText: '완료',
                                 borderRadius: 5,
                                 onPressed: _onMemoCompletePressed,
                                 backgroundColor: clearBlackColor,
-                                activated: (_.memoTextController.text != '') &&
-                                    (_.memoTextController.text !=
-                                        _.dailyExerciseStatData['stats']
-                                            ['memo']),
+                                activated: isActivated,
                               );
                             },
                           ),
@@ -175,7 +195,7 @@ class DailyStatsPage extends GetView<StatsController> {
                       child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Text(
-                          _.dailyExerciseStatData.isNotEmpty
+                          _.dailyExerciseStatData['empty'] == false
                               ? (_.dailyExerciseStatData['stats']['memo'] ==
                                           "" ||
                                       _.dailyExerciseStatData['stats']
@@ -185,7 +205,7 @@ class DailyStatsPage extends GetView<StatsController> {
                                   : _.dailyExerciseStatData['stats']['memo'])
                               : _hintText,
                           style: TextStyle(
-                            color: _.dailyExerciseStatData.isNotEmpty
+                            color: _.dailyExerciseStatData['empty'] == false
                                 ? (_.dailyExerciseStatData['stats']['memo'] ==
                                             "" ||
                                         _.dailyExerciseStatData['stats']
@@ -250,7 +270,8 @@ class DailyStatsPage extends GetView<StatsController> {
                         builder: (_) {
                           if (_.loading) {
                             return const SizedBox();
-                          } else if (_.dailyExerciseStatData.isEmpty) {
+                          } else if (_.dailyExerciseStatData['empty'] != false ||
+                              _.dailyExerciseStatData['records'].isEmpty) {
                             return Column(
                               children: [
                                 const Padding(
@@ -602,7 +623,8 @@ class DailyStatsPage extends GetView<StatsController> {
                                                 ),
                                                 Padding(
                                                   padding:
-                                                      EdgeInsets.only(top: 3),
+                                                      const EdgeInsets.only(
+                                                          top: 3),
                                                   child: Text.rich(
                                                     TextSpan(
                                                       text: getCleanTextFromDouble(

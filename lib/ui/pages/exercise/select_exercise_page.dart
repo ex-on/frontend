@@ -81,7 +81,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
     }
 
     void _onAerobicMethodPressed(int target) {
-      controller.exerciseMethodSelectUpdate(target);
+      controller.cardioMethodSelectUpdate(target);
     }
 
     void _onExerciseBlockPressed(int index) {
@@ -91,6 +91,16 @@ class SelectExercisePage extends GetView<AddExerciseController> {
 
     void _onExerciseTypeChangePressed() {
       controller.changeExerciseType();
+    }
+
+    void _onSearchFieldChanged(String keyword) {
+      controller.onExerciseSearchFieldChanged(keyword);
+    }
+
+    void _onDeleteExerciseSearchFieldPressed() {
+      controller.searchExerciseTextController.clear();
+      FocusScope.of(context).unfocus();
+      controller.update();
     }
 
     Widget _header = GetBuilder<AddExerciseController>(
@@ -112,18 +122,41 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       ),
     );
 
-    Widget _exerciseSearchBar = InputTextField(
-      label: _searchFieldLabelText,
-      controller: controller.searchExerciseController,
-      height: 40,
-      borderRadius: 10,
-      backgroundColor: Colors.white,
-      icon: const Icon(
-        Icons.search_rounded,
-        size: 24,
-        color: _searchIconColor,
-      ),
-      autofocus: false,
+    Widget _exerciseSearchBar = GetBuilder<AddExerciseController>(
+      builder: (_) {
+        return InputTextField(
+          label: _searchFieldLabelText,
+          controller: controller.searchExerciseTextController,
+          onChanged: _onSearchFieldChanged,
+          height: 40,
+          borderRadius: 10,
+          backgroundColor: Colors.white,
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (_.searchExerciseTextController.text.isNotEmpty)
+                  IconButton(
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      size: 24,
+                      color: deepGrayColor,
+                    ),
+                    onPressed: _onDeleteExerciseSearchFieldPressed,
+                  ),
+                const Icon(
+                  Icons.search_rounded,
+                  size: 24,
+                  color: _searchIconColor,
+                ),
+              ],
+            ),
+          ),
+          autofocus: false,
+        );
+      },
     );
 
     Widget _targetMuscleSelect = SizedBox(
@@ -279,7 +312,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
                 } else {
                   return GetBuilder<AddExerciseController>(
                     builder: (_) {
-                      if (_.exerciseMethod == (index ~/ 2)) {
+                      if (_.cardioMethod == (index ~/ 2)) {
                         return ElevatedButton(
                           onPressed: () => _onAerobicMethodPressed(index ~/ 2),
                           style: ElevatedButton.styleFrom(

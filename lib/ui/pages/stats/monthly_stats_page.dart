@@ -5,7 +5,6 @@ import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/stats_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
-import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +18,12 @@ class MonthlyStatsPage extends GetView<StatsController> {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () {
+      if (controller.monthlyExerciseStatData.isEmpty) {
+        controller.monthlyStatsRefreshController.requestRefresh();
+      }
+    });
+
     void _onMonthlyStatsCategoryButtonPressed(int val) {
       controller.updateMonthlyStatsByWeekCategory(val);
     }
@@ -74,7 +79,7 @@ class MonthlyStatsPage extends GetView<StatsController> {
                   builder: (_) {
                     if (_.loading) {
                       return const SizedBox();
-                    } else if (_.monthlyExerciseStatData.isEmpty) {
+                    } else if (_.monthlyExerciseStatData['empty'] != false) {
                       return const Padding(
                         padding: EdgeInsets.symmetric(vertical: 50),
                         child: Text(

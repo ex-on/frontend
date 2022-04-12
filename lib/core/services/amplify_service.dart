@@ -28,14 +28,20 @@ class AmplifyService {
     bool _amplifyConfigured = false;
 
     if (!_amplifyConfigured) {
-      Amplify.addPlugins([auth, 
-      analytics, 
-      api]);
+      Amplify.addPlugins([auth, analytics, api]);
       try {
         await Amplify.configure(amplifyconfig);
         _amplifyConfigured = true;
-      } catch (e) {
-        print(e);
+      } on AmplifyAlreadyConfiguredException {
+        print(
+            "Tried to reconfigure Amplify; this can occur when your app restarts on OS.");
+      } on AmplifyException catch (e) {
+        if (e.underlyingException!
+            .contains('Amplify has already been configured.')) {
+          print('ignore');
+        } else {
+          throw e;
+        }
       }
     }
 

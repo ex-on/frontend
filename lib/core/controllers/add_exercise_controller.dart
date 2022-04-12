@@ -1,13 +1,12 @@
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/core/services/exercise_api_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddExerciseController extends GetxController
-    with SingleGetTickerProviderMixin {
+    with GetTickerProviderStateMixin {
   static AddExerciseController to = Get.find();
-  TextEditingController searchExerciseController = TextEditingController();
+  TextEditingController searchExerciseTextController = TextEditingController();
   late TabController cardioPlanInputTabController;
   List<List<TextEditingController>> inputSetControllerList = [
     [TextEditingController(text: '0.0'), TextEditingController(text: '0')]
@@ -21,6 +20,7 @@ class AddExerciseController extends GetxController
   int exerciseType = 0;
   int targetMuscle = 0;
   int exerciseMethod = 0;
+  int cardioMethod = 0;
   int numSets = 1;
   int? inputSetNum;
   int inputWeightType = 0;
@@ -89,7 +89,12 @@ class AddExerciseController extends GetxController
   void exerciseMethodSelectUpdate(int method) {
     exerciseMethod = method;
     update();
-    print(exerciseMethod);
+    updateCurrentExerciseDataList();
+  }
+
+  void cardioMethodSelectUpdate(int method) {
+    cardioMethod = method;
+    update();
     updateCurrentExerciseDataList();
   }
 
@@ -272,8 +277,9 @@ class AddExerciseController extends GetxController
   void resetExerciseSelect() {
     targetMuscle = 0;
     exerciseMethod = 0;
-    selectedExerciseDataList = [];
-    // update();
+    cardioMethod = 0;
+    searchExerciseTextController.clear();
+    updateCurrentExerciseDataList();
   }
 
   Future<void> getExerciseList() async {
@@ -288,26 +294,51 @@ class AddExerciseController extends GetxController
   }
 
   void updateCurrentExerciseDataList() {
+    String _keyword = searchExerciseTextController.text;
     if (exerciseType == 0) {
       List<dynamic> dataList = exerciseDataListWeight.toList();
       dataList.retainWhere((element) {
         var data = element as Map;
         return ((data['exercise_method'] == exerciseMethod) ||
                 exerciseMethod == 0) &&
-            ((data['target_muscle'] == targetMuscle) || targetMuscle == 0);
+            ((data['target_muscle'] == targetMuscle) || targetMuscle == 0) &&
+            data['name'].contains(_keyword);
       });
       selectedExerciseDataList = dataList;
-      update();
     } else {
       List<dynamic> dataList = exerciseDataListCardio.toList();
       dataList.retainWhere((element) {
         var data = element as Map;
-        return ((data['exercise_method'] == exerciseMethod) ||
-            exerciseMethod == 0);
+        return ((data['exercise_method'] == cardioMethod) ||
+                cardioMethod == 0) &&
+            data['name'].contains(_keyword);
       });
       selectedExerciseDataList = dataList;
-      update();
     }
+  }
+
+  void onExerciseSearchFieldChanged(String keyword) {
+    if (exerciseType == 0) {
+      List<dynamic> dataList = exerciseDataListWeight.toList();
+      dataList.retainWhere((element) {
+        var data = element as Map;
+        return ((data['exercise_method'] == exerciseMethod) ||
+                exerciseMethod == 0) &&
+            ((data['target_muscle'] == targetMuscle) || targetMuscle == 0) &&
+            data['name'].contains(keyword);
+      });
+      selectedExerciseDataList = dataList;
+    } else {
+      List<dynamic> dataList = exerciseDataListCardio.toList();
+      dataList.retainWhere((element) {
+        var data = element as Map;
+        return ((data['exercise_method'] == cardioMethod) ||
+                cardioMethod == 0) &&
+            data['name'].contains(keyword);
+      });
+      selectedExerciseDataList = dataList;
+    }
+    update();
   }
 
   void postExerciseWeightPlan() async {

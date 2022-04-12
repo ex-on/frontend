@@ -4,12 +4,14 @@ class Circle extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? color;
+  final Color? borderColor;
   final Widget? child;
   const Circle({
     Key? key,
     this.width,
     this.height,
     this.color,
+    this.borderColor,
     this.child,
   }) : super(key: key);
 
@@ -22,6 +24,7 @@ class Circle extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: color,
+          border: borderColor != null ? Border.all(color: borderColor!) : null,
         ),
         child: child,
       ),

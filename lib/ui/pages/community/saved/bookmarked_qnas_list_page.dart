@@ -24,20 +24,24 @@ class BookmarkedQnasListPage extends GetView<CommunityController> {
           controller: _.bookmarkedQnasRefreshController,
           onRefresh: _.onBookmarkedQnasRefresh,
           header: const CustomRefreshHeader(),
-          child: ListView.separated(
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              itemBuilder: (context, index) {
-                return QnaContentPreviewBuilder(
-                    displaySolved: true, data: _.bookmarkedQnasList[index]);
-              },
-              separatorBuilder: (context, index) => const Divider(
-                    color: lightGrayColor,
-                    thickness: 0.5,
-                    height: 0.5,
-                  ),
-              itemCount: _.bookmarkedQnasList.length),
+          child: (_.bookmarkedQnasList.isEmpty && !_.loading)
+              ? const Center(
+                  child: Text('북마크가 없습니다'),
+                )
+              : ListView.separated(
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemBuilder: (context, index) {
+                    return QnaContentPreviewBuilder(
+                        displaySolved: true, data: _.bookmarkedQnasList[index]);
+                  },
+                  separatorBuilder: (context, index) => const Divider(
+                        color: lightGrayColor,
+                        thickness: 0.5,
+                        height: 0.5,
+                      ),
+                  itemCount: _.bookmarkedQnasList.length),
         );
       },
     );

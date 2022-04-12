@@ -361,7 +361,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: SizedBox(
-                width: 40,
+                width: 45,
                 height: 240,
                 child: GetBuilder<AddExerciseController>(builder: (_) {
                   return CupertinoPicker(
@@ -434,7 +434,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
                           fontSize: 30,
                         ),
                         const Text(
-                          'kg',
+                          'km',
                           style: TextStyle(
                             fontSize: 16,
                             color: brightPrimaryColor,
@@ -511,7 +511,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(
-                  height: 80,
+                  height: 85,
                   child: TabBar(
                     labelPadding: EdgeInsets.zero,
                     controller: _.cardioPlanInputTabController,

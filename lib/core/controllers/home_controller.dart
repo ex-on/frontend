@@ -33,7 +33,7 @@ class HomeController extends GetxController {
     }
     currentMD = DateFormat.Md().format(currentDateTime);
     weekDay = DateFormat.E('ko_KR').format(currentDateTime);
-    Future.delayed(Duration.zero, () => refreshController.requestRefresh());
+    // Future.delayed(Duration.zero, () => refreshController.requestRefresh());
     currentTimeCounter = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
@@ -42,7 +42,11 @@ class HomeController extends GetxController {
         if (previousTime.day != currentDateTime.day) {
           currentDay = currentDateTime;
           updateRefreshModeWeek(false);
-          refreshController.requestRefresh();
+          if (refreshModeWeek) {
+            getWeekExerciseStatus();
+          } else {
+            getTodayExerciseStatus();
+          }
           updateRefreshModeWeek(true);
           updateSelectedDay(currentDay);
         }

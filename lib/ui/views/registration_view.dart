@@ -5,8 +5,6 @@ import 'package:exon_app/ui/pages/register/register_password_page.dart';
 import 'package:exon_app/ui/pages/register/register_phone_auth_page.dart';
 import 'package:exon_app/ui/pages/register_info/register_physical_info_page.dart';
 import 'package:exon_app/ui/pages/register/register_username_page.dart';
-import 'package:exon_app/ui/views/home_navigation_view.dart';
-import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -119,6 +119,23 @@ class UserApiService extends ApiService {
     }
   }
 
+  static Future<bool> postFcmToken(String token) async {
+    String path = '/user/fcm_token';
+
+    Map<String, dynamic> data = {
+      'token': token,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      print(res);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   static Future<dynamic> getProfileStats() async {
     String path = '/user/stats';
 

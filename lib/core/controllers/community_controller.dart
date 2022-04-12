@@ -256,33 +256,45 @@ class CommunityController extends GetxController
   }
 
   void onBookmarkedPostsRefresh() async {
+    setLoading(true);
     await getBookmarkedPosts();
     bookmarkedPostsRefreshController.refreshCompleted();
+    setLoading(false);
   }
 
   void onBookmarkedQnasRefresh() async {
+    setLoading(true);
     await getBookmarkedQnas();
     bookmarkedQnasRefreshController.refreshCompleted();
+    setLoading(false);
   }
 
   void onSavedUserPostsRefresh() async {
+    setLoading(true);
     await getSavedUserPosts();
     savedUserPostsRefreshController.refreshCompleted();
+    setLoading(false);
   }
 
   void onSavedUserCommentedPostsRefresh() async {
+    setLoading(true);
     await getSavedUserCommentedPosts();
     savedUserCommentedPostsRefreshController.refreshCompleted();
+    setLoading(false);
   }
 
   void onSavedUserQnasRefresh() async {
+    setLoading(true);
     await getSavedUserQnas();
     savedUserQnasRefreshController.refreshCompleted();
+    setLoading(false);
   }
 
   void onSavedUserAnsweredQnasRefresh() async {
+    setLoading(true);
     await getSavedUserAnsweredQnas();
     savedUserAnsweredQnasRefreshController.refreshCompleted();
+    setLoading(false);
   }
 
   void setSearchOpen(bool val) {
@@ -889,6 +901,9 @@ class CommunityController extends GetxController
     if (resCode == 200) {
       update();
       return true;
+    } else if (resCode == 208) {
+      update();
+      return 208;
     } else {
       return false;
     }

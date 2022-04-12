@@ -17,8 +17,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class ProfileView extends GetView<ProfileController> {
-  const ProfileView({Key? key}) : super(key: key);
+class UserProfilePage extends GetView<ProfileController> {
+  const UserProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +258,6 @@ class ProfileView extends GetView<ProfileController> {
                                         ),
                                       ),
                                     ),
-                                    //todo: 최대 등급일 경우 고려하기
                                     Row(
                                       children: [
                                         Container(
@@ -466,7 +465,6 @@ class ProfileView extends GetView<ProfileController> {
                                 padding:
                                     const EdgeInsets.fromLTRB(30, 20, 30, 15),
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     const Padding(
                                       padding: EdgeInsets.only(right: 7),
@@ -479,19 +477,29 @@ class ProfileView extends GetView<ProfileController> {
                                         ),
                                       ),
                                     ),
-                                    Text(
-                                      _.profileData.isNotEmpty
-                                          ? '상위 ' +
-                                              (_.profileData['community'][
-                                                          'num_accepted_percentage']
-                                                      .toString() +
-                                                  '%')
-                                          : '---',
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        color: brightPrimaryColor,
-                                      ),
-                                    ),
+                                    () {
+                                      if (_.profileData['community']
+                                          ['privacy']) {
+                                        return const Text(
+                                          _privateLabelText,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: lightGrayColor,
+                                          ),
+                                        );
+                                      } else {
+                                        return 
+                                        Text(
+                                          _.totalPostNum != null
+                                              ? _.totalPostNum.toString()
+                                              : '---',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: brightPrimaryColor,
+                                          ),
+                                        );
+                                      }
+                                    }(),
                                   ],
                                 ),
                               ),

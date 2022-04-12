@@ -154,7 +154,7 @@ class RankCardioPage extends GetView<RankController> {
                                       margin: const EdgeInsets.only(left: 7),
                                       alignment: Alignment.centerRight,
                                       constraints: const BoxConstraints(
-                                        minWidth: 30,
+                                        minWidth: 40,
                                       ),
                                       decoration: BoxDecoration(
                                         gradient: const LinearGradient(colors: [
@@ -191,7 +191,7 @@ class RankCardioPage extends GetView<RankController> {
                                           _baseWidth,
                                       height: 18,
                                       constraints: const BoxConstraints(
-                                        minWidth: 30,
+                                        minWidth: 40,
                                       ),
                                       padding: const EdgeInsets.only(right: 10),
                                       margin: const EdgeInsets.only(left: 7),

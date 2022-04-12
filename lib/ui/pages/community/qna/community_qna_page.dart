@@ -143,6 +143,30 @@ class CommunityQnaPage extends GetView<CommunityController> {
             backgroundColor: darkSecondaryColor.withOpacity(0.8),
           ),
         );
+      } else if (success == 208) {
+        Get.back();
+        late String messageText;
+
+        if (category == 'qna') {
+          messageText = '이미 신고한 Q&A입니다';
+        } else {
+          messageText = '이미 신고한 답볌입니다';
+        }
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: Text(
+              messageText,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
       }
     }
 

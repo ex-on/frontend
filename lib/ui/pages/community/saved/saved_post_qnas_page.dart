@@ -140,11 +140,14 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                   builder: (context) {
                     if (_.savedData.isEmpty) {
                       return const Center(
-                        child: Text(
-                          '북마크를 불러오는 중이에요...',
-                          style: TextStyle(
-                            height: 2,
-                            color: deepGrayColor,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Text(
+                            '북마크를 불러오는 중이에요...',
+                            style: TextStyle(
+                              height: 2,
+                              color: deepGrayColor,
+                            ),
                           ),
                         ),
                       );
@@ -395,11 +398,14 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                   builder: (context) {
                     if (_.savedData.isEmpty) {
                       return const Center(
-                        child: Text(
-                          '게시판 활동 내역을 불러오는 중이에요...',
-                          style: TextStyle(
-                            height: 2,
-                            color: deepGrayColor,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Text(
+                            '게시판 활동 내역을 불러오는 중이에요...',
+                            style: TextStyle(
+                              height: 2,
+                              color: deepGrayColor,
+                            ),
                           ),
                         ),
                       );
@@ -710,11 +716,14 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                   builder: (context) {
                     if (_.savedData.isEmpty) {
                       return const Center(
-                        child: Text(
-                          'Q&A 활동 내역을 불러오는 중이에요...',
-                          style: TextStyle(
-                            height: 2,
-                            color: deepGrayColor,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Text(
+                            'Q&A 활동 내역을 불러오는 중이에요...',
+                            style: TextStyle(
+                              height: 2,
+                              color: deepGrayColor,
+                            ),
                           ),
                         ),
                       );

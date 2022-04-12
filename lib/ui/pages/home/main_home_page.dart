@@ -1,8 +1,11 @@
+import 'package:badges/badges.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/add_exercise_controller.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
+import 'package:exon_app/core/controllers/notification_controller.dart';
 import 'package:exon_app/helpers/utils.dart';
+import 'package:exon_app/ui/widgets/common/bubble_tooltips.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/exercise/exercise_blocks.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
@@ -12,7 +15,6 @@ import 'package:exon_app/ui/widgets/home/exercise_time_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:exon_app/dummy_data_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -29,7 +31,7 @@ class MainHomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     bool isDaytime = ColorTheme.day == controller.theme;
     String _welcomeText = isDaytime
-        ? DummyDataController.to.dailyExercisePlanList.isEmpty
+        ? controller.indexDayExercisePlanList.isEmpty
             ? 'EXON과 함께\n운동을 시작해요.'
             : '아침 운동하기\n참 좋은 날이에요'
         : '더 어두워지기 전에\n운동을 시작할까요?';
@@ -49,6 +51,11 @@ class MainHomePage extends GetView<HomeController> {
         } else {
           controller.refreshController.refreshCompleted();
         }
+        if (NotificationController.to.notificationData.isEmpty) {
+          NotificationController.to.setLoading(true);
+          NotificationController.to.getNotifications();
+          NotificationController.to.setLoading(false);
+        }
       },
     );
 
@@ -61,6 +68,10 @@ class MainHomePage extends GetView<HomeController> {
 
     void _onDatePressed(DateTime indexDate) {
       controller.updateSelectedDay(indexDate);
+    }
+
+    void _onNotificationPressed() {
+      Get.toNamed('/notification');
     }
 
     Widget _titleBanner = SizedBox(
@@ -265,6 +276,47 @@ class MainHomePage extends GetView<HomeController> {
                   },
                 ),
               ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: GetBuilder<NotificationController>(
+                  builder: (_) {
+                    return Material(
+                      type: MaterialType.transparency,
+                      child: Badge(
+                        showBadge: _.notificationData['unread'] != 0,
+                        badgeContent: Text(
+                          _.notificationData['unread'] == null
+                              ? ''
+                              : _.notificationData['unread'].toString(),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.white,
+                          ),
+                        ),
+                        animationType: BadgeAnimationType.scale,
+                        position: BadgePosition.topEnd(top: 6, end: 6),
+                        elevation: 0,
+                        padding: const EdgeInsets.all(5),
+                        alignment: Alignment.bottomLeft,
+                        badgeColor: brightRedColor,
+                        child: IconButton(
+                          onPressed: _onNotificationPressed,
+                          padding: EdgeInsets.zero,
+                          splashRadius: 20,
+                          splashColor: Colors.white.withOpacity(0.2),
+                          highlightColor: Colors.white.withOpacity(0.2),
+                          icon: const Icon(
+                            Icons.notifications_none_rounded,
+                            color: Colors.white,
+                            size: 33,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),
@@ -368,13 +420,53 @@ class MainHomePage extends GetView<HomeController> {
               Positioned(
                 bottom: 35 + context.mediaQueryPadding.bottom,
                 right: 35,
-                child: FloatingIconButton(
-                  heroTag: 'add_exercise',
-                  onPressed: _onAddPressed,
-                  icon: const Icon(
-                    Icons.add_rounded,
-                    size: 50,
-                  ),
+                child: GetBuilder<HomeController>(
+                  builder: (_) {
+                    if (_.weekExerciseStatus.isNotEmpty) {
+                      if (_
+                              .weekExerciseStatus[DateFormat('yyyy/MM/dd')
+                                  .format(_.currentDay)]['plans']
+                              .isEmpty &&
+                          _
+                              .weekExerciseStatus[DateFormat('yyyy/MM/dd')
+                                  .format(_.currentDay)]['records']
+                              .isEmpty) {
+                        return ReverseBubbleTooltip(
+                          message: '운동을 추가해보세요!',
+                          backgroundColor: Colors.white,
+                          textColor: brightPrimaryColor,
+                          margin: const EdgeInsets.only(bottom: 20),
+                          arrowPosition: 0.6,
+                          child: FloatingIconButton(
+                            heroTag: 'add_exercise',
+                            onPressed: _onAddPressed,
+                            icon: const Icon(
+                              Icons.add_rounded,
+                              size: 50,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return FloatingIconButton(
+                          heroTag: 'add_exercise',
+                          onPressed: _onAddPressed,
+                          icon: const Icon(
+                            Icons.add_rounded,
+                            size: 50,
+                          ),
+                        );
+                      }
+                    } else {
+                      return FloatingIconButton(
+                        heroTag: 'add_exercise',
+                        onPressed: _onAddPressed,
+                        icon: const Icon(
+                          Icons.add_rounded,
+                          size: 50,
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ],
