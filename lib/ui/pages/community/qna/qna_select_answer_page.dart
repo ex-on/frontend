@@ -306,27 +306,24 @@ class QnaSelectAnswerPage extends GetView<CommunityController> {
                 ],
               ),
             ),
-            SizedBox(
-              width: 320,
-              height: 60,
-              child: GetBuilder<CommunityController>(
-                builder: (_) {
-                  return ElevatedActionButton(
-                    buttonText: _selectButtonText,
-                    onPressed: _onSelectPressed,
-                    backgroundColor: _.selectedAnswerIndex >= 0
-                        ? darkSecondaryColor
-                        : mainBackgroundColor,
-                    textStyle: TextStyle(
-                      color: _.selectedAnswerIndex >= 0
-                          ? Colors.white
-                          : deepGrayColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    activated: _.selectedAnswerIndex >= 0,
-                  );
-                },
-              ),
+            GetBuilder<CommunityController>(
+              builder: (_) {
+                return ElevatedActionButton(
+                  width: 320,
+                  buttonText: _selectButtonText,
+                  onPressed: _onSelectPressed,
+                  backgroundColor: _.selectedAnswerIndex >= 0
+                      ? darkSecondaryColor
+                      : mainBackgroundColor,
+                  textStyle: TextStyle(
+                    color: _.selectedAnswerIndex >= 0
+                        ? Colors.white
+                        : deepGrayColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  activated: _.selectedAnswerIndex >= 0,
+                );
+              },
             )
           ],
         ),

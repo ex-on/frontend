@@ -395,37 +395,33 @@ class CommunityQnaPage extends GetView<CommunityController> {
                     Center(
                       child: Column(
                         children: [
-                          SizedBox(
-                            width: 300,
-                            height: 60,
-                            child: () {
-                              if (controller.qnaContent['user_data']
-                                      ['username'] ==
-                                  AuthController.to.userInfo['username']) {
-                                return ElevatedActionButton(
-                                  buttonText: _selectAnswerButtonText,
-                                  onPressed: _onSelectAnswerPressed,
-                                  backgroundColor: mainBackgroundColor,
-                                  width: 300,
-                                  textStyle: const TextStyle(
-                                    color: darkSecondaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                );
-                              } else {
-                                return ElevatedActionButton(
-                                  buttonText: _answerButtonText,
-                                  onPressed: _onAnswerPressed,
-                                  backgroundColor: mainBackgroundColor,
-                                  width: 300,
-                                  textStyle: const TextStyle(
-                                    color: darkSecondaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                );
-                              }
-                            }(),
-                          ),
+                          () {
+                            if (controller.qnaContent['user_data']
+                                    ['username'] ==
+                                AuthController.to.userInfo['username']) {
+                              return ElevatedActionButton(
+                                buttonText: _selectAnswerButtonText,
+                                onPressed: _onSelectAnswerPressed,
+                                backgroundColor: mainBackgroundColor,
+                                width: 300,
+                                textStyle: const TextStyle(
+                                  color: darkSecondaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            } else {
+                              return ElevatedActionButton(
+                                buttonText: _answerButtonText,
+                                onPressed: _onAnswerPressed,
+                                backgroundColor: mainBackgroundColor,
+                                width: 300,
+                                textStyle: const TextStyle(
+                                  color: darkSecondaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            }
+                          }(),
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: () {

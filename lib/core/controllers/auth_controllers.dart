@@ -83,12 +83,16 @@ class AuthController extends GetxController {
       log(data.toString());
       String cognitoGroup = data['cognito:groups'][0];
       late String authProvider;
+      if (data['identities'] != null) {
+        print(data['identities'][0]['providerName']);
+      }
+      print(data['cognito:groups']);
       switch (cognitoGroup) {
         case 'ManualSignUp':
           authProvider = 'Manual';
           break;
         case 'ap-northeast-2_EuYr8s0Rp_Facebook':
-          authProvider = 'Social';
+          authProvider = 'Facebook';
           break;
         case 'ap-northeast-2_EuYr8s0Rp_Google':
           authProvider = 'Google';

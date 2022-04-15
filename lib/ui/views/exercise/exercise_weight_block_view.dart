@@ -163,33 +163,30 @@ class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
                                 4 + 3,
                                 (index) => index % 2 == 1
                                     ? horizontalSpacer(10)
-                                    : SizedBox(
-                                        height: 38,
-                                        width: 62,
-                                        child: ElevatedActionButton(
-                                          buttonText: getCleanTextFromDouble(
+                                    : ElevatedActionButton(height: 38,
+                                    width: 62,
+                                      buttonText: getCleanTextFromDouble(
+                                          inputWeightChangeValueList[
+                                              index ~/ 2]),
+                                      onPressed: () =>
+                                          _updateWeightChangeValue(
+                                              index ~/ 2),
+                                      backgroundColor: _
+                                                  .inputWeightChangeValue ==
                                               inputWeightChangeValueList[
-                                                  index ~/ 2]),
-                                          onPressed: () =>
-                                              _updateWeightChangeValue(
-                                                  index ~/ 2),
-                                          backgroundColor: _
-                                                      .inputWeightChangeValue ==
-                                                  inputWeightChangeValueList[
-                                                      index ~/ 2]
-                                              ? brightPrimaryColor
-                                              : const Color(0xffE1F4F8),
-                                          textStyle: TextStyle(
-                                            color: _.inputWeightChangeValue ==
-                                                    inputWeightChangeValueList[
-                                                        index ~/ 2]
-                                                ? Colors.white
-                                                : brightPrimaryColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Manrope',
-                                          ),
-                                        ),
+                                                  index ~/ 2]
+                                          ? brightPrimaryColor
+                                          : const Color(0xffE1F4F8),
+                                      textStyle: TextStyle(
+                                        color: _.inputWeightChangeValue ==
+                                                inputWeightChangeValueList[
+                                                    index ~/ 2]
+                                            ? Colors.white
+                                            : brightPrimaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Manrope',
                                       ),
+                                    ),
                               ),
                             ),
                       _.exerciseData['exercise_method'] == 1
@@ -335,28 +332,25 @@ class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  width: 280,
-                  height: 70,
-                  child: ElevatedActionButton(
-                    backgroundColor: Colors.white,
-                    overlayColor: brightPrimaryColor.withOpacity(0.1),
-                    textStyle: const TextStyle(
-                      color: brightPrimaryColor,
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Manrope',
-                    ),
-                    borderRadius: 100,
-                    buttonText: (_.exerciseData['exercise_method'] == 1
-                            ? ''
-                            : (_.inputSetValues![0].text + 'kg X ')) +
-                        _.inputSetValues![1].text +
-                        '회',
-                    onPressed: () {},
-                    disabledColor: Colors.white,
-                    activated: false,
+                ElevatedActionButton(  width: 280,
+                height: 70,
+                  backgroundColor: Colors.white,
+                  overlayColor: brightPrimaryColor.withOpacity(0.1),
+                  textStyle: const TextStyle(
+                    color: brightPrimaryColor,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Manrope',
                   ),
+                  borderRadius: 100,
+                  buttonText: (_.exerciseData['exercise_method'] == 1
+                          ? ''
+                          : (_.inputSetValues![0].text + 'kg X ')) +
+                      _.inputSetValues![1].text +
+                      '회',
+                  onPressed: () {},
+                  disabledColor: Colors.white,
+                  activated: false,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 55),
@@ -416,36 +410,30 @@ class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    width: 170,
-                    height: 65,
-                    child: ElevatedActionButton(
-                      buttonText: '돌아가기',
-                      backgroundColor: Colors.white,
-                      textStyle: const TextStyle(
-                        color: clearBlackColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overlayColor: clearBlackColor.withOpacity(0.2),
-                      borderRadius: 20,
-                      onPressed: () => Get.back(),
+                  ElevatedActionButton(   width: 170,
+                  height: 65,
+                    buttonText: '돌아가기',
+                    backgroundColor: Colors.white,
+                    textStyle: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
+                    overlayColor: clearBlackColor.withOpacity(0.2),
+                    borderRadius: 20,
+                    onPressed: () => Get.back(),
                   ),
-                  SizedBox(
-                    width: 170,
-                    height: 65,
-                    child: ElevatedActionButton(
-                      buttonText: '종료',
-                      backgroundColor: clearBlackColor,
-                      textStyle: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      borderRadius: 20,
-                      onPressed: _endExercise,
+                  ElevatedActionButton(width: 170,
+                  height: 65,
+                    buttonText: '종료',
+                    backgroundColor: clearBlackColor,
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
+                    borderRadius: 20,
+                    onPressed: _endExercise,
                   ),
                 ],
               ),
@@ -494,36 +482,30 @@ class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 170,
-                      height: 65,
-                      child: ElevatedActionButton(
-                        buttonText: '돌아가기',
-                        backgroundColor: Colors.white,
-                        textStyle: const TextStyle(
-                          color: clearBlackColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        borderRadius: 20,
-                        overlayColor: clearBlackColor.withOpacity(0.2),
-                        onPressed: () => Get.back(),
+                    ElevatedActionButton( width: 170,
+                    height: 65,
+                      buttonText: '돌아가기',
+                      backgroundColor: Colors.white,
+                      textStyle: const TextStyle(
+                        color: clearBlackColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
+                      borderRadius: 20,
+                      overlayColor: clearBlackColor.withOpacity(0.2),
+                      onPressed: () => Get.back(),
                     ),
-                    SizedBox(
-                      width: 170,
-                      height: 65,
-                      child: ElevatedActionButton(
-                        buttonText: '중단',
-                        backgroundColor: cancelRedColor,
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        borderRadius: 20,
-                        onPressed: _quitExercise,
+                    ElevatedActionButton(width: 170,
+                    height: 65,
+                      buttonText: '중단',
+                      backgroundColor: cancelRedColor,
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
+                      borderRadius: 20,
+                      onPressed: _quitExercise,
                     ),
                   ],
                 ),
@@ -1015,29 +997,26 @@ class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
                         : Stack(
                             alignment: Alignment.centerRight,
                             children: [
-                              SizedBox(
-                                height: 70,
-                                width: 280,
-                                child: ElevatedActionButton(
-                                  borderRadius: 100,
-                                  backgroundColor: Colors.white,
-                                  overlayColor:
-                                      brightPrimaryColor.withOpacity(0.1),
-                                  textStyle: const TextStyle(
-                                    color: brightPrimaryColor,
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Manrope',
-                                  ),
-                                  buttonText:
-                                      (_.exerciseData['exercise_method'] == 1
-                                              ? ''
-                                              : (_.inputSetValues![0].text +
-                                                  'kg X ')) +
-                                          _.inputSetValues![1].text +
-                                          '회',
-                                  onPressed: _onInputExerciseRecordPressed,
+                              ElevatedActionButton(height: 70,
+                              width: 280,
+                                borderRadius: 100,
+                                backgroundColor: Colors.white,
+                                overlayColor:
+                                    brightPrimaryColor.withOpacity(0.1),
+                                textStyle: const TextStyle(
+                                  color: brightPrimaryColor,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Manrope',
                                 ),
+                                buttonText:
+                                    (_.exerciseData['exercise_method'] == 1
+                                            ? ''
+                                            : (_.inputSetValues![0].text +
+                                                'kg X ')) +
+                                        _.inputSetValues![1].text +
+                                        '회',
+                                onPressed: _onInputExerciseRecordPressed,
                               ),
                               const Positioned(
                                 right: 20,

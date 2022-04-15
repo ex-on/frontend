@@ -8,7 +8,7 @@ class ProfileController extends GetxController
     with GetSingleTickerProviderStateMixin {
   static ProfileController to = Get.find();
   RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+      RefreshController();
   bool loading = false;
   int? totalQnaAnswerNum;
   int? totalPostNum;

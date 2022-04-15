@@ -6,6 +6,7 @@ import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrapped_korean_text/wrapped_korean_text.dart';
 
 class RegisterPasswordPage extends GetView<RegisterController> {
   const RegisterPasswordPage({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class RegisterPasswordPage extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     const String _titleText = '비밀번호를 입력해주세요';
-    const String _titleLabelText = '영문자, 숫자, 특수문자를\n각각 하나 이상 포함해야 합니다';
+    const String _titleLabelText = '영문자, 숫자, 특수문자를 각각 하나 이상 포함하고, 8자 이상이어야 합니다';
     const String _passwordInputFieldLabelText = '비밀번호';
     const String _passwordCheckFieldLabelText = '비밀번호 확인';
     const String _nextButtonText = '다음';
@@ -84,8 +85,8 @@ class RegisterPasswordPage extends GetView<RegisterController> {
                       width: 330,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Padding(
+                        children: [
+                          const Padding(
                             padding: EdgeInsets.only(bottom: 10),
                             child: Text(
                               _titleText,
@@ -95,9 +96,9 @@ class RegisterPasswordPage extends GetView<RegisterController> {
                               ),
                             ),
                           ),
-                          Text(
+                          WrappedKoreanText(
                             _titleLabelText,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                             ),
                           ),

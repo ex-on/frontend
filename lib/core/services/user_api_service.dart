@@ -94,6 +94,38 @@ class UserApiService extends ApiService {
     }
   }
 
+  static Future<dynamic> updateUsername(String username) async {
+    String path = '/user/update_username';
+
+    Map<String, dynamic> data = {
+      'username': username,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      print(res);
+      return res;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<dynamic> checkPassword(String password) async {
+    String path = '/user/password';
+
+    Map<String, dynamic> parameters = {
+      'password': password,
+    };
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      print(res);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Future<bool> postUserPhysicalInfo(
     double? height,
     double? weight,

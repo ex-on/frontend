@@ -124,8 +124,110 @@ class AmplifyService {
         log(key);
         log(value);
       });
+
+      SignInResult res = await Amplify.Auth.signIn(
+        username: email,
+        password: password,
+      );
+      inspect(res);
+
       return true;
+    } on AuthException catch (e) {
+      print(e);
+      return false;
+    } on CognitoUserNewPasswordRequiredException catch (e) {
+      // handle New Password challenge
+      print(e);
+      return false;
+    } on CognitoUserMfaRequiredException catch (e) {
+      // handle SMS_MFA challenge
+      print(e);
+      return false;
+    } on CognitoUserSelectMfaTypeException catch (e) {
+      // handle SELECT_MFA_TYPE challenge
+      print(e);
+      return false;
+    } on CognitoUserMfaSetupException catch (e) {
+      // handle MFA_SETUP challenge
+      print(e);
+      return false;
+    } on CognitoUserTotpRequiredException catch (e) {
+      // handle SOFTWARE_TOKEN_MFA challenge
+      print(e);
+      return false;
+    } on CognitoUserCustomChallengeException catch (e) {
+      // handle CUSTOM_CHALLENGE challenge
+      print(e);
+      return false;
+    } on CognitoUserConfirmationNecessaryException catch (e) {
+      // handle User Confirmation Necessary
+      print(e);
+      return false;
+    } on CognitoClientException catch (e) {
+      // handle Wrong Username and Password and Cognito Client
+      print(e);
+      return false;
     } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> authenticateUser(String email, String password) async {
+    var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
+    var cognitoUser = CognitoUser(email, userPool);
+    var authDetails =
+        AuthenticationDetails(username: email, password: password);
+    try {
+      var session = await cognitoUser.authenticateUser(authDetails);
+      return true;
+    } on CognitoUserNewPasswordRequiredException catch (e) {
+      // handle New Password challenge
+      print(e);
+      return false;
+    } on CognitoUserMfaRequiredException catch (e) {
+      // handle SMS_MFA challenge
+      print(e);
+      return false;
+    } on CognitoUserSelectMfaTypeException catch (e) {
+      // handle SELECT_MFA_TYPE challenge
+      print(e);
+      return false;
+    } on CognitoUserMfaSetupException catch (e) {
+      // handle MFA_SETUP challenge
+      print(e);
+      return false;
+    } on CognitoUserTotpRequiredException catch (e) {
+      // handle SOFTWARE_TOKEN_MFA challenge
+      print(e);
+      return false;
+    } on CognitoUserCustomChallengeException catch (e) {
+      // handle CUSTOM_CHALLENGE challenge
+      print(e);
+      return false;
+    } on CognitoUserConfirmationNecessaryException catch (e) {
+      // handle User Confirmation Necessary
+      print(e);
+      return false;
+    } on CognitoClientException catch (e) {
+      // handle Wrong Username and Password and Cognito Client
+      print('caught');
+      print(e);
+      return false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> updateCognitoPassword(
+      String oldPassword, String newPassword) async {
+    try {
+      await Amplify.Auth.updatePassword(
+          oldPassword: oldPassword, newPassword: newPassword);
+
+      return true;
+    } on AmplifyException catch (e) {
       print(e);
       return false;
     }
@@ -200,7 +302,11 @@ class AmplifyService {
       storage.delete(key: 'username');
       storage.delete(key: 'activity_level');
       storage.delete(key: 'created_at');
+      await Amplify.Auth.signOut();
       return true;
+    } on AuthException catch (e) {
+      print(e);
+      return false;
     } catch (e) {
       print(e);
       return false;

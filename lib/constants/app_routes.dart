@@ -12,6 +12,8 @@ import 'package:exon_app/ui/pages/community/qna/qna_list_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_select_answer_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_write_page.dart';
 import 'package:exon_app/ui/pages/home/notification_page.dart';
+import 'package:exon_app/ui/pages/settings/check_password_page.dart';
+import 'package:exon_app/ui/pages/settings/update_username_page.dart';
 import 'package:exon_app/ui/views/community/bookmarked_tab_view.dart';
 import 'package:exon_app/ui/views/community/post_activity_tab_view.dart';
 import 'package:exon_app/ui/views/community/qna_activity_tab_view.dart';
@@ -32,6 +34,7 @@ import 'package:exon_app/ui/pages/exercise_info_page.dart';
 import 'package:exon_app/ui/views/home_navigation_view.dart';
 import 'package:exon_app/ui/views/login_view.dart';
 import 'package:exon_app/ui/views/registration_view.dart';
+import 'package:exon_app/ui/views/settings/update_password_view.dart';
 import 'package:exon_app/ui/views/settings_view.dart';
 import 'package:exon_app/ui/views/splash_view.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
@@ -127,8 +130,17 @@ class AppRoutes {
       transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
-        name: '/settings',
-        page: () => const SettingsView(),
-        transition: Transition.rightToLeft),
+      name: '/settings',
+      page: () => const SettingsView(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: '/settings/username',
+      page: () => const UpdateUsernamePage(),
+    ),
+    GetPage(
+      name: '/settings/password',
+      page: () => const UpdatePasswordView(),
+    ),
   ];
 }

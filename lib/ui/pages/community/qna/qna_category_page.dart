@@ -178,7 +178,7 @@ class QnaCategoryPage extends GetView<CommunityController> {
                                     child: LoadingCommentBlock(),
                                   )
                                 : ListView.separated(
-                                    physics: const BouncingScrollPhysics(),
+                                    physics: const ClampingScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       return QnaContentPreviewBuilder(
                                         displaySolved: _.qnaCategory.value == 0,

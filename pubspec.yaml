@@ -55,6 +55,7 @@ dependencies:
   wrapped_korean_text: ^0.0.2
   shimmer: ^2.0.0
   badges: ^2.0.2
+  package_info_plus: ^1.4.2
   # smart_select: ^4.3.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -121,6 +122,11 @@ flutter:
     - assets/icons/checkIcon.svg
     - assets/icons/incompleteIcon.svg
     - assets/icons/fistIcon.svg
+    - assets/icons/kakaoIcon.svg
+    - assets/icons/googleIcon.svg
+    - assets/icons/facebookIcon.svg
+    - assets/icons/facebookIcon.png
+    - assets/icons/facebookColorIcon.png
     - assets/characters/searchCharacter.svg
     - assets/characters/blankSearchCharacter.svg
     - assets/characters/excitedCharacter.svg

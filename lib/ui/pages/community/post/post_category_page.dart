@@ -159,7 +159,7 @@ class PostCategoryPage extends GetView<CommunityController> {
                                 child: LoadingCommentBlock(),
                               )
                             : ListView.separated(
-                                physics: const BouncingScrollPhysics(),
+                                physics: const ClampingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return PostContentPreviewBuilder(
                                       displayType: _.postCategory.value == 0,

@@ -464,27 +464,25 @@ class AddExerciseDetailsPage extends StatelessWidget {
                 4 + 3,
                 (index) => index % 2 == 1
                     ? horizontalSpacer(10)
-                    : SizedBox(
-                        height: 31,
+                    : ElevatedActionButton(
+                      height: 31,
                         width: 53,
-                        child: ElevatedActionButton(
-                          buttonText: getCleanTextFromDouble(
-                              inputDistanceChangeValueList[index ~/ 2]),
-                          onPressed: () =>
-                              _updateDistanceChangeValue(index ~/ 2),
-                          backgroundColor: _.inputDistanceChangeValue ==
-                                  inputDistanceChangeValueList[index ~/ 2]
-                              ? const Color(0xff007590)
-                              : const Color(0xff40CCEC),
-                          textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Manrope',
-                            fontSize: 13,
-                            overflow: TextOverflow.visible,
-                          ),
-                        ),
+                      buttonText: getCleanTextFromDouble(
+                          inputDistanceChangeValueList[index ~/ 2]),
+                      onPressed: () =>
+                          _updateDistanceChangeValue(index ~/ 2),
+                      backgroundColor: _.inputDistanceChangeValue ==
+                              inputDistanceChangeValueList[index ~/ 2]
+                          ? const Color(0xff007590)
+                          : const Color(0xff40CCEC),
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Manrope',
+                        fontSize: 13,
+                        overflow: TextOverflow.visible,
                       ),
+                    ),
               ),
             ),
           ],

@@ -390,39 +390,33 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
                       width: context.width - 80,
                       child: Row(
                         children: [
-                          SizedBox(
-                            width: context.width / 2 - 45,
-                            height: 65,
-                            child: ElevatedActionButton(
-                              buttonText: '셀프 축하',
-                              backgroundColor: Colors.white,
-                              textStyle: const TextStyle(
-                                color: darkSecondaryColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overlayColor: darkSecondaryColor.withOpacity(0.2),
-                              borderRadius: 20,
-                              borderSide:
-                                  const BorderSide(color: darkSecondaryColor),
-                              onPressed: _onCelebratePressed,
+                          ElevatedActionButton(      width: context.width / 2 - 45,
+                          height: 65,
+                            buttonText: '셀프 축하',
+                            backgroundColor: Colors.white,
+                            textStyle: const TextStyle(
+                              color: darkSecondaryColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
+                            overlayColor: darkSecondaryColor.withOpacity(0.2),
+                            borderRadius: 20,
+                            borderSide:
+                                const BorderSide(color: darkSecondaryColor),
+                            onPressed: _onCelebratePressed,
                           ),
                           horizontalSpacer(10),
-                          SizedBox(
-                            width: context.width / 2 - 45,
-                            height: 65,
-                            child: ElevatedActionButton(
-                              buttonText: '홈으로',
-                              backgroundColor: darkSecondaryColor,
-                              textStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              borderRadius: 20,
-                              onPressed: _onGoHomePressed,
+                          ElevatedActionButton( width: context.width / 2 - 45,
+                          height: 65,
+                            buttonText: '홈으로',
+                            backgroundColor: darkSecondaryColor,
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
+                            borderRadius: 20,
+                            onPressed: _onGoHomePressed,
                           ),
                         ],
                       ),

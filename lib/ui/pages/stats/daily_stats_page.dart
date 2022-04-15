@@ -114,37 +114,34 @@ class DailyStatsPage extends GetView<StatsController> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 120,
-                          height: 45,
-                          child: GetBuilder<StatsController>(
-                            builder: (_) {
-                              late bool isActivated;
-                              if (_.memoTextController.text != '') {
-                                if (_.dailyExerciseStatData['empty'] == false) {
-                                  if (_.dailyExerciseStatData['stats']
-                                          ['memo'] ==
-                                      _.memoTextController.text) {
-                                    isActivated = false;
-                                  } else {
-                                    isActivated = true;
-                                  }
+                        GetBuilder<StatsController>(
+                          builder: (_) {
+                            late bool isActivated;
+                            if (_.memoTextController.text != '') {
+                              if (_.dailyExerciseStatData['empty'] == false) {
+                                if (_.dailyExerciseStatData['stats']
+                                        ['memo'] ==
+                                    _.memoTextController.text) {
+                                  isActivated = false;
                                 } else {
                                   isActivated = true;
                                 }
                               } else {
-                                isActivated = false;
+                                isActivated = true;
                               }
+                            } else {
+                              isActivated = false;
+                            }
 
-                              return ElevatedActionButton(
-                                buttonText: '완료',
-                                borderRadius: 5,
-                                onPressed: _onMemoCompletePressed,
-                                backgroundColor: clearBlackColor,
-                                activated: isActivated,
-                              );
-                            },
-                          ),
+                            return ElevatedActionButton(        width: 120,
+                        height: 45,
+                              buttonText: '완료',
+                              borderRadius: 5,
+                              onPressed: _onMemoCompletePressed,
+                              backgroundColor: clearBlackColor,
+                              activated: isActivated,
+                            );
+                          },
                         ),
                       ],
                     ),

@@ -29,8 +29,8 @@ class RegisterPhysicalInfoPage extends GetView<RegisterInfoController> {
     }
 
     void _onStartPressed() async {
-     await controller.postUserInfo();
-     await controller.postUserPhysicalInfo();
+      await controller.postUserInfo();
+      await controller.postUserPhysicalInfo();
       Get.offAllNamed('/home');
       controller.reset();
     }
@@ -110,6 +110,7 @@ class RegisterPhysicalInfoPage extends GetView<RegisterInfoController> {
                       focusNode: _.bodyFatPercentageFocusNode,
                       unit: '%',
                     ),
+                    verticalSpacer(30),
                   ],
                 );
               }),

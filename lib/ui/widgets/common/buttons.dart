@@ -11,12 +11,14 @@ class ElevatedRouteButton extends StatelessWidget {
   final String buttonText;
   final dynamic Function()? onPressed;
   final Color backgroundColor;
+  final Color? textColor;
 
   const ElevatedRouteButton({
     Key? key,
     required this.buttonText,
     required this.onPressed,
     required this.backgroundColor,
+    this.textColor,
   }) : super(key: key);
 
   @override
@@ -37,7 +39,7 @@ class ElevatedRouteButton extends StatelessWidget {
       ),
       shape: MaterialStateProperty.all(
         const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
       ),
       elevation: MaterialStateProperty.all(0),
@@ -46,11 +48,12 @@ class ElevatedRouteButton extends StatelessWidget {
       child: Text(
         buttonText,
         style: TextStyle(
-          color: (int.parse(backgroundColor.toString().substring(10, 16),
-                      radix: 16) <
-                  int.parse('800000', radix: 16))
-              ? Colors.white
-              : deepGrayColor,
+          color: textColor ??
+              ((int.parse(backgroundColor.toString().substring(10, 16),
+                          radix: 16) <
+                      int.parse('800000', radix: 16))
+                  ? Colors.white
+                  : deepGrayColor),
         ),
       ),
       onPressed: onPressed,
@@ -161,8 +164,8 @@ class ElevatedActionButton extends StatelessWidget {
     required this.buttonText,
     required dynamic Function() this.onPressed,
     this.activated,
-    this.height,
-    this.width,
+    this.height = 60,
+    this.width = 220,
     this.backgroundColor = brightPrimaryColor,
     this.overlayColor,
     this.disabledColor = mainBackgroundColor,

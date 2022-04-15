@@ -4,6 +4,10 @@ import 'package:flutter_svg/svg.dart';
 const String _exonLogo = "assets/exonLogo.svg";
 const String _exonIconLogo = "assets/exonIconLogo.svg";
 
+const String _kakaoIcon = 'assets/icons/kakaoIcon.svg';
+const String _googleIcon = 'assets/icons/googleIcon.svg';
+const String _facebookIcon = 'assets/icons/facebookIcon.png';
+const String _facebookColorIcon = 'assets/icons/facebookColorIcon.png';
 const String _communityIcon = 'assets/icons/communityIcon.svg';
 const String _rankIcon = 'assets/icons/rankIcon.svg';
 const String _statIcon = 'assets/icons/statIcon.svg';
@@ -85,6 +89,92 @@ class ExonIconLogo extends StatelessWidget {
       height: height,
       color: color,
       fit: BoxFit.contain,
+    );
+  }
+}
+
+class KakaoIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const KakaoIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _kakaoIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class GoogleIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const GoogleIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _googleIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class FacebookIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const FacebookIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      _facebookIcon,
+      width: width,
+      height: height,
+    );
+  }
+}
+
+class FacebookColorIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const FacebookColorIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      _facebookColorIcon,
+      width: width,
+      height: height,
     );
   }
 }

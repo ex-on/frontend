@@ -29,7 +29,7 @@ class RegisterUsernamePage extends GetView<RegisterInfoController> {
 
     String? _usernameValidator(String? text) {
       const pattern =
-          r'^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣._]+(?<![_.])$';
+          r'^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣._\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]]+(?<![_.])$';
       final regExp = RegExp(pattern);
       if (text == null || text.isEmpty) {
         return '닉네임을 입력해주세요';

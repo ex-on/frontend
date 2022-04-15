@@ -78,36 +78,30 @@ class ExerciseCardioBlockView extends GetView<ExerciseBlockController> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 170,
-                      height: 65,
-                      child: ElevatedActionButton(
-                        buttonText: '돌아가기',
-                        backgroundColor: Colors.white,
-                        textStyle: const TextStyle(
-                          color: clearBlackColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        borderRadius: 20,
-                        overlayColor: clearBlackColor.withOpacity(0.2),
-                        onPressed: () => Get.back(),
+                    ElevatedActionButton(width: 170,
+                    height: 65,
+                      buttonText: '돌아가기',
+                      backgroundColor: Colors.white,
+                      textStyle: const TextStyle(
+                        color: clearBlackColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
+                      borderRadius: 20,
+                      overlayColor: clearBlackColor.withOpacity(0.2),
+                      onPressed: () => Get.back(),
                     ),
-                    SizedBox(
-                      width: 170,
-                      height: 65,
-                      child: ElevatedActionButton(
-                        buttonText: '중단',
-                        backgroundColor: cancelRedColor,
-                        textStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        borderRadius: 20,
-                        onPressed: _quitExercise,
+                    ElevatedActionButton( width: 170,
+                    height: 65,
+                      buttonText: '중단', 
+                      backgroundColor: cancelRedColor,
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
+                      borderRadius: 20,
+                      onPressed: _quitExercise,
                     ),
                   ],
                 ),
@@ -644,27 +638,13 @@ class ExerciseCardioBlockView extends GetView<ExerciseBlockController> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 70,
-              width: 280,
-              child: GetBuilder<ExerciseBlockController>(
-                builder: (_) {
-                  if (!_.resting) {
-                    return ElevatedActionButton(
-                      buttonText: '휴식',
-                      onPressed: _onRestPressed,
-                      textStyle: const TextStyle(
-                        color: mainBackgroundColor,
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      borderRadius: 100,
-                    );
-                  } else {}
-                  return ElevatedActionButton(
-                    buttonText: '계속하기',
-                    onPressed: _onContinuePressed,
-                    backgroundColor: darkSecondaryColor,
+            GetBuilder<ExerciseBlockController>(
+              builder: (_) {
+                if (!_.resting) {
+                  return ElevatedActionButton(     height: 70,
+            width: 280,
+                    buttonText: '휴식',
+                    onPressed: _onRestPressed,
                     textStyle: const TextStyle(
                       color: mainBackgroundColor,
                       fontSize: 26,
@@ -672,8 +652,20 @@ class ExerciseCardioBlockView extends GetView<ExerciseBlockController> {
                     ),
                     borderRadius: 100,
                   );
-                },
-              ),
+                } else {}
+                return ElevatedActionButton(     height: 70,
+            width: 280,
+                  buttonText: '계속하기',
+                  onPressed: _onContinuePressed,
+                  backgroundColor: darkSecondaryColor,
+                  textStyle: const TextStyle(
+                    color: mainBackgroundColor,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  borderRadius: 100,
+                );
+              },
             ),
             GetBuilder<ExerciseBlockController>(builder: (_) {
               return Padding(
