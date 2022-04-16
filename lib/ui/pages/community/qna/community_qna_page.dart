@@ -9,6 +9,7 @@ import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/comment_badge.dart';
 import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
+import 'package:exon_app/ui/widgets/profile/clickable_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -255,15 +256,18 @@ class CommunityQnaPage extends GetView<CommunityController> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            activityLevelIntToStr[_.qnaContent['user_data']
-                                    ['activity_level']]! +
-                                ' ' +
-                                _.qnaContent['user_data']['username'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: clearBlackColor,
+                          ClickableProfile(
+                            username: _.qnaContent['user_data']['username'],
+                            child: Text(
+                              activityLevelIntToStr[_.qnaContent['user_data']
+                                      ['activity_level']]! +
+                                  ' ' +
+                                  _.qnaContent['user_data']['username'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: clearBlackColor,
+                              ),
                             ),
                           ),
                           Text(
@@ -477,16 +481,21 @@ class CommunityQnaPage extends GetView<CommunityController> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          activityLevelIntToStr[controller.qnaAnswerList[index]
-                                  ['user_data']['activity_level']]! +
-                              ' ' +
-                              controller.qnaAnswerList[index]['user_data']
-                                  ['username'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: clearBlackColor,
+                        ClickableProfile(
+                          username: controller.qnaAnswerList[index]['user_data']
+                              ['username'],
+                          child: Text(
+                            activityLevelIntToStr[
+                                    controller.qnaAnswerList[index]['user_data']
+                                        ['activity_level']]! +
+                                ' ' +
+                                controller.qnaAnswerList[index]['user_data']
+                                    ['username'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: clearBlackColor,
+                            ),
                           ),
                         ),
                         if (_.qnaAnswerList[index]['answer_data']

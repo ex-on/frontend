@@ -45,4 +45,35 @@ class NotificationApiService extends ApiService {
       print(e);
     }
   }
+
+  static Future<dynamic> getUserNotiSettings() async {
+    String path = '/notification/settings';
+
+    Map<String, dynamic> parameters = {};
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<dynamic> postUserNotiSettings(
+      int toggleIndex, bool value) async {
+    String path = '/notification/settings';
+
+    Map<String, dynamic> data = {
+      'toggle_index': toggleIndex,
+      'value': value,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      print(res);
+      return res;
+    } catch (e) {
+      print(e);
+    }
+  }
 }

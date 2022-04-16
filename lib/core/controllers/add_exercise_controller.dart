@@ -355,11 +355,12 @@ class AddExerciseController extends GetxController
         : false) {
       _targetDistance = double.parse(targetDistanceTextController.text);
     }
+    print('called');
     if (inputCardioHour != 0 || inputCardioMin != 0) {
       _targetDuration = inputCardioHour * 3600 + inputCardioMin * 60;
-      await ExerciseApiService.postExercisePlanCardio(
-          selectedExerciseInfo['id'], _targetDistance, _targetDuration);
-      HomeController.to.getTodayExerciseStatus();
     }
+    await ExerciseApiService.postExercisePlanCardio(
+        selectedExerciseInfo['id'], _targetDistance, _targetDuration);
+    HomeController.to.getTodayExerciseStatus();
   }
 }

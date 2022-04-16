@@ -194,3 +194,32 @@ class LoadingCommentBlock extends StatelessWidget {
     );
   }
 }
+
+class SingleLoadingBlock extends StatelessWidget {
+  final double width;
+  final double height;
+  final Color baseColor;
+  final Color highlightColor;
+  const SingleLoadingBlock({
+    Key? key,
+    this.width = 180,
+    this.height = 24,
+    this.baseColor = Colors.white,
+    this.highlightColor = mainBackgroundColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: const DecoratedBox(
+          decoration: BoxDecoration(color: Colors.white),
+        ),
+      ),
+      baseColor: baseColor,
+      highlightColor: highlightColor.withOpacity(0.3),
+    );
+  }
+}

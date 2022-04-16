@@ -12,7 +12,9 @@ import 'package:exon_app/ui/pages/community/qna/qna_list_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_select_answer_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_write_page.dart';
 import 'package:exon_app/ui/pages/home/notification_page.dart';
+import 'package:exon_app/ui/pages/profile/user_profile_page.dart';
 import 'package:exon_app/ui/pages/settings/check_password_page.dart';
+import 'package:exon_app/ui/pages/settings/push_notifications_settings_page.dart';
 import 'package:exon_app/ui/pages/settings/update_username_page.dart';
 import 'package:exon_app/ui/views/community/bookmarked_tab_view.dart';
 import 'package:exon_app/ui/views/community/post_activity_tab_view.dart';
@@ -142,5 +144,11 @@ class AppRoutes {
       name: '/settings/password',
       page: () => const UpdatePasswordView(),
     ),
+    GetPage(
+      name: '/settings/push_notification',
+      page: () => const PushNotificationsSettingsPage(),
+      transition: Transition.downToUp,
+    ),
+    GetPage(name: '/profile', page: () => const UserProfilePage()),
   ];
 }

@@ -1,6 +1,7 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/profile_controller.dart';
+import 'package:exon_app/core/controllers/settings_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/bubble_tooltips.dart';
@@ -40,13 +41,14 @@ class ProfileView extends GetView<ProfileController> {
         if (AuthController.to.userInfo.isEmpty) {
           AuthController.to.getUserInfo();
         }
-        if (controller.profileData.isEmpty) {
+        if (controller.myProfileData.isEmpty) {
           controller.refreshController.requestRefresh();
         }
       },
     );
 
     void _onMenuPressed() {
+      SettingsController.to.getProfilePrivacy();
       Get.toNamed('/settings');
     }
 
@@ -149,7 +151,7 @@ class ProfileView extends GetView<ProfileController> {
                     );
                   },
                 ),
-                child: _.profileData.isEmpty
+                child: _.myProfileData.isEmpty
                     ? const Align(
                         alignment: Alignment.topCenter,
                         child: Padding(
@@ -167,9 +169,9 @@ class ProfileView extends GetView<ProfileController> {
                             bottom: context.mediaQueryPadding.bottom),
                         children: () {
                           int _currentLevel =
-                              _.profileData['activity_level']['level'];
+                              _.myProfileData['activity_level']['level'];
                           int _protein =
-                              _.profileData['activity_level']['protein'];
+                              _.myProfileData['activity_level']['protein'];
                           DateTime _today = DateTime.now();
                           return [
                             DecoratedBox(
@@ -230,7 +232,7 @@ class ProfileView extends GetView<ProfileController> {
                                             children: [
                                               TextSpan(
                                                 text: activityLevelIntToStr[
-                                                    _.profileData[
+                                                    _.myProfileData[
                                                             'activity_level']
                                                         ['level']]!,
                                                 style: const TextStyle(
@@ -398,7 +400,7 @@ class ProfileView extends GetView<ProfileController> {
                                                 _today.year,
                                                 _today.month,
                                                 index + 1);
-                                            bool dataExists = _.profileData[
+                                            bool dataExists = _.myProfileData[
                                                         'monthly_exercise'][
                                                     DateFormat('yyyy-MM-dd')
                                                         .format(indexDate)] !=
@@ -407,7 +409,7 @@ class ProfileView extends GetView<ProfileController> {
                                             late String _exerciseStatusText;
 
                                             if (dataExists) {
-                                              _exerciseStatus = _.profileData[
+                                              _exerciseStatus = _.myProfileData[
                                                       'monthly_exercise'][
                                                   DateFormat('yyyy-MM-dd')
                                                       .format(indexDate)];
@@ -494,9 +496,9 @@ class ProfileView extends GetView<ProfileController> {
                                           ),
                                         ),
                                         Text(
-                                          _.profileData.isNotEmpty
+                                          _.myProfileData.isNotEmpty
                                               ? '상위 ' +
-                                                  (_.profileData['community'][
+                                                  (_.myProfileData['community'][
                                                               'num_accepted_percentage']
                                                           .toString() +
                                                       '%')
@@ -515,89 +517,83 @@ class ProfileView extends GetView<ProfileController> {
                                     child: SizedBox(
                                       width: context.width - 60,
                                       height: 50,
-                                      child: _.profileData['community']
-                                              ['privacy']
-                                          ? const PrivacyCharacter()
-                                          : ListView.separated(
-                                              scrollDirection: Axis.horizontal,
-                                              itemBuilder: (context, index) {
-                                                late String _labelText;
-                                                late String _dataText;
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) {
+                                          late String _labelText;
+                                          late String _dataText;
 
-                                                switch (index) {
-                                                  case 1:
-                                                    _labelText = '채택률';
-                                                    _dataText = getCleanTextFromDouble(_
-                                                                    .profileData[
-                                                                'community'][
-                                                            'acception_rate']) +
-                                                        '%';
-                                                    break;
-                                                  case 2:
-                                                    _labelText = '게시글 수';
-                                                    _dataText = _.profileData[
-                                                            'community']
-                                                            ['posts']
-                                                        .toString();
-                                                    break;
-                                                  case 3:
-                                                    _labelText = '질문 수';
-                                                    _dataText = _.profileData[
-                                                            'community']['qnas']
-                                                        .toString();
-                                                    break;
-                                                  case 4:
-                                                    _labelText = '답변 수';
-                                                    _dataText = _.profileData[
-                                                            'community']
-                                                            ['answers']
-                                                        .toString();
-                                                    break;
-                                                  default:
-                                                    _labelText = '채택 답변';
-                                                    _dataText = _.profileData[
-                                                            'community']
-                                                            ['accepted_answers']
-                                                        .toString();
-                                                    break;
-                                                }
-                                                return Column(
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 5),
-                                                      child: Text(
-                                                        _labelText,
-                                                        style: const TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              clearBlackColor,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      _dataText,
-                                                      style: const TextStyle(
-                                                        color: clearBlackColor,
-                                                        fontFamily: 'Manrope',
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                              separatorBuilder:
-                                                  (context, index) =>
-                                                      const VerticalDivider(
-                                                color: dividerColor,
-                                                width: 32,
-                                                thickness: 1,
+                                          switch (index) {
+                                            case 1:
+                                              _labelText = '채택률';
+                                              _dataText = getCleanTextFromDouble(
+                                                      _.myProfileData[
+                                                              'community']
+                                                          ['acception_rate']) +
+                                                  '%';
+                                              break;
+                                            case 2:
+                                              _labelText = '게시글 수';
+                                              _dataText = _
+                                                  .myProfileData['community']
+                                                      ['posts']
+                                                  .toString();
+                                              break;
+                                            case 3:
+                                              _labelText = '질문 수';
+                                              _dataText = _
+                                                  .myProfileData['community']
+                                                      ['qnas']
+                                                  .toString();
+                                              break;
+                                            case 4:
+                                              _labelText = '답변 수';
+                                              _dataText = _
+                                                  .myProfileData['community']
+                                                      ['answers']
+                                                  .toString();
+                                              break;
+                                            default:
+                                              _labelText = '채택 답변';
+                                              _dataText = _
+                                                  .myProfileData['community']
+                                                      ['accepted_answers']
+                                                  .toString();
+                                              break;
+                                          }
+                                          return Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 5),
+                                                child: Text(
+                                                  _labelText,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: clearBlackColor,
+                                                  ),
+                                                ),
                                               ),
-                                              itemCount: 5,
-                                            ),
+                                              Text(
+                                                _dataText,
+                                                style: const TextStyle(
+                                                  color: clearBlackColor,
+                                                  fontFamily: 'Manrope',
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) =>
+                                            const VerticalDivider(
+                                          color: dividerColor,
+                                          width: 32,
+                                          thickness: 1,
+                                        ),
+                                        itemCount: 5,
+                                      ),
                                     ),
                                   ),
                                   const Divider(
@@ -609,30 +605,15 @@ class ProfileView extends GetView<ProfileController> {
                                     padding: const EdgeInsets.fromLTRB(
                                         30, 20, 30, 15),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.only(right: 7),
-                                          child: Text(
-                                            _physicalDataLabelText,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18,
-                                              color: clearBlackColor,
-                                            ),
+                                      children: const [
+                                        Text(
+                                          _physicalDataLabelText,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: clearBlackColor,
                                           ),
                                         ),
-                                        _.profileData['physical_data']
-                                                ['privacy']
-                                            ? const Text(
-                                                _privateLabelText,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: lightGrayColor,
-                                                ),
-                                              )
-                                            : const SizedBox.shrink(),
                                       ],
                                     ),
                                   ),
@@ -669,13 +650,13 @@ class ProfileView extends GetView<ProfileController> {
                                                             const EdgeInsets
                                                                 .only(top: 5),
                                                         child: Text(
-                                                          _.profileData['physical_data']
+                                                          _.myProfileData['physical_data']
                                                                       [
                                                                       'muscle_mass'] ==
                                                                   null
                                                               ? '--'
                                                               : getCleanTextFromDouble(
-                                                                  _.profileData[
+                                                                  _.myProfileData[
                                                                           'physical_data']
                                                                       [
                                                                       'muscle_mass']),
@@ -709,13 +690,13 @@ class ProfileView extends GetView<ProfileController> {
                                                             const EdgeInsets
                                                                 .only(top: 5),
                                                         child: Text(
-                                                          _.profileData['physical_data']
+                                                          _.myProfileData['physical_data']
                                                                       [
                                                                       'body_fat_percentage'] ==
                                                                   null
                                                               ? '--'
                                                               : getCleanTextFromDouble(
-                                                                  _.profileData[
+                                                                  _.myProfileData[
                                                                           'physical_data']
                                                                       [
                                                                       'body_fat_percentage']),
@@ -750,7 +731,7 @@ class ProfileView extends GetView<ProfileController> {
                                                                 .only(top: 5),
                                                         child: Text(
                                                           getCleanTextFromDouble(
-                                                              _.profileData[
+                                                              _.myProfileData[
                                                                       'physical_data']
                                                                   ['height']),
                                                           style:
@@ -784,7 +765,7 @@ class ProfileView extends GetView<ProfileController> {
                                                                 .only(top: 5),
                                                         child: Text(
                                                           getCleanTextFromDouble(
-                                                              _.profileData[
+                                                              _.myProfileData[
                                                                       'physical_data']
                                                                   ['weight']),
                                                           style:
@@ -807,7 +788,7 @@ class ProfileView extends GetView<ProfileController> {
                                                   top: 10,
                                                   bottom: 5,
                                                   left: 260 *
-                                                      ((_.profileData[
+                                                      ((_.myProfileData[
                                                                   'physical_data']
                                                               [
                                                               'bmi'] as double) -

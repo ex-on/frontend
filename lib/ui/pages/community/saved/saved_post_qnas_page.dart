@@ -981,19 +981,25 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                                                                   clearBlackColor,
                                                             ),
                                                           ),
-                                                    Text(
-                                                      _isSolved
-                                                          ? _.savedData[
-                                                                      'qna_activity']
-                                                                  ['user_qnas']
-                                                              [index]['answer']
-                                                          : '마음에 드는 답변이 있다면 채택해주세요.',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: const TextStyle(
-                                                        fontSize: 12,
-                                                        color: clearBlackColor,
+                                                    SizedBox(
+                                                      width: 220,
+                                                      child: Text(
+                                                        _isSolved
+                                                            ? _.savedData[
+                                                                        'qna_activity']
+                                                                    [
+                                                                    'user_qnas']
+                                                                [
+                                                                index]['answer']
+                                                            : '마음에 드는 답변이 있다면 채택해주세요.',
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1,
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              clearBlackColor,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -1038,19 +1044,24 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                                                                 clearBlackColor,
                                                           ),
                                                         ),
-                                                        Text(
-                                                          _.savedData['qna_activity']
-                                                                  [
-                                                                  'user_answered_qnas']
-                                                              [index]['answer'],
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 1,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                clearBlackColor,
+                                                        SizedBox(
+                                                          width: 220,
+                                                          child: Text(
+                                                            _.savedData['qna_activity']
+                                                                    [
+                                                                    'user_answered_qnas']
+                                                                [
+                                                                index]['answer'],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 1,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  clearBlackColor,
+                                                            ),
                                                           ),
                                                         ),
                                                       ],

@@ -68,15 +68,14 @@ class AppController extends GetxController {
               .markNotificationAsRead(int.parse(msg.data['id']));
           break;
         case 3:
-          CommunityController.to.onQnaPageInit(
-              int.parse(msg.data['link_id']), msg.data['qna_solved'].toString().parseBool);
+          CommunityController.to.onQnaPageInit(int.parse(msg.data['link_id']),
+              msg.data['qna_solved'].toString().parseBool);
           Get.toNamed('/community/qna');
           await NotificationController.to.refreshNotifications();
           NotificationController.to
               .markNotificationAsRead(int.parse(msg.data['id']));
           break;
         default:
-          NotificationController.to.refreshNotifications();
           Get.toNamed('/notification');
           break;
       }
@@ -85,6 +84,7 @@ class AppController extends GetxController {
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage msg) {
         message.value = msg;
+        NotificationController.to.refreshNotifications();
         Get.snackbar(
           msg.notification?.title ?? 'TITLE',
           msg.notification?.body ?? 'BODY',
@@ -98,8 +98,7 @@ class AppController extends GetxController {
 
     FirebaseMessaging.onMessageOpenedApp.listen(
       (RemoteMessage msg) async {
-        inspect(msg);
-
+        NotificationController.to.refreshNotifications();
         _onMessageTap(msg);
       },
     );

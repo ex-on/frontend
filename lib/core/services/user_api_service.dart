@@ -168,10 +168,56 @@ class UserApiService extends ApiService {
     }
   }
 
+  static Future<dynamic> getProfilePrivacy() async {
+    String path = '/user/privacy';
+
+    Map<String, dynamic> parameters = {};
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<bool> postProfilePrivacy(int privacy) async {
+    String path = '/user/privacy';
+
+    Map<String, dynamic> data = {
+      'privacy': privacy,
+    // toggle 0: 모두, 1: 커뮤니티 활동, 2: 신체 기록
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      print(res);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   static Future<dynamic> getProfileStats() async {
     String path = '/user/stats';
 
     Map<String, dynamic> parameters = {};
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<dynamic> getUserProfileStats(String username) async {
+    String path = '/user/stats';
+
+    Map<String, dynamic> parameters = {
+      'username': username,
+    };
 
     try {
       var res = await ApiService.get(path, parameters);

@@ -182,30 +182,31 @@ class CardioRecordPage extends GetView<ExerciseBlockController> {
                               4 + 3,
                               (index) => index % 2 == 1
                                   ? horizontalSpacer(10)
-                                  : ElevatedActionButton( height: 38,
-                                  width: 62,
-                                    buttonText: getCleanTextFromDouble(
-                                        inputDistanceChangeValueList[
-                                            index ~/ 2]),
-                                    onPressed: () =>
-                                        _updateDistanceChangeValue(
-                                            index ~/ 2),
-                                    backgroundColor: _
-                                                .inputDistanceChangeValue ==
-                                            inputDistanceChangeValueList[
-                                                index ~/ 2]
-                                        ? brightPrimaryColor
-                                        : const Color(0xffE1F4F8),
-                                    textStyle: TextStyle(
-                                      color: _.inputDistanceChangeValue ==
-                                              inputDistanceChangeValueList[
-                                                  index ~/ 2]
-                                          ? Colors.white
-                                          : brightPrimaryColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Manrope',
+                                  : ElevatedActionButton(
+                                      height: 38,
+                                      width: 62,
+                                      buttonText: getCleanTextFromDouble(
+                                          inputDistanceChangeValueList[
+                                              index ~/ 2]),
+                                      onPressed: () =>
+                                          _updateDistanceChangeValue(
+                                              index ~/ 2),
+                                      backgroundColor:
+                                          _.inputDistanceChangeValue ==
+                                                  inputDistanceChangeValueList[
+                                                      index ~/ 2]
+                                              ? brightPrimaryColor
+                                              : const Color(0xffE1F4F8),
+                                      textStyle: TextStyle(
+                                        color: _.inputDistanceChangeValue ==
+                                                inputDistanceChangeValueList[
+                                                    index ~/ 2]
+                                            ? Colors.white
+                                            : brightPrimaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Manrope',
+                                      ),
                                     ),
-                                  ),
                             ),
                           ),
                         ),
@@ -226,6 +227,7 @@ class CardioRecordPage extends GetView<ExerciseBlockController> {
                       color: mainBackgroundColor,
                     ),
                     onPressed: _onRecordButtonPressed,
+                    disabledColor: lightGrayColor,
                     activated: _.recordDistanceTextController.text.isNotEmpty
                         ? double.parse(_.recordDistanceTextController.text) > 0
                         : false,

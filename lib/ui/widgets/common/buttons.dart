@@ -201,19 +201,23 @@ class ElevatedActionButton extends StatelessWidget {
       width: width,
       height: height,
       child: ElevatedButton(
-        child: Text(
-          buttonText,
-          style: textStyle ??
-              TextStyle(
-                color: (activated != null ? activated! : true)
-                    ? ((int.parse(backgroundColor.toString().substring(10, 16),
-                                radix: 16) <
-                            int.parse('800000', radix: 16))
-                        ? Colors.white
-                        : deepGrayColor)
-                    : lightGrayColor,
-                fontWeight: FontWeight.bold,
-              ),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            buttonText,
+            style: textStyle ??
+                TextStyle(
+                  color: (activated != null ? activated! : true)
+                      ? ((int.parse(
+                                  backgroundColor.toString().substring(10, 16),
+                                  radix: 16) <
+                              int.parse('800000', radix: 16))
+                          ? Colors.white
+                          : deepGrayColor)
+                      : lightGrayColor,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
         ),
         onPressed: activated == null || activated! ? onPressed : null,
         style: style,

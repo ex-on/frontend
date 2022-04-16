@@ -5,6 +5,7 @@ import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/circle.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
+import 'package:exon_app/ui/widgets/profile/clickable_profile.dart';
 import 'package:exon_app/ui/widgets/rank/activity_level_info_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -407,25 +408,28 @@ class RankProteinPage extends GetView<RankController> {
                                       padding: const EdgeInsets.only(right: 15),
                                       child: _rankIcon,
                                     ),
-                                    Text.rich(
-                                      TextSpan(
-                                        text: activityLevelIntToStr[
-                                            data['activity_level']]!,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: lightGrayColor,
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text: ' ' + data['username'],
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: clearBlackColor,
-                                            ),
+                                    ClickableProfile(
+                                      username: data['username'],
+                                      child: Text.rich(
+                                        TextSpan(
+                                          text: activityLevelIntToStr[
+                                              data['activity_level']]!,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: lightGrayColor,
                                           ),
-                                        ],
+                                          children: [
+                                            TextSpan(
+                                              text: ' ' + data['username'],
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: clearBlackColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                     const Expanded(child: SizedBox()),

@@ -1,6 +1,7 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
+import 'package:exon_app/core/controllers/profile_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
@@ -8,6 +9,7 @@ import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
+import 'package:exon_app/ui/widgets/profile/clickable_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -253,15 +255,18 @@ class CommunityPostPage extends GetView<CommunityController> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            activityLevelIntToStr[_.postContent['user_data']
-                                    ['activity_level']]! +
-                                ' ' +
-                                _.postContent['user_data']['username'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: clearBlackColor,
+                          ClickableProfile(
+                            username: _.postContent['user_data']['username'],
+                            child: Text(
+                              activityLevelIntToStr[_.postContent['user_data']
+                                      ['activity_level']]! +
+                                  ' ' +
+                                  _.postContent['user_data']['username'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: clearBlackColor,
+                              ),
                             ),
                           ),
                           Text(
@@ -456,17 +461,21 @@ class CommunityPostPage extends GetView<CommunityController> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          activityLevelIntToStr[_.postCommentList[index]
-                                      ['comments']['user_data']
-                                  ['activity_level']]! +
-                              ' ' +
-                              _.postCommentList[index]['comments']['user_data']
-                                  ['username'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: clearBlackColor,
+                        ClickableProfile(
+                          username: _.postCommentList[index]['comments']
+                              ['user_data']['username'],
+                          child: Text(
+                            activityLevelIntToStr[_.postCommentList[index]
+                                        ['comments']['user_data']
+                                    ['activity_level']]! +
+                                ' ' +
+                                _.postCommentList[index]['comments']
+                                    ['user_data']['username'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: clearBlackColor,
+                            ),
                           ),
                         ),
                         if (_.postCommentList[index]['comments']['user_data']
@@ -687,15 +696,18 @@ class CommunityPostPage extends GetView<CommunityController> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          activityLevelIntToStr[replyList[index]['user_data']
-                                  ['activity_level']]! +
-                              ' ' +
-                              replyList[index]['user_data']['username'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: clearBlackColor,
+                        ClickableProfile(
+                          username: replyList[index]['user_data']['username'],
+                          child: Text(
+                            activityLevelIntToStr[replyList[index]['user_data']
+                                    ['activity_level']]! +
+                                ' ' +
+                                replyList[index]['user_data']['username'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: clearBlackColor,
+                            ),
                           ),
                         ),
                         if (replyList[index]['user_data']['username'] ==

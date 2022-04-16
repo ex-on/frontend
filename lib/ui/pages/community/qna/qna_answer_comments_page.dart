@@ -9,6 +9,7 @@ import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/comment_badge.dart';
 import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
+import 'package:exon_app/ui/widgets/profile/clickable_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -185,23 +186,32 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                         children: [
                                           Row(
                                             children: [
-                                              Text(
-                                                activityLevelIntToStr[
-                                                        _.qnaAnswerCommentList[
-                                                                        index]
-                                                                    ['comment']
-                                                                ['user_data'][
-                                                            'activity_level']]! +
-                                                    ' ' +
+                                              ClickableProfile(
+                                                username:
                                                     _.qnaAnswerCommentList[
                                                                     index]
                                                                 ['comment']
                                                             ['user_data']
                                                         ['username'],
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14,
-                                                  color: clearBlackColor,
+                                                child: Text(
+                                                  activityLevelIntToStr[
+                                                          _.qnaAnswerCommentList[
+                                                                          index]
+                                                                      [
+                                                                      'comment']
+                                                                  ['user_data'][
+                                                              'activity_level']]! +
+                                                      ' ' +
+                                                      _.qnaAnswerCommentList[
+                                                                      index]
+                                                                  ['comment']
+                                                              ['user_data']
+                                                          ['username'],
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                    color: clearBlackColor,
+                                                  ),
                                                 ),
                                               ),
                                               if (_.qnaAnswerCommentList[index]
@@ -483,24 +493,34 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                           children: [
                                             Row(
                                               children: [
-                                                Text(
-                                                  activityLevelIntToStr[
-                                                          _.qnaAnswerCommentList[
-                                                                          index]
-                                                                      [
-                                                                      'comment']
-                                                                  ['user_data'][
-                                                              'activity_level']]! +
-                                                      ' ' +
+                                                ClickableProfile(
+                                                  username:
                                                       _.qnaAnswerCommentList[
-                                                                      index]
-                                                                  ['comment']
+                                                                      index][
+                                                                  'comment']
                                                               ['user_data']
                                                           ['username'],
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14,
-                                                    color: clearBlackColor,
+                                                  child: Text(
+                                                    activityLevelIntToStr[
+                                                            _.qnaAnswerCommentList[
+                                                                            index]
+                                                                        ['comment']
+                                                                    [
+                                                                    'user_data']
+                                                                [
+                                                                'activity_level']]! +
+                                                        ' ' +
+                                                        _.qnaAnswerCommentList[
+                                                                        index]
+                                                                    ['comment']
+                                                                ['user_data']
+                                                            ['username'],
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      color: clearBlackColor,
+                                                    ),
                                                   ),
                                                 ),
                                                 (() {
@@ -825,20 +845,26 @@ class QnaAnswerCommentsPage extends GetView<CommunityController> {
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
-                                                      Text(
-                                                        activityLevelIntToStr[reply[
-                                                                    'user_data']
-                                                                [
-                                                                'activity_level']]! +
-                                                            ' ' +
+                                                      ClickableProfile(
+                                                        username:
                                                             reply['user_data']
                                                                 ['username'],
-                                                        style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                          color:
-                                                              clearBlackColor,
+                                                        child: Text(
+                                                          activityLevelIntToStr[
+                                                                  reply['user_data']
+                                                                      [
+                                                                      'activity_level']]! +
+                                                              ' ' +
+                                                              reply['user_data']
+                                                                  ['username'],
+                                                          style:
+                                                              const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14,
+                                                            color:
+                                                                clearBlackColor,
+                                                          ),
                                                         ),
                                                       ),
                                                       (() {
