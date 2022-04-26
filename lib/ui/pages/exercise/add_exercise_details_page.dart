@@ -6,6 +6,7 @@ import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
 import 'package:exon_app/ui/widgets/common/keep_alive_wrapper.dart';
+import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/exercise/set_input_bottom_sheet.dart';
@@ -30,12 +31,16 @@ class AddExerciseDetailsPage extends StatelessWidget {
     int _targetMuscle = controller.selectedExerciseInfo['target_muscle'];
     int _exerciseMethod = controller.selectedExerciseInfo['exercise_method'];
 
+    Future.delayed(Duration.zero, () {});
+
     void _onBackPressed() {
       controller.jumpToPage(0);
       controller.resetExerciseDetails();
     }
 
-    void _onLoadRecordPressed() {}
+    void _onLoadRecordPressed() {
+      controller.loadRecentExercisePlan();
+    }
 
     void _onDeleteSetPressed(int setNum) {
       controller.deleteSet(setNum);
@@ -323,28 +328,32 @@ class AddExerciseDetailsPage extends StatelessWidget {
             SizedBox(
               width: 40,
               height: 240,
-              child: GetBuilder<AddExerciseController>(builder: (_) {
-                return CupertinoPicker(
-                  scrollController: _.targetHourScrollController,
-                  itemExtent: 60,
-                  onSelectedItemChanged: _.updateInputCardioHour,
-                  selectionOverlay: const DecoratedBox(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          color: brightPrimaryColor,
-                          width: 0.5,
-                        ),
-                        bottom: BorderSide(
-                          color: brightPrimaryColor,
-                          width: 0.5,
+              child: GetBuilder<AddExerciseController>(
+                builder: (_) {
+                  _.targetHourScrollController = FixedExtentScrollController();
+
+                  return CupertinoPicker(
+                    scrollController: _.targetHourScrollController,
+                    itemExtent: 60,
+                    onSelectedItemChanged: _.updateInputCardioHour,
+                    selectionOverlay: const DecoratedBox(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: brightPrimaryColor,
+                            width: 0.5,
+                          ),
+                          bottom: BorderSide(
+                            color: brightPrimaryColor,
+                            width: 0.5,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  children: _inputHourList,
-                );
-              }),
+                    children: _inputHourList,
+                  );
+                },
+              ),
             ),
             const Padding(
               padding: EdgeInsets.only(left: 6),
@@ -364,6 +373,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
                 width: 45,
                 height: 240,
                 child: GetBuilder<AddExerciseController>(builder: (_) {
+                  _.targetMinScrollController = FixedExtentScrollController();
                   return CupertinoPicker(
                     scrollController: _.targetMinScrollController,
                     itemExtent: 60,
@@ -677,13 +687,22 @@ class AddExerciseDetailsPage extends StatelessWidget {
                 top: 15,
                 bottom: 15,
               ),
-              child: TextActionButton(
-                buttonText: _loadRecordButtonText,
-                onPressed: _onLoadRecordPressed,
-                fontSize: 13,
-                isUnderlined: false,
-                textColor: softGrayColor,
-              ),
+              child: GetBuilder<AddExerciseController>(builder: (_) {
+                if (_.loading) {
+                  return const AspectRatio(
+                    aspectRatio: 1,
+                    child: CircularLoadingIndicator(),
+                  );
+                } else {
+                  return TextActionButton(
+                    buttonText: _loadRecordButtonText,
+                    onPressed: _onLoadRecordPressed,
+                    fontSize: 13,
+                    isUnderlined: false,
+                    textColor: softGrayColor,
+                  );
+                }
+              }),
             ),
           ],
         ),

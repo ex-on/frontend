@@ -1,3 +1,4 @@
+import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/core/services/exercise_api_service.dart';
 import 'package:flutter/material.dart';
@@ -269,7 +270,6 @@ class AddExerciseController extends GetxController
     inputSetControllerList = [
       [TextEditingController(text: '0.0'), TextEditingController(text: '0')],
     ];
-
     numSets = 1;
     update();
   }
@@ -278,6 +278,7 @@ class AddExerciseController extends GetxController
     targetMuscle = 0;
     exerciseMethod = 0;
     cardioMethod = 0;
+    exerciseType = 0;
     searchExerciseTextController.clear();
     updateCurrentExerciseDataList();
   }
@@ -339,6 +340,75 @@ class AddExerciseController extends GetxController
       selectedExerciseDataList = dataList;
     }
     update();
+  }
+
+  void loadRecentExercisePlan() async {
+    setLoading(true);
+    var data = await ExerciseApiService.loadRecentExercisePlan(
+        selectedExerciseInfo['id']);
+    if (exerciseType == 0) {
+      List<dynamic> setData = data['sets'];
+      if (setData.isNotEmpty) {
+        inputSetControllerList = [];
+        numSets = 0;
+        for (int i = 0; i < setData.length; i++) {
+          numSets++;
+          inputSetControllerList.add(
+            [
+              TextEditingController(
+                  text: setData[i]['target_weight'].toString()),
+              TextEditingController(text: setData[i]['target_reps'].toString()),
+            ],
+          );
+        }
+      } else {
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              '운동한 기록이 없습니다',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      }
+    } else {
+      if (data['target_duration'] != null) {
+        int _duration = data['target_duration'];
+        inputCardioHour = _duration ~/ 3600;
+        inputCardioMin = _duration % 3600;
+        targetHourScrollController.jumpTo(60 * inputCardioHour.toDouble());
+        targetMinScrollController.jumpTo(60 * inputCardioMin.toDouble());
+      }
+      if (data['target_distance'] != null) {
+        targetDistanceTextController.text = data['target_distance'].toString();
+      }
+      if (data['target_distance'] == null && data['target_duration'] == null) {
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              '운동한 기록이 없습니다',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 0),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      }
+      update();
+    }
+    setLoading(false);
   }
 
   void postExerciseWeightPlan() async {

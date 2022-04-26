@@ -1,6 +1,23 @@
 import 'package:exon_app/core/services/api_service.dart';
 
 class CommunityApiService extends ApiService {
+  static Future<dynamic> search(int searchCategory, String searchText) async {
+    String path = '/community/search';
+
+    Map<String, dynamic> parameters = {
+      'category': searchCategory,
+      'text': searchText,
+    };
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   static Future<dynamic> getPostPreview(
       int indexNum, int startIndex, int type) async {
     String path = '/community/post_list';
@@ -44,7 +61,7 @@ class CommunityApiService extends ApiService {
 
   // Post API
   static Future<dynamic> getPost(int postId) async {
-    String path = '/community/getpost';
+    String path = '/community/post';
 
     Map<String, dynamic> parameters = {
       'post_id': postId,
@@ -60,7 +77,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> getQna(int qnaId) async {
-    String path = '/community/getQna';
+    String path = '/community/qna';
 
     Map<String, dynamic> parameters = {
       'qna_id': qnaId,
@@ -76,7 +93,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> getPostComments(int postId) async {
-    String path = '/community/getpostcomments';
+    String path = '/community/post_comment';
 
     Map<String, dynamic> parameters = {
       'post_id': postId,
@@ -92,7 +109,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> getQnaAnswers(int qnaId) async {
-    String path = '/community/getQnaAnswers';
+    String path = '/community/qna_answer';
 
     Map<String, dynamic> parameters = {
       'qna_id': qnaId,
@@ -108,7 +125,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> getQnaAnswerComments(int answerId) async {
-    String path = '/community/get_qna_answer_comments';
+    String path = '/community/qna_answer_comment';
 
     Map<String, dynamic> parameters = {
       'answer_id': answerId,
@@ -143,7 +160,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> updatePost(
-     int postId, String title, String content) async {
+      int postId, String title, String content) async {
     String path = '/community/post/update';
 
     Map<String, dynamic> data = {
@@ -162,7 +179,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> postPostComment(int postId, String content) async {
-    String path = '/community/postcomment';
+    String path = '/community/post_comment';
 
     Map<String, dynamic> data = {
       'post_id': postId,
@@ -180,7 +197,7 @@ class CommunityApiService extends ApiService {
 
   static Future<dynamic> postPostCommentReply(
       int postId, int postCommentId, String content) async {
-    String path = '/community/postcommentreply';
+    String path = '/community/post_comment_reply';
 
     Map<String, dynamic> data = {
       'post_id': postId,
@@ -307,7 +324,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> getPostUserStatus(int postId, String extent) async {
-    String path = '/community/get_post_user_status';
+    String path = '/community/post_user_status';
 
     Map<String, dynamic> parameters = {
       'post_id': postId,
@@ -324,7 +341,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> getQnaUserStatus(int qnaId) async {
-    String path = '/community/get_qna_user_status';
+    String path = '/community/qna_user_status';
 
     Map<String, dynamic> parameters = {
       'qna_id': qnaId,
@@ -340,7 +357,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> getPostCount(int postId) async {
-    String path = '/community/get_post_count';
+    String path = '/community/post_count';
 
     Map<String, dynamic> parameters = {
       'post_id': postId,
@@ -356,7 +373,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> getQnaCount(int qnaId) async {
-    String path = '/community/get_qna_count';
+    String path = '/community/qna_count';
 
     Map<String, dynamic> parameters = {
       'qna_id': qnaId,
@@ -372,7 +389,24 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> updatePostLikes(int postId, bool add) async {
-    String path = '/community/update_post_count/likes';
+    String path = '/community/post_count/update_likes';
+
+    Map<String, dynamic> data = {
+      'post_id': postId,
+      'add': add,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<dynamic> updatePostSaved(int postId, bool add) async {
+    String path = '/community/post_count/update_saved';
 
     Map<String, dynamic> data = {
       'post_id': postId,
@@ -390,7 +424,7 @@ class CommunityApiService extends ApiService {
 
   static Future<dynamic> updatePostCommentLikes(
       int postCommentId, bool add) async {
-    String path = '/community/update_post_comment_count/likes';
+    String path = '/community/post_comment_count/update_likes';
 
     Map<String, dynamic> data = {
       'post_comment_id': postCommentId,
@@ -408,7 +442,7 @@ class CommunityApiService extends ApiService {
 
   static Future<dynamic> updatePostCommentReplyLikes(
       int postCommentReplyId, bool add) async {
-    String path = '/community/update_post_comment_reply_count/likes';
+    String path = '/community/post_comment_reply_count/update_likes';
 
     Map<String, dynamic> data = {
       'post_comment_reply_id': postCommentReplyId,
@@ -424,25 +458,8 @@ class CommunityApiService extends ApiService {
     }
   }
 
-  static Future<dynamic> updatePostSaved(int postId, bool add) async {
-    String path = '/community/update_post_count/saved';
-
-    Map<String, dynamic> data = {
-      'post_id': postId,
-      'add': add,
-    };
-
-    try {
-      var res = await ApiService.post(path, data);
-      return res.statusCode;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
   static Future<dynamic> updateQnaSaved(int qnaId, bool add) async {
-    String path = '/community/update_qna_count/saved';
+    String path = '/community/qna_count/update_saved';
 
     Map<String, dynamic> data = {
       'qna_id': qnaId,
@@ -459,7 +476,7 @@ class CommunityApiService extends ApiService {
   }
 
   static Future<dynamic> updateQnaAnswerLikes(int qnaAnswerId, bool add) async {
-    String path = '/community/update_qna_answer_count/likes';
+    String path = '/community/qna_answer_count/update_likes';
 
     Map<String, dynamic> data = {
       'qna_answer_id': qnaAnswerId,
@@ -477,7 +494,7 @@ class CommunityApiService extends ApiService {
 
   static Future<dynamic> updateQnaAnswerCommentLikes(
       int qnaAnswerCommentId, bool add) async {
-    String path = '/community/update_qna_answer_comment_count/likes';
+    String path = '/community/qna_answer_comment_count/update_likes';
 
     Map<String, dynamic> data = {
       'qna_answer_comment_id': qnaAnswerCommentId,
@@ -631,23 +648,6 @@ class CommunityApiService extends ApiService {
     Map<String, dynamic> parameters = {
       'index_num': indexNum,
       'start_index': startIndex,
-    };
-
-    try {
-      var res = await ApiService.get(path, parameters);
-      return res.data;
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
-
-  static Future<dynamic> search(int searchCategory, String searchText) async {
-    String path = '/community/search';
-
-    Map<String, dynamic> parameters = {
-      'category': searchCategory,
-      'text': searchText,
     };
 
     try {

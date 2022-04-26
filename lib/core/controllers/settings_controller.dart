@@ -1,20 +1,19 @@
-import 'dart:developer';
-
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/home_navigation_controller.dart';
-import 'package:exon_app/core/controllers/notification_controller.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/core/services/notification_api_service.dart';
 import 'package:exon_app/core/services/user_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsController extends GetxController {
   static SettingsController to = Get.find();
   final authFormKey = GlobalKey<FormState>();
   final updateFormKey = GlobalKey<FormState>();
+  final InAppReview inAppReview = InAppReview.instance;
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordAuthorizeController = TextEditingController();
   TextEditingController passwordInputController = TextEditingController();

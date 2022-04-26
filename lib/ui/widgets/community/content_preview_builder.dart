@@ -26,6 +26,7 @@ class PostContentPreviewBuilder extends StatelessWidget {
             onTap: () {
               _.onPostPageInit(
                   data['post_data']['id'], data['post_data']['type']);
+
               Get.toNamed('/community/post');
             },
             child: SizedBox(
@@ -41,12 +42,15 @@ class PostContentPreviewBuilder extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          data['post_data']['title'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: darkPrimaryColor,
+                        Flexible(
+                          child: Text(
+                            data['post_data']['title'],
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: darkPrimaryColor,
+                            ),
                           ),
                         ),
                         Text(
@@ -187,12 +191,15 @@ class PostCommentContentPreviewBuilder extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          data['post_data']['title'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: darkPrimaryColor,
+                        Flexible(
+                          child: Text(
+                            data['post_data']['title'],
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: darkPrimaryColor,
+                            ),
                           ),
                         ),
                         Text(
@@ -290,14 +297,16 @@ class PostCommentContentPreviewBuilder extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Text(
-                                      data['comment'],
-                                      textAlign: TextAlign.start,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: darkPrimaryColor,
+                                    Flexible(
+                                      child: Text(
+                                        data['comment'],
+                                        textAlign: TextAlign.start,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: darkPrimaryColor,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -377,12 +386,15 @@ class QnaContentPreviewBuilder extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          data['qna_data']['title'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: darkPrimaryColor,
+                        Flexible(
+                          child: Text(
+                            data['qna_data']['title'],
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: darkPrimaryColor,
+                            ),
                           ),
                         ),
                         Text(
@@ -537,12 +549,15 @@ class QnaAnswerContentPreviewBuilder extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          data['qna_data']['title'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: darkPrimaryColor,
+                        Flexible(
+                          child: Text(
+                            data['qna_data']['title'],
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: darkPrimaryColor,
+                            ),
                           ),
                         ),
                         Text(
@@ -605,14 +620,16 @@ class QnaAnswerContentPreviewBuilder extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Text(
-                                      data['answer'],
-                                      textAlign: TextAlign.start,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: darkPrimaryColor,
+                                    Flexible(
+                                      child: Text(
+                                        data['answer'],
+                                        textAlign: TextAlign.start,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: darkPrimaryColor,
+                                        ),
                                       ),
                                     ),
                                   ],

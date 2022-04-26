@@ -607,6 +607,7 @@ class TitleInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      maxLength: 30,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(
           left: 2,
@@ -672,6 +673,7 @@ class ContentInputField extends StatelessWidget {
         ),
       ),
       maxLines: null,
+      maxLength: 500,
       style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,

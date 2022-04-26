@@ -133,6 +133,8 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (7.7.0):
     - GoogleUtilities/Logger
+  - in_app_review (0.2.0):
+    - Flutter
   - kakao_flutter_sdk (0.9.0):
     - Flutter
   - nanopb (2.30908.0):
@@ -169,6 +171,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - kakao_flutter_sdk (from `.symlinks/plugins/kakao_flutter_sdk/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
@@ -226,6 +229,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  in_app_review:
+    :path: ".symlinks/plugins/in_app_review/ios"
   kakao_flutter_sdk:
     :path: ".symlinks/plugins/kakao_flutter_sdk/ios"
   package_info_plus:
@@ -268,6 +273,7 @@ SPEC CHECKSUMS:
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
+  in_app_review: 4a97249f7a2f539a0f294c2d9196b7fe35e49541
   kakao_flutter_sdk: bb7397452b15fb550037aea8e6d347143488af71
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81

@@ -75,8 +75,8 @@ class QnaAnswerWritePage extends GetView<CommunityController> {
                                 color: mainBackgroundColor,
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
                                 child: Text(
                                   '엑손 게시판 이용규칙',
                                   style: TextStyle(
@@ -88,8 +88,8 @@ class QnaAnswerWritePage extends GetView<CommunityController> {
                               ),
                             ),
                           ),
-                          Text(
-                            '1. 욕설 및 비방 금지',
+                          const Text(
+                            communityGuidelines,
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w300,

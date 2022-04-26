@@ -101,7 +101,7 @@ class QnaWritePage extends GetView<CommunityController> {
                                 ),
                               ),
                               const Text(
-                                '1. 욕설 및 비방 금지',
+                                communityGuidelines,
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w300,

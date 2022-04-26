@@ -160,4 +160,19 @@ class ExerciseApiService extends ApiService {
       print(e);
     }
   }
+
+  static Future<dynamic> loadRecentExercisePlan(int id) async {
+    String path = '/exercise/recent';
+
+    Map<String, dynamic> parameters = {
+      'id': id,
+    };
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
 }

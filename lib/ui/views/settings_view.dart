@@ -2,6 +2,7 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/settings_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
+import 'package:exon_app/helpers/url_launcher.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
@@ -25,9 +26,16 @@ const String _informationSettingsLabelText = '정보';
 const String _privacyAllLabelText = '활동 내역 전체 공개';
 const String _privacyCommunityLabelText = '커뮤니티 활동 공개';
 const String _privacyPhysicalDataLabelText = '신체 기록 공개';
-const String _exonUserAgreementLabelText = '이용약관';
-const String _personalInformationHandlingPolicy = '개인정보처리방침';
+// const String _exonUserAgreementLabelText = '이용약관';
+const String _privacyPolicyLabelText = '개인정보처리방침';
 const String _appVersion = '앱 버전';
+
+const String _privacyPolicyUrl = endPointUrl + '/user/policy/privacy';
+const String _instagramUrl = 'https://www.instagram.com/official_exon/';
+const String _nativeInstagramUrl = "instagram://user?username=official_exon";
+const String _feedbackUrl = 'https://instagram.com/';
+const String _nativeFeedbackUrl = "instagram://user?username=official_exon";
+const String _appStoreId = '';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({Key? key}) : super(key: key);
@@ -49,6 +57,22 @@ class SettingsView extends GetView<SettingsController> {
     void _onPushNotificationPressed() {
       SettingsController.to.getUserNotiSettings();
       Get.toNamed('/settings/push_notification');
+    }
+
+    void _onStoreReviewPressed() {
+      controller.inAppReview.openStoreListing(appStoreId: _appStoreId);
+    }
+
+    void _onInstagramPressed() {
+      UrlLauncher.launchInApp(_instagramUrl, nativeUrl: _nativeInstagramUrl);
+    }
+
+    void _onFeedbackPressed() {
+      UrlLauncher.launchInApp(_feedbackUrl, nativeUrl: _nativeFeedbackUrl);
+    }
+
+    void _onPrivacyPolicyPressed() {
+      UrlLauncher.launchInApp(_privacyPolicyUrl);
     }
 
     void _onSignOutPressed() async {
@@ -276,7 +300,7 @@ class SettingsView extends GetView<SettingsController> {
                       ),
                       _divider,
                       _getSettingsMenuItem(
-                        () => null,
+                        _onStoreReviewPressed,
                         _reviewLabelText,
                         trailing: const Padding(
                           padding: EdgeInsets.only(right: 25),
@@ -287,7 +311,7 @@ class SettingsView extends GetView<SettingsController> {
                         ),
                       ),
                       _getSettingsMenuItem(
-                        () => null,
+                        _onInstagramPressed,
                         _instagramLabelText,
                         trailing: const Padding(
                           padding: EdgeInsets.only(right: 25),
@@ -298,7 +322,7 @@ class SettingsView extends GetView<SettingsController> {
                         ),
                       ),
                       _getSettingsMenuItem(
-                        () => null,
+                        _onFeedbackPressed,
                         _featureFeedbackLabelText,
                         trailing: const Padding(
                           padding: EdgeInsets.only(right: 25),
@@ -314,10 +338,10 @@ class SettingsView extends GetView<SettingsController> {
                             _informationSettingsLabelText),
                       ),
                       _divider,
+                      // _getSettingsMenuItem(
+                      //     () => null, _exonUserAgreementLabelText),
                       _getSettingsMenuItem(
-                          () => null, _exonUserAgreementLabelText),
-                      _getSettingsMenuItem(
-                          () => null, _personalInformationHandlingPolicy),
+                          _onPrivacyPolicyPressed, _privacyPolicyLabelText),
                       _getSettingsMenuItem(
                         null,
                         _appVersion,
@@ -330,7 +354,9 @@ class SettingsView extends GetView<SettingsController> {
                         ),
                       ),
                       _getSettingsMenuItem(
-                          () => _onSignOutPressed(), _signOutLabelText),
+                        () => _onSignOutPressed(),
+                        _signOutLabelText,
+                      ),
                     ],
                   ),
                 ),

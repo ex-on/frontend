@@ -2,9 +2,10 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/connection_controller.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
+import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
 
 class ConnectionErrorDialog extends StatelessWidget {
   final void Function() onRetryPressed;
@@ -19,7 +20,7 @@ class ConnectionErrorDialog extends StatelessWidget {
 
     return AlertDialog(
       backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.fromLTRB(40, 40, 40, 30),
+      contentPadding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -37,11 +38,23 @@ class ConnectionErrorDialog extends StatelessWidget {
             if (_.loading) {
               return const CircularLoadingIndicator();
             } else {
-              return ElevatedActionButton(
-                buttonText: '다시 시도하기',
-                onPressed: onRetryPressed,
-                width: 220,
-                height: 60,
+              return Column(
+                children: [
+                  ElevatedActionButton(
+                    buttonText: '다시 시도하기',
+                    onPressed: onRetryPressed,
+                    width: 220,
+                    height: 60,
+                  ),
+                  verticalSpacer(10),
+                  TextActionButton(
+                    height: 30,
+                    textColor: deepGrayColor,
+                    buttonText: '뒤로 가기',
+                    onPressed: () => Get.back(),
+                    isUnderlined: false,
+                  )
+                ],
               );
             }
           }),

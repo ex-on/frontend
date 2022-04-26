@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const String endPointUrl =
-    'http://d648-2001-2d8-ef52-18b3-199c-11af-487c-e23c.ngrok.io';
+const String endPointUrl = 'http://exonverse.com';
 // Colors
 const Color splashViewBackgroundColor = Colors.white;
 const Color mainBackgroundColor = Color(0xffF4F3F8);
@@ -65,3 +64,11 @@ const kakaoClientId = '9289c2192aae86a9837cf14e90664ffd';
 const List<double> inputWeightChangeValueList = [1, 2.5, 5, 10];
 
 const List<double> inputDistanceChangeValueList = [0.5, 1, 2.5, 5];
+
+const String communityGuidelines = '''
+※ 정치﹒사회 관련 언급 금지
+※ 홍보 및 판매 관련 행위 금지
+※ 성적 수치심을 유발하는 행위 금지
+※ 타인의 권리를 침해하는 행위 금지
+※ 욕설, 비하, 차별, 혐오, 자살, 폭력 관련 내용을 포함한 글 작성 금지
+''';

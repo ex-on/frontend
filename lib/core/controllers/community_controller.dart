@@ -47,7 +47,7 @@ class CommunityController extends GetxController
   int? qnaId;
   int? answerId;
   int? answerNumComments;
-  int? postType = 0;
+  int postType = 1;
   bool? qnaSolved = false;
   int bookmarkCategory = 0;
   int postActivityCategory = 0;
@@ -61,6 +61,7 @@ class CommunityController extends GetxController
   int selectedAnswerIndex = -1;
 
   RxInt postCategory = 0.obs; //0: HOT, 1: 자유, 2: 정보
+  RxInt postWriteCategory = 1.obs;
   RxInt qnaCategory = 0.obs; // 0: HOT, 1: 미해결, 2: 해결
   RxInt postListStartIndex = 0.obs;
   RxInt qnaListStartIndex = 0.obs;
@@ -362,9 +363,11 @@ class CommunityController extends GetxController
     update();
   }
 
-  void updatePostType(int? val) {
-    postType = val;
-    update();
+  void updatePostType(int val) {
+    if (val != 0) {
+      postType = val;
+      update();
+    }
   }
 
   void updateQnaSolved(bool? val) {
@@ -378,6 +381,7 @@ class CommunityController extends GetxController
     getPostComments(id);
     updatePostId(id);
     updatePostType(type);
+    setApiPostLoading(false);
   }
 
   void onQnaPageInit(int id, bool solved) {
@@ -386,6 +390,7 @@ class CommunityController extends GetxController
     getQnaAnswers(id);
     updateQnaId(id);
     updateQnaSolved(solved);
+    setApiPostLoading(false);
   }
 
   void resetContent() {
@@ -609,7 +614,7 @@ class CommunityController extends GetxController
         postContentTextController.text != '') {
       setApiPostLoading(true);
       var res = await CommunityApiService.postPost(postTitleTextController.text,
-          postContentTextController.text, postCategory.value);
+          postContentTextController.text, postType);
       setApiPostLoading(false);
     }
   }

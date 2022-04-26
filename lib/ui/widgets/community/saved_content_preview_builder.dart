@@ -51,14 +51,17 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            isPost
-                                ? _.savedData[index]['post_data']['title']
-                                : _.savedData[index]['qna_data']['title'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: darkPrimaryColor,
+                          Flexible(
+                            child: Text(
+                              isPost
+                                  ? _.savedData[index]['post_data']['title']
+                                  : _.savedData[index]['qna_data']['title'],
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: darkPrimaryColor,
+                              ),
                             ),
                           ),
                           Text(
@@ -78,15 +81,17 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Text(
-                          isPost
-                              ? _.savedData[index]['post_data']['content']
-                              : _.savedData[index]['qna_data']['content'],
-                          textAlign: TextAlign.start,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: deepGrayColor,
+                        child: Flexible(
+                          child: Text(
+                            isPost
+                                ? _.savedData[index]['post_data']['content']
+                                : _.savedData[index]['qna_data']['content'],
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: deepGrayColor,
+                            ),
                           ),
                         ),
                       ),
@@ -115,7 +120,7 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              LikeIcon(),
+                              const LikeIcon(),
                               Padding(
                                 padding: const EdgeInsets.only(left: 5),
                                 child: Text(
@@ -129,7 +134,7 @@ class SavedContentPreviewBuilder extends StatelessWidget {
                                 ),
                               ),
                               horizontalSpacer(10),
-                              CommentIcon(),
+                              const CommentIcon(),
                               Padding(
                                 padding: const EdgeInsets.only(left: 5),
                                 child: Text(

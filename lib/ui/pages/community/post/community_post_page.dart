@@ -1,7 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
-import 'package:exon_app/core/controllers/profile_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';

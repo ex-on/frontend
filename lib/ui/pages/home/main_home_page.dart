@@ -269,8 +269,6 @@ class MainHomePage extends GetView<HomeController> {
                       totalExerciseTime: (_.weekExerciseStatus.isEmpty)
                           ? 0
                           :
-                          // _.weekExerciseStatus[DateFormat('yyyy/MM/dd')
-                          //     .format(_.currentDay)]['total_exercise_time'],
                           _.totalExerciseTime,
                     );
                   },

@@ -226,12 +226,16 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                _contentData['title'],
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: darkPrimaryColor,
+                                              Flexible(
+                                                child: Text(
+                                                  _contentData['title'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: darkPrimaryColor,
+                                                  ),
                                                 ),
                                               ),
                                               Text(
@@ -498,12 +502,16 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                _data['post_data']['title'],
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: darkPrimaryColor,
+                                              Flexible(
+                                                child: Text(
+                                                  _data['post_data']['title'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: darkPrimaryColor,
+                                                  ),
                                                 ),
                                               ),
                                               Text(
@@ -519,6 +527,7 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                                           ),
                                           Text(
                                             _data['post_data']['content'],
+                                            overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                               fontSize: 12,
                                               color: deepGrayColor,
@@ -817,12 +826,16 @@ class SavedPostQnasPage extends GetView<CommunityController> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                _data['qna_data']['title'],
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: darkPrimaryColor,
+                                              Flexible(
+                                                child: Text(
+                                                  _data['qna_data']['title'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: darkPrimaryColor,
+                                                  ),
                                                 ),
                                               ),
                                               Text(

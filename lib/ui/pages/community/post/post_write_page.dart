@@ -1,5 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
+import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
@@ -12,7 +13,7 @@ class PostWritePage extends GetView<CommunityController> {
 
   @override
   Widget build(BuildContext context) {
-    const String _headerTitle = '글쓰기';
+    const String _headerTitle = '글 쓰기';
     const String _submitButtonText = '등록';
 
     void _onBackPressed() {
@@ -23,9 +24,10 @@ class PostWritePage extends GetView<CommunityController> {
     void _onSubmitPressed() async {
       await controller.postPost();
       controller.postListStartIndex.value = 0;
+      controller.postCategory.value = controller.postType;
       Get.back();
       controller.resetPostWrite();
-      controller.getPostPreview(null, controller.postCategory.value);
+      controller.getPostPreview(null, controller.postType);
     }
 
     return Scaffold(
@@ -38,7 +40,7 @@ class PostWritePage extends GetView<CommunityController> {
                 children: [
                   Header(
                     onPressed: _onBackPressed,
-                    title: _headerTitle,
+                    title: postTypeIntToStr[_.postType]! + _headerTitle,
                     actions: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -66,7 +68,7 @@ class PostWritePage extends GetView<CommunityController> {
                             controller: controller.postContentTextController,
                           ),
                         ),
-                        Divider(
+                        const Divider(
                           thickness: 0.5,
                           height: 0.5,
                           color: Color(0xffAEADAD),
@@ -81,8 +83,8 @@ class PostWritePage extends GetView<CommunityController> {
                                   color: mainBackgroundColor,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
                                   child: Text(
                                     '엑손 게시판 이용규칙',
                                     style: TextStyle(
@@ -94,8 +96,8 @@ class PostWritePage extends GetView<CommunityController> {
                                 ),
                               ),
                             ),
-                            Text(
-                              '1. 욕설 및 비방 금지',
+                            const Text(
+                              communityGuidelines,
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w300,
