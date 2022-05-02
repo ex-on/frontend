@@ -3,10 +3,11 @@ import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/core/services/exercise_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class AddExerciseController extends GetxController
+class ExercisePlanController extends GetxController
     with GetTickerProviderStateMixin {
-  static AddExerciseController to = Get.find();
+  static ExercisePlanController to = Get.find();
   TextEditingController searchExerciseTextController = TextEditingController();
   late TabController cardioPlanInputTabController;
   List<List<TextEditingController>> inputSetControllerList = [
@@ -17,6 +18,7 @@ class AddExerciseController extends GetxController
   late FixedExtentScrollController targetRepsScrollController;
   late FixedExtentScrollController targetHourScrollController;
   late FixedExtentScrollController targetMinScrollController;
+  RefreshController exercisePlansRefreshController = RefreshController();
   int page = 0;
   int exerciseType = 0;
   int targetMuscle = 0;
@@ -29,13 +31,17 @@ class AddExerciseController extends GetxController
   int inputCardioHour = 0;
   int inputCardioMin = 0;
   double inputDistanceChangeValue = 1;
+  int selectedPlanId = 0;
   bool loading = false;
   bool inputSetDataNotNull = false;
+  bool isUpdate = false;
   Map<String, dynamic> selectedExerciseInfo = {};
+  Map<String, dynamic> previousExercisePlan = {};
   List<int> inputTargetRepsList = [];
   List<dynamic> exerciseDataListWeight = [];
   List<dynamic> exerciseDataListCardio = [];
   List<dynamic> selectedExerciseDataList = [];
+  List<dynamic> dailyExercisePlans = [];
 
   @override
   void onInit() {
@@ -69,6 +75,11 @@ class AddExerciseController extends GetxController
   void setLoading(bool val) {
     loading = val;
     update();
+  }
+
+  void onExercisePlansRefresh() async {
+    await getDailyExercisePlans();
+    exercisePlansRefreshController.refreshCompleted();
   }
 
   void changeExerciseType() {
@@ -266,11 +277,74 @@ class AddExerciseController extends GetxController
     }
   }
 
-  void resetExerciseDetails() {
+  void setIsUpdate(bool val) {
+    isUpdate = val;
+    update();
+  }
+
+  void initializeExerciseUpdate(int index) {
+    isUpdate = true;
+    selectedExerciseInfo = {
+      'id': dailyExercisePlans[index]['exercise_data']['id'],
+      'name': dailyExercisePlans[index]['exercise_data']['name'],
+      'exercise_method': dailyExercisePlans[index]['exercise_data']
+          ['exercise_method'],
+      'target_muscle': dailyExercisePlans[index]['exercise_data']
+          ['target_muscle'],
+    };
+    selectedPlanId = dailyExercisePlans[index]['plan_data']['id'];
+    exerciseType = dailyExercisePlans[index]['exercise_data']['type'];
+    previousExercisePlan = dailyExercisePlans[index]['plan_data'];
+    print(previousExercisePlan);
+    if (dailyExercisePlans[index]['exercise_data']['type'] == 0) {
+      inputSetNum = null;
+      List<dynamic> setData = dailyExercisePlans[index]['plan_data']['sets'];
+      if (setData.isNotEmpty) {
+        inputSetControllerList = [];
+        numSets = 0;
+        for (int i = 0; i < setData.length; i++) {
+          numSets++;
+          inputSetControllerList.add(
+            [
+              TextEditingController(
+                  text: setData[i]['target_weight'].toString()),
+              TextEditingController(text: setData[i]['target_reps'].toString()),
+            ],
+          );
+        }
+      }
+    } else {
+      if (dailyExercisePlans[index]['plan_data']['target_distance'] != null) {
+        targetDistanceTextController.text = dailyExercisePlans[index]
+                ['plan_data']['target_distance']
+            .toString();
+      }
+      if (dailyExercisePlans[index]['plan_data']['target_duration'] != null) {
+        int _duration =
+            dailyExercisePlans[index]['plan_data']['target_duration'];
+        inputCardioHour = _duration ~/ 3600;
+        inputCardioMin = (_duration % 3600) ~/ 60;
+        Future.delayed(const Duration(milliseconds: 100), () {
+          targetHourScrollController.jumpTo(60 * inputCardioHour.toDouble());
+          targetMinScrollController.jumpTo(60 * inputCardioMin.toDouble());
+        });
+      }
+    }
+  }
+
+  void resetExerciseWeightDetails() {
     inputSetControllerList = [
       [TextEditingController(text: '0.0'), TextEditingController(text: '0')],
     ];
     numSets = 1;
+    update();
+  }
+
+  void resetExerciseCardioDetails() {
+    targetDistanceTextController.text = '0.0';
+    inputCardioHour = 0;
+    inputCardioMin = 0;
+    cardioPlanInputTabController.index = 0;
     update();
   }
 
@@ -281,6 +355,13 @@ class AddExerciseController extends GetxController
     exerciseType = 0;
     searchExerciseTextController.clear();
     updateCurrentExerciseDataList();
+  }
+
+  void resetExerciseUpdate() {
+    isUpdate = false;
+    selectedExerciseInfo = {};
+    exerciseType = 0;
+    update();
   }
 
   Future<void> getExerciseList() async {
@@ -382,7 +463,7 @@ class AddExerciseController extends GetxController
       if (data['target_duration'] != null) {
         int _duration = data['target_duration'];
         inputCardioHour = _duration ~/ 3600;
-        inputCardioMin = _duration % 3600;
+        inputCardioMin = (_duration % 3600) ~/ 60;
         targetHourScrollController.jumpTo(60 * inputCardioHour.toDouble());
         targetMinScrollController.jumpTo(60 * inputCardioMin.toDouble());
       }
@@ -414,7 +495,25 @@ class AddExerciseController extends GetxController
   void postExerciseWeightPlan() async {
     await ExerciseApiService.postExercisePlanWeight(
         selectedExerciseInfo['id'], inputSetControllerList);
+    resetExerciseSelect();
+    resetExerciseWeightDetails();
     HomeController.to.getTodayExerciseStatus();
+    getDailyExercisePlans();
+    Get.showSnackbar(
+      GetSnackBar(
+        messageText: const Text(
+          '운동 계획이 성공적으로 추가되었습니다',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        borderRadius: 10,
+        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+        duration: const Duration(seconds: 2),
+        isDismissible: false,
+        backgroundColor: darkSecondaryColor.withOpacity(0.8),
+      ),
+    );
   }
 
   void postExerciseCardioPlan() async {
@@ -425,12 +524,123 @@ class AddExerciseController extends GetxController
         : false) {
       _targetDistance = double.parse(targetDistanceTextController.text);
     }
-    print('called');
     if (inputCardioHour != 0 || inputCardioMin != 0) {
       _targetDuration = inputCardioHour * 3600 + inputCardioMin * 60;
     }
     await ExerciseApiService.postExercisePlanCardio(
         selectedExerciseInfo['id'], _targetDistance, _targetDuration);
+    resetExerciseSelect();
+    resetExerciseCardioDetails();
     HomeController.to.getTodayExerciseStatus();
+    getDailyExercisePlans();
+    Get.showSnackbar(
+      GetSnackBar(
+        messageText: const Text(
+          '운동 계획이 성공적으로 추가되었습니다',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        borderRadius: 10,
+        margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+        duration: const Duration(seconds: 2),
+        isDismissible: false,
+        backgroundColor: darkSecondaryColor.withOpacity(0.8),
+      ),
+    );
+  }
+
+  Future<void> getDailyExercisePlans() async {
+    var res = await ExerciseApiService.getExerciseDetailsList();
+    dailyExercisePlans = res;
+    update();
+  }
+
+  Future<void> updateExercisePlanWeight() async {
+    var res = await ExerciseApiService.updateExercisePlanWeight(
+        selectedPlanId, inputSetControllerList);
+    resetExerciseWeightDetails();
+    HomeController.to.getTodayExerciseStatus();
+    getDailyExercisePlans();
+
+    if (res == 200) {
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: const Text(
+            '운동 계획이 성공적으로 수정되었습니다',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          borderRadius: 10,
+          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 0),
+          duration: const Duration(seconds: 2),
+          isDismissible: false,
+          backgroundColor: darkSecondaryColor.withOpacity(0.8),
+        ),
+      );
+    }
+  }
+
+  Future<void> updateExercisePlanCardio() async {
+    double? _targetDistance;
+    int? _targetDuration;
+    if (targetDistanceTextController.text.isNotEmpty
+        ? double.parse(targetDistanceTextController.text) > 0
+        : false) {
+      _targetDistance = double.parse(targetDistanceTextController.text);
+    }
+    if (inputCardioHour != 0 || inputCardioMin != 0) {
+      _targetDuration = inputCardioHour * 3600 + inputCardioMin * 60;
+    }
+    var res = await ExerciseApiService.updateExercisePlanCardio(
+        selectedPlanId, _targetDistance, _targetDuration);
+    resetExerciseCardioDetails();
+    getDailyExercisePlans();
+    HomeController.to.getTodayExerciseStatus();
+    if (res == 200) {
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: const Text(
+            '운동 계획이 성공적으로 수정되었습니다',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          borderRadius: 10,
+          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+          duration: const Duration(seconds: 2),
+          isDismissible: false,
+          backgroundColor: darkSecondaryColor.withOpacity(0.8),
+        ),
+      );
+    }
+  }
+
+  Future<void> deleteExercisePlan(int index) async {
+    var res = await ExerciseApiService.deleteExercisePlan(
+        dailyExercisePlans[index]['plan_data']['id'],
+        dailyExercisePlans[index]['exercise_data']['type']);
+
+    await getDailyExercisePlans();
+
+    if (res == 200) {
+      HomeController.to.getTodayExerciseStatus();
+      Get.showSnackbar(
+        GetSnackBar(
+          messageText: const Text(
+            '운동 계획이 성공적으로 삭제되었습니다',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          borderRadius: 10,
+          margin: const EdgeInsets.only(left: 10, right: 10, bottom: 0),
+          duration: const Duration(seconds: 2),
+          isDismissible: false,
+          backgroundColor: darkSecondaryColor.withOpacity(0.8),
+        ),
+      );
+    }
   }
 }

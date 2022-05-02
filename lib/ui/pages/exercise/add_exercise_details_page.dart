@@ -1,5 +1,5 @@
 import 'package:exon_app/constants/constants.dart';
-import 'package:exon_app/core/controllers/add_exercise_controller.dart';
+import 'package:exon_app/core/controllers/exercise_plan_controller.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/color_labels.dart';
@@ -15,12 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/utils.dart';
 
-class AddExerciseDetailsPage extends StatelessWidget {
+class AddExerciseDetailsPage extends GetView<ExercisePlanController> {
   const AddExerciseDetailsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AddExerciseController());
     const String _crashText = '정보를 찾을 수 없습니다';
     const String _targetTimeLabelText = '목표 시간';
     const String _targetDistanceLabelText = '목표 거리';
@@ -31,11 +30,19 @@ class AddExerciseDetailsPage extends StatelessWidget {
     int _targetMuscle = controller.selectedExerciseInfo['target_muscle'];
     int _exerciseMethod = controller.selectedExerciseInfo['exercise_method'];
 
-    Future.delayed(Duration.zero, () {});
-
     void _onBackPressed() {
-      controller.jumpToPage(0);
-      controller.resetExerciseDetails();
+      if (controller.isUpdate) {
+        Get.back();
+        Future.delayed(const Duration(seconds: 1), () {
+          controller.resetExerciseWeightDetails();
+          controller.resetExerciseCardioDetails();
+          controller.resetExerciseUpdate();
+        });
+      } else {
+        controller.jumpToPage(0);
+        controller.resetExerciseWeightDetails();
+        controller.resetExerciseCardioDetails();
+      }
     }
 
     void _onLoadRecordPressed() {
@@ -47,15 +54,24 @@ class AddExerciseDetailsPage extends StatelessWidget {
     }
 
     void _onCompletePressed() {
-      if (controller.exerciseType == 0) {
-        controller.postExerciseWeightPlan();
+      if (controller.isUpdate) {
+        if (controller.exerciseType == 0) {
+          controller.updateExercisePlanWeight();
+        } else {
+          controller.updateExercisePlanCardio();
+        }
+        Get.back();
       } else {
-        controller.postExerciseCardioPlan();
+        if (controller.exerciseType == 0) {
+          controller.postExerciseWeightPlan();
+        } else {
+          controller.postExerciseCardioPlan();
+        }
+        HomeController.to.updateRefreshModeWeek(false);
+        HomeController.to.refreshController.requestRefresh();
+
+        Get.back();
       }
-      controller.resetExerciseDetails();
-      HomeController.to.updateRefreshModeWeek(false);
-      HomeController.to.refreshController.requestRefresh();
-      Get.back();
     }
 
     void _onSetPressed(int setNum) {
@@ -124,7 +140,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
     );
 
     Widget _exerciseSetBlock(int setNum) {
-      return GetBuilder<AddExerciseController>(
+      return GetBuilder<ExercisePlanController>(
         builder: (_) {
           if (setNum == 1) {
             return SizedBox(
@@ -328,7 +344,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
             SizedBox(
               width: 40,
               height: 240,
-              child: GetBuilder<AddExerciseController>(
+              child: GetBuilder<ExercisePlanController>(
                 builder: (_) {
                   _.targetHourScrollController = FixedExtentScrollController();
 
@@ -372,7 +388,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
               child: SizedBox(
                 width: 45,
                 height: 240,
-                child: GetBuilder<AddExerciseController>(builder: (_) {
+                child: GetBuilder<ExercisePlanController>(builder: (_) {
                   _.targetMinScrollController = FixedExtentScrollController();
                   return CupertinoPicker(
                     scrollController: _.targetMinScrollController,
@@ -414,7 +430,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
       }),
     );
 
-    Widget _targetDistanceTabBarView = GetBuilder<AddExerciseController>(
+    Widget _targetDistanceTabBarView = GetBuilder<ExercisePlanController>(
       builder: (_) {
         return Column(
           children: [
@@ -499,7 +515,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
       },
     );
 
-    Widget _exercisePlanDetailsInput = GetBuilder<AddExerciseController>(
+    Widget _exercisePlanDetailsInput = GetBuilder<ExercisePlanController>(
       builder: (_) {
         if (controller.exerciseType == 0) {
           var children = List.generate(
@@ -525,7 +541,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     indicatorColor: Colors.transparent,
                     tabs: <Widget>[
-                      GetBuilder<AddExerciseController>(builder: (_) {
+                      GetBuilder<ExercisePlanController>(builder: (_) {
                         return Container(
                           constraints: const BoxConstraints.expand(height: 100),
                           decoration: BoxDecoration(
@@ -571,7 +587,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
                           ),
                         );
                       }),
-                      GetBuilder<AddExerciseController>(builder: (_) {
+                      GetBuilder<ExercisePlanController>(builder: (_) {
                         return Container(
                           constraints: const BoxConstraints.expand(),
                           margin: EdgeInsets.zero,
@@ -642,38 +658,117 @@ class AddExerciseDetailsPage extends StatelessWidget {
 
     Widget _completeButtonSection = Padding(
       padding: const EdgeInsets.only(top: 50, bottom: 40),
-      child: GetBuilder<AddExerciseController>(builder: (_) {
-        late bool _isActivated;
+      child: GetBuilder<ExercisePlanController>(
+        builder: (_) {
+          bool _isActivated = false;
 
-        if (_.exerciseType == 0) {
-          if (_.selectedExerciseInfo['exercise_method'] == 1) {
-            _isActivated = _.inputSetControllerList.every((element) =>
-                element[0].text == '0.0' &&
-                element[1].text.isNotEmpty &&
-                element[1].text != '0');
+          if (_.isUpdate) {
+            if (_.exerciseType == 0) {
+              if (_.selectedExerciseInfo['exercise_method'] == 1) {
+                _isActivated = _.inputSetControllerList.every((element) =>
+                    element[0].text == '0.0' &&
+                    element[1].text.isNotEmpty &&
+                    element[1].text != '0');
+                if (_isActivated) {
+                  bool _isSame = true;
+                  _.inputSetControllerList.asMap().forEach(
+                    (index, element) {
+                      _isSame = _isSame &&
+                          (int.parse(element[1].text) ==
+                              _.previousExercisePlan['sets'][index]
+                                  ['target_reps']);
+                    },
+                  );
+                  if (_isSame) {
+                    _isActivated = false;
+                  }
+                }
+              } else {
+                _isActivated = _.inputSetControllerList.every((element) =>
+                    element[0].text.isNotEmpty &&
+                    element[0].text != '0.0' &&
+                    element[0].text != '0' &&
+                    element[1].text.isNotEmpty &&
+                    element[1].text != '0');
+                if (_isActivated) {
+                  bool _isSame = true;
+                  _.inputSetControllerList.asMap().forEach(
+                    (index, element) {
+                      _isSame = _isSame &&
+                          (double.parse(element[0].text) ==
+                              _.previousExercisePlan['sets'][index]
+                                  ['target_weight']);
+                      _isSame = _isSame &&
+                          (int.parse(element[1].text) ==
+                              _.previousExercisePlan['sets'][index]
+                                  ['target_reps']);
+                    },
+                  );
+                  if (_isSame) {
+                    _isActivated = false;
+                  }
+                }
+              }
+            } else {
+              _isActivated = (_.targetDistanceTextController.text.isNotEmpty
+                      ? double.parse(_.targetDistanceTextController.text) > 0
+                      : false) ||
+                  _.inputCardioHour != 0 ||
+                  _.inputCardioMin != 0;
+              if (_isActivated) {
+                if (_.previousExercisePlan['target_distance'] != null) {
+                  _isActivated =
+                      double.parse(_.targetDistanceTextController.text) !=
+                          _.previousExercisePlan['target_distance'];
+                }
+                if (_.previousExercisePlan['target_duration'] != null) {}
+                _isActivated = _isActivated &&
+                    !(_.inputCardioHour ==
+                            _.previousExercisePlan['target_duration'] ~/ 3600 &&
+                        _.inputCardioMin ==
+                            (_.previousExercisePlan['target_duration'] %
+                                    3600) ~/
+                                60);
+              }
+            }
           } else {
-            _isActivated = _.inputSetControllerList.every((element) =>
-                element[0].text.isNotEmpty &&
-                element[0].text != '0.0' &&
-                element[0].text != '0' &&
-                element[1].text.isNotEmpty &&
-                element[1].text != '0');
+            if (_.exerciseType == 0) {
+              if (_.selectedExerciseInfo['exercise_method'] == 1) {
+                _isActivated = _.inputSetControllerList.every((element) =>
+                    element[0].text == '0.0' &&
+                    element[1].text.isNotEmpty &&
+                    element[1].text != '0');
+              } else {
+                _isActivated = _.inputSetControllerList.every((element) =>
+                    element[0].text.isNotEmpty &&
+                    element[0].text != '0.0' &&
+                    element[0].text != '0' &&
+                    element[1].text.isNotEmpty &&
+                    element[1].text != '0');
+              }
+            } else {
+              _isActivated = (_.targetDistanceTextController.text.isNotEmpty
+                      ? double.parse(_.targetDistanceTextController.text) > 0
+                      : false) ||
+                  _.inputCardioHour != 0 ||
+                  _.inputCardioMin != 0;
+            }
           }
-        } else {
-          _isActivated = (_.targetDistanceTextController.text.isNotEmpty
-                  ? double.parse(_.targetDistanceTextController.text) > 0
-                  : false) ||
-              _.inputCardioHour != 0 ||
-              _.inputCardioMin != 0;
-        }
-        return Center(
-          child: ElevatedActionButton(
-            buttonText: _completeButtonText,
-            onPressed: _onCompletePressed,
-            activated: _isActivated,
-          ),
-        );
-      }),
+
+          return Center(
+            child: ElevatedActionButton(
+              buttonText: _completeButtonText,
+              onPressed: _onCompletePressed,
+              activated: _isActivated,
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              disabledColor: lightGrayColor,
+            ),
+          );
+        },
+      ),
     );
 
     return Column(
@@ -687,7 +782,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
                 top: 15,
                 bottom: 15,
               ),
-              child: GetBuilder<AddExerciseController>(builder: (_) {
+              child: GetBuilder<ExercisePlanController>(builder: (_) {
                 if (_.loading) {
                   return const AspectRatio(
                     aspectRatio: 1,
@@ -734,7 +829,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
             ),
           ),
         ),
-        GetBuilder<AddExerciseController>(
+        GetBuilder<ExercisePlanController>(
           builder: (_) {
             if (_.exerciseType == 0) {
               return AnimatedSize(
@@ -750,7 +845,7 @@ class AddExerciseDetailsPage extends StatelessWidget {
             }
           },
         ),
-        GetBuilder<AddExerciseController>(
+        GetBuilder<ExercisePlanController>(
           builder: (_) {
             if (_.exerciseType == 0) {
               return AnimatedSize(

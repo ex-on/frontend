@@ -1,6 +1,6 @@
 import 'package:exon_app/constants/app_routes.dart';
 import 'package:exon_app/constants/constants.dart';
-import 'package:exon_app/core/controllers/add_exercise_controller.dart';
+import 'package:exon_app/core/controllers/exercise_plan_controller.dart';
 import 'package:exon_app/core/controllers/app_controller.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/community_search_controller.dart';
@@ -31,7 +31,7 @@ void main() async {
   Get.put<LoginController>(LoginController());
   Get.put<AuthController>(AuthController());
   Get.put<SettingsController>(SettingsController());
-  Get.put<AddExerciseController>(AddExerciseController());
+  Get.put<ExercisePlanController>(ExercisePlanController());
   Get.put<ExerciseBlockController>(ExerciseBlockController());
   Get.put<HomeNavigationController>(HomeNavigationController());
   Get.put<NotificationController>(NotificationController());
@@ -65,6 +65,7 @@ class MyApp extends GetView<AppController> {
             secondary: deepGrayColor,
           ),
         ),
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

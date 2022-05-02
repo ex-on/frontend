@@ -63,6 +63,10 @@ class SettingsController extends GetxController {
   // 기타 알림
   bool generalNoti = false; // 13
 
+  bool proteinNotiDropDown = false;
+  bool postNotiDropDown = false;
+  bool qnaNotiDropDown = false;
+
   int updatePasswordPage = 0;
 
   late String appVersion;
@@ -390,6 +394,27 @@ class SettingsController extends GetxController {
     generalNoti = !generalNoti;
     NotificationApiService.postUserNotiSettings(13, generalNoti);
     update();
+  }
+
+  void toggleProteinNotiDropDown() {
+    proteinNotiDropDown = !proteinNotiDropDown;
+    update();
+  }
+
+  void togglePostNotiDropDown() {
+    postNotiDropDown = !postNotiDropDown;
+    update();
+  }
+
+  void toggleQnaNotiDropDown() {
+    qnaNotiDropDown = !qnaNotiDropDown;
+    update();
+  }
+
+  void resetPushNotiSettings() {
+    proteinNotiDropDown = false;
+    postNotiDropDown = false;
+    qnaNotiDropDown = false;
   }
 
   Future<void> checkAvailableUsername() async {

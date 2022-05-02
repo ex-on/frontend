@@ -179,7 +179,7 @@ class PostCommentContentPreviewBuilder extends StatelessWidget {
               Get.toNamed('/community/post');
             },
             child: SizedBox(
-              height: 170,
+              height: 172,
               width: context.width,
               child: Padding(
                 padding:
@@ -297,16 +297,14 @@ class PostCommentContentPreviewBuilder extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Flexible(
-                                      child: Text(
-                                        data['comment'],
-                                        textAlign: TextAlign.start,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: darkPrimaryColor,
-                                        ),
+                                    Text(
+                                      data['comment'],
+                                      textAlign: TextAlign.start,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: darkPrimaryColor,
                                       ),
                                     ),
                                   ],
@@ -620,16 +618,14 @@ class QnaAnswerContentPreviewBuilder extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Flexible(
-                                      child: Text(
-                                        data['answer'],
-                                        textAlign: TextAlign.start,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: darkPrimaryColor,
-                                        ),
+                                    Text(
+                                      data['answer'],
+                                      textAlign: TextAlign.start,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: darkPrimaryColor,
                                       ),
                                     ),
                                   ],

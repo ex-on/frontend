@@ -129,6 +129,11 @@ flutter:
     - assets/icons/facebookIcon.svg
     - assets/icons/facebookIcon.png
     - assets/icons/facebookColorIcon.png
+    - assets/icons/hotIcon.svg
+    - assets/icons/progressingIcon.svg
+    - assets/icons/solvedIcon.svg
+    - assets/icons/infoIcon.svg
+    - assets/icons/editIcon.svg
     - assets/characters/searchCharacter.svg
     - assets/characters/blankSearchCharacter.svg
     - assets/characters/excitedCharacter.svg

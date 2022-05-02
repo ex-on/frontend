@@ -29,6 +29,11 @@ const String _checkIcon = 'assets/icons/checkIcon.svg';
 const String _addIcon = 'assets/icons/addIcon.svg';
 const String _subtractIcon = 'assets/icons/subtractIcon.svg';
 const String _scrollUpIcon = 'assets/icons/arrowDropUp.svg';
+const String _hotIcon = 'assets/icons/hotIcon.svg';
+const String _progressingIcon = 'assets/icons/progressingIcon.svg';
+const String _solvedIcon = 'assets/icons/solvedIcon.svg';
+const String _infoIcon = 'assets/icons/infoIcon.svg';
+const String _editIcon = 'assets/icons/editIcon.svg';
 
 const String _searchCharacter = 'assets/characters/searchCharacter.svg';
 const String _blankSearchCharacter =
@@ -634,6 +639,116 @@ class ScrollUpIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _scrollUpIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class HotIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const HotIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _hotIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class ProgressingIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const ProgressingIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _progressingIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class SolvedIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const SolvedIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _solvedIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class InfoIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const InfoIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _infoIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class EditIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const EditIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _editIcon,
       width: width,
       height: height,
       color: color,

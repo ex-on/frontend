@@ -175,4 +175,78 @@ class ExerciseApiService extends ApiService {
       print(e);
     }
   }
+
+  static Future<dynamic> getExerciseDetailsList() async {
+    String path = '/exercise/daily_plans';
+
+    Map<String, dynamic> parameters = {};
+
+    try {
+      var res = await ApiService.get(path, parameters);
+      return res.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<dynamic> deleteExercisePlan(int id, int type) async {
+    String path = '/exercise/plan_delete';
+
+    Map<String, dynamic> data = {
+      'id': id,
+      'type': type,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<dynamic> updateExercisePlanWeight(int id, List setData) async {
+    String path = '/exercise/plan_weight/update';
+
+    List<Map> sets = [];
+
+    for (int i = 0; i < setData.length; i++) {
+      Map<String, dynamic> setDataMap = {
+        'set_num': i + 1,
+        'target_weight': double.parse((setData[i][0].text)),
+        'target_reps': int.parse((setData[i][1].text)),
+      };
+      sets.add(setDataMap);
+    }
+
+    Map<String, dynamic> data = {
+      'id': id,
+      'sets': sets,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<dynamic> updateExercisePlanCardio(
+      int id, double? targetDistance, int? targetDuration) async {
+    String path = '/exercise/plan_cardio/update';
+
+    Map<String, dynamic> data = {
+      'id': id,
+      'target_distance': targetDistance,
+      'target_duration': targetDuration,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+    }
+  }
 }

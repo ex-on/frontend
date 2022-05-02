@@ -13,7 +13,6 @@ import 'package:exon_app/ui/pages/community/qna/qna_select_answer_page.dart';
 import 'package:exon_app/ui/pages/community/qna/qna_write_page.dart';
 import 'package:exon_app/ui/pages/home/notification_page.dart';
 import 'package:exon_app/ui/pages/profile/user_profile_page.dart';
-import 'package:exon_app/ui/pages/settings/check_password_page.dart';
 import 'package:exon_app/ui/pages/settings/push_notifications_settings_page.dart';
 import 'package:exon_app/ui/pages/settings/update_username_page.dart';
 import 'package:exon_app/ui/views/community/bookmarked_tab_view.dart';
@@ -21,7 +20,7 @@ import 'package:exon_app/ui/views/community/post_activity_tab_view.dart';
 import 'package:exon_app/ui/views/community/qna_activity_tab_view.dart';
 import 'package:exon_app/ui/pages/exercise/cardio_record_page.dart';
 import 'package:exon_app/ui/pages/exercise/end_exercise_summary_page.dart';
-import 'package:exon_app/ui/pages/exercise/update_exercise_details_page.dart';
+import 'package:exon_app/ui/pages/exercise/daily_exercise_plans_page.dart';
 import 'package:exon_app/ui/pages/stats/exercise_bodyweight_stats_page.dart';
 import 'package:exon_app/ui/pages/stats/exercise_cardio_stats_page.dart';
 import 'package:exon_app/ui/pages/stats/exercise_stats_list_page.dart';
@@ -55,8 +54,7 @@ class AppRoutes {
     GetPage(name: '/notification', page: () => const NotificationPage()),
     GetPage(name: '/add_exercise', page: () => AddExerciseView()),
     GetPage(
-        name: '/add_exercise/update',
-        page: () => const UpdateExerciseDetailsPage()),
+        name: '/exercise_plans', page: () => const DailyExercisePlansPage()),
     GetPage(
         name: '/exercise_weight_block',
         page: () => const ExerciseWeightBlockView()),

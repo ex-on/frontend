@@ -38,7 +38,7 @@ class HomeController extends GetxController {
       const Duration(seconds: 1),
       (timer) {
         DateTime previousTime = currentDateTime;
-        currentDateTime = currentDateTime.add(const Duration(seconds: 1));
+        currentDateTime = DateTime.now();
         if (previousTime.day != currentDateTime.day) {
           currentDay = currentDateTime;
           updateRefreshModeWeek(false);
@@ -98,6 +98,8 @@ class HomeController extends GetxController {
     ConnectionController.to.updateRefreshCategory(3);
     DateTime now = DateTime.now();
 
+    selectedDay = now;
+    update();
     var res = await ExerciseApiService.getExerciseStatusDate(now);
     if (res != null) {
       weekExerciseStatus[DateFormat('yyyy/MM/dd').format(currentDay)] = {

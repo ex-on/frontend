@@ -15,7 +15,6 @@ class BookmarkedTabView extends GetView<CommunityController> {
 
     void _onBackPressed() {
       Get.back();
-      var d = kTextTabBarHeight;
     }
 
     PreferredSizeWidget _tabBar = PreferredSize(

@@ -1,4 +1,5 @@
 import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class PostCategoryPage extends GetView<CommunityController> {
   Widget build(BuildContext context) {
     Future.delayed(Duration.zero, () {
       if (controller.postContentList.isEmpty) {
-        controller.postCategoryRefreshController.requestRefresh();
+        controller.postCategoryListCallback(controller.postCategory.value);
+        // controller.postCategoryRefreshController.requestRefresh();
       }
     });
 
@@ -37,11 +39,13 @@ class PostCategoryPage extends GetView<CommunityController> {
 
     void _onWriteFreePostPressed() {
       controller.updatePostType(1);
+      controller.resetPostWrite();
       Get.toNamed('community/post/write');
     }
 
     void _onWriteInfoPostPressed() {
       controller.updatePostType(2);
+      controller.resetPostWrite();
       Get.toNamed('community/post/write');
     }
 
@@ -83,11 +87,23 @@ class PostCategoryPage extends GetView<CommunityController> {
                                         : Colors.transparent,
                                   ),
                                 ),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(3),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
                                   child: CircleAvatar(
                                     backgroundColor: mainBackgroundColor,
                                     radius: 28.5,
+                                    child: () {
+                                      switch (index) {
+                                        case 0:
+                                          return HotIcon();
+                                        case 1:
+                                          return EditIcon();
+                                        case 2:
+                                          return InfoIcon();
+                                        default:
+                                          break;
+                                      }
+                                    }(),
                                   ),
                                 ),
                               ),
@@ -201,7 +217,7 @@ class PostCategoryPage extends GetView<CommunityController> {
                     buttonSize: const Size(70, 70),
                     backgroundColor: brightPrimaryColor,
                     activeBackgroundColor: Colors.white,
-                    overlayOpacity: 0.7,
+                    overlayColor: mainBackgroundColor,
                     iconTheme: const IconThemeData(
                       size: 35,
                     ),
@@ -212,44 +228,41 @@ class PostCategoryPage extends GetView<CommunityController> {
                     activeIcon: Icons.close_rounded,
                     activeForegroundColor: brightPrimaryColor,
                     foregroundColor: Colors.white,
-                    spaceBetweenChildren: 10,
+                    spaceBetweenChildren: 5,
+                    spacing: 5,
                     children: [
                       SpeedDialChild(
-                        label: '정보글 쓰기',
-                        backgroundColor: brightPrimaryColor,
-                        labelBackgroundColor: Colors.white,
-                        elevation: 5,
-                        labelShadow: [
-                         const BoxShadow(
-                              color: mainBackgroundColor,
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                              offset: Offset(1, 2)),
-                        ],
-                        child: const Icon(
-                          Icons.edit_rounded,
-                          color: Colors.white,
-                          size: 25,
+                        labelWidget: const Padding(
+                          padding: EdgeInsets.only(right: 5),
+                          child: Text(
+                            '정보글 쓰기',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
+                        backgroundColor: Colors.white,
+                        labelBackgroundColor: mainBackgroundColor,
+                        elevation: 5,
+                        labelShadow: [],
+                        child: const InfoIcon(),
                         onTap: _onWriteInfoPostPressed,
                       ),
                       SpeedDialChild(
-                        label: '자유글 쓰기',
-                        backgroundColor: brightPrimaryColor,
-                        labelBackgroundColor: Colors.white,
-                        elevation: 5,
-                        labelShadow: [
-                         const BoxShadow(
-                              color: mainBackgroundColor,
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                              offset: Offset(1, 2)),
-                        ],
-                        child: const Icon(
-                          Icons.edit_rounded,
-                          color: Colors.white,
-                          size: 25,
+                        labelWidget: const Padding(
+                          padding: EdgeInsets.only(right: 5),
+                          child: Text(
+                            '자유글 쓰기',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
+                        backgroundColor: Colors.white,
+                        labelBackgroundColor: mainBackgroundColor,
+                        elevation: 5,
+                        labelShadow: [],
+                        child: const EditIcon(),
                         onTap: _onWriteFreePostPressed,
                       ),
                     ],

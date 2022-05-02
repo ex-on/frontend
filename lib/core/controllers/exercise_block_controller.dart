@@ -286,7 +286,6 @@ class ExerciseBlockController extends GetxController
   }
 
   void endExerciseWeight() async {
-    Get.offNamed('/exercise_summary');
     exerciseRecord!['sets'][currentSet - 1]['record_weight'] =
         inputSetValues![0].text;
     exerciseRecord!['sets'][currentSet - 1]['record_reps'] =
@@ -300,6 +299,7 @@ class ExerciseBlockController extends GetxController
     int recordWeightId =
         await ExerciseApiService.postExerciseRecordWeight(exerciseRecord!);
     getExerciseRecordWeight(recordWeightId);
+    Get.offNamed('/exercise_summary');
     reset();
   }
 
@@ -400,13 +400,13 @@ class ExerciseBlockController extends GetxController
   }
 
   void endExerciseCardioRecord() async {
-    Get.offNamed('/exercise_summary');
     exerciseRecord!['record_distance'] =
         double.parse(recordDistanceTextController.text);
     print(exerciseRecord!);
     int recordCardioId =
         await ExerciseApiService.postExerciseRecordCardio(exerciseRecord!);
     getExerciseRecordCardio(recordCardioId);
+    Get.offNamed('/exercise_summary');
     reset();
   }
 

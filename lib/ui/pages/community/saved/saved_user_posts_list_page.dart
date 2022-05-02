@@ -15,7 +15,7 @@ class SavedUserPostsListPage extends GetView<CommunityController> {
       if (controller.savedUserPostsList.isEmpty) {
         controller.savedUserPostsRefreshController.requestRefresh();
       }
-    });
+    },);
 
     return GetBuilder<CommunityController>(
       builder: (_) {

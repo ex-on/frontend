@@ -1,5 +1,5 @@
 import 'package:exon_app/constants/constants.dart';
-import 'package:exon_app/core/controllers/add_exercise_controller.dart';
+import 'package:exon_app/core/controllers/exercise_plan_controller.dart';
 import 'package:exon_app/helpers/disable_glow_list_view.dart';
 import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/transformers.dart';
 
-class SelectExercisePage extends GetView<AddExerciseController> {
+class SelectExercisePage extends GetView<ExercisePlanController> {
   const SelectExercisePage({Key? key}) : super(key: key);
 
   @override
@@ -86,6 +86,8 @@ class SelectExercisePage extends GetView<AddExerciseController> {
 
     void _onExerciseBlockPressed(int index) {
       controller.updateSelectedExercise(index);
+      controller.searchExerciseTextController.clear();
+      FocusScope.of(context).unfocus();
       controller.jumpToPage(1);
     }
 
@@ -103,7 +105,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       controller.update();
     }
 
-    Widget _header = GetBuilder<AddExerciseController>(
+    Widget _header = GetBuilder<ExercisePlanController>(
       builder: (_) => Header(
         onPressed: _onBackPressed,
         title: exerciseTypeEnumToStr[_.exerciseType]! + _headerTitle,
@@ -122,7 +124,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
       ),
     );
 
-    Widget _exerciseSearchBar = GetBuilder<AddExerciseController>(
+    Widget _exerciseSearchBar = GetBuilder<ExercisePlanController>(
       builder: (_) {
         return InputTextField(
           label: _searchFieldLabelText,
@@ -174,7 +176,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
                 if (index % 2 != 0) {
                   return horizontalSpacer(5);
                 } else {
-                  return GetBuilder<AddExerciseController>(
+                  return GetBuilder<ExercisePlanController>(
                     builder: (_) {
                       if (_.targetMuscle == (index ~/ 2)) {
                         return ElevatedButton(
@@ -241,7 +243,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
                 if (index % 2 != 0) {
                   return horizontalSpacer(5);
                 } else {
-                  return GetBuilder<AddExerciseController>(
+                  return GetBuilder<ExercisePlanController>(
                     builder: (_) {
                       if (_.exerciseMethod == (index ~/ 2)) {
                         return ElevatedButton(
@@ -310,7 +312,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
                 if (index % 2 != 0) {
                   return horizontalSpacer(5);
                 } else {
-                  return GetBuilder<AddExerciseController>(
+                  return GetBuilder<ExercisePlanController>(
                     builder: (_) {
                       if (_.cardioMethod == (index ~/ 2)) {
                         return ElevatedButton(
@@ -361,7 +363,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
     );
 
     Widget _exerciseBlockList = Expanded(
-      child: GetBuilder<AddExerciseController>(builder: (_) {
+      child: GetBuilder<ExercisePlanController>(builder: (_) {
         if (_.loading) {
           return const CircularLoadingIndicator();
         } else {
@@ -395,7 +397,7 @@ class SelectExercisePage extends GetView<AddExerciseController> {
         _header,
         verticalSpacer(20),
         _exerciseSearchBar,
-        GetBuilder<AddExerciseController>(
+        GetBuilder<ExercisePlanController>(
           builder: (_) {
             if (_.exerciseType == 0) {
               return Column(

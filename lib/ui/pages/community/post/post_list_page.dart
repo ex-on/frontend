@@ -35,6 +35,7 @@ class PostListPage extends StatelessWidget {
     }
 
     void _onWritePressed() {
+      controller.resetPostWrite();
       Get.toNamed('community/post/write');
     }
 

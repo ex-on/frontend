@@ -1,4 +1,5 @@
 import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/content_preview_builder.dart';
 import 'package:exon_app/ui/widgets/community/floating_write_button.dart';
 import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
@@ -49,6 +50,7 @@ class QnaCategoryPage extends GetView<CommunityController> {
     }
 
     void _onWritePressed() {
+      controller.resetQnaWrite();
       Get.toNamed('community/qna/write');
     }
 
@@ -90,11 +92,23 @@ class QnaCategoryPage extends GetView<CommunityController> {
                                         : Colors.transparent,
                                   ),
                                 ),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(3),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(3),
                                   child: CircleAvatar(
                                     backgroundColor: Color(0xffF3F4F6),
                                     radius: 28.5,
+                                    child: () {
+                                      switch (index) {
+                                        case 0:
+                                          return HotIcon();
+                                        case 1:
+                                          return ProgressingIcon();
+                                        case 2:
+                                          return SolvedIcon();
+                                        default:
+                                          break;
+                                      }
+                                    }(),
                                   ),
                                 ),
                               ),

@@ -68,6 +68,7 @@ class TextActionButton extends StatelessWidget {
   final double? fontSize;
   final Color? textColor;
   final Color? overlayColor;
+  final bool? activated;
   final bool? isUnderlined;
   final Widget? leading;
   final double? width;
@@ -81,6 +82,7 @@ class TextActionButton extends StatelessWidget {
     this.fontSize = 14,
     this.textColor = Colors.black,
     this.overlayColor,
+    this.activated,
     this.isUnderlined = true,
     this.leading,
     this.width,
@@ -109,7 +111,9 @@ class TextActionButton extends StatelessWidget {
       style: TextStyle(
         fontWeight: fontWeight,
         fontSize: fontSize,
-        color: textColor,
+        color: (activated != null ? activated! : true)
+            ? (textColor ?? Colors.black)
+            : lightGrayColor,
         textBaseline: TextBaseline.ideographic,
         height: 1.0,
       ),
@@ -120,7 +124,9 @@ class TextActionButton extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: textColor ?? Colors.black,
+                  color: (activated != null ? activated! : true)
+                      ? (textColor ?? Colors.black)
+                      : lightGrayColor,
                   width: 0.5,
                 ),
               ),
@@ -132,7 +138,7 @@ class TextActionButton extends StatelessWidget {
       width: width,
       height: height,
       child: TextButton(
-        onPressed: onPressed,
+        onPressed: (activated == null || activated!) ? onPressed : null,
         child: leading == null
             ? underlinedText
             : Row(
@@ -219,7 +225,7 @@ class ElevatedActionButton extends StatelessWidget {
                 ),
           ),
         ),
-        onPressed: activated == null || activated! ? onPressed : null,
+        onPressed: (activated == null || activated!) ? onPressed : null,
         style: style,
       ),
     );

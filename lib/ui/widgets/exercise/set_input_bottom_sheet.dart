@@ -1,4 +1,4 @@
-import 'package:exon_app/core/controllers/add_exercise_controller.dart';
+import 'package:exon_app/core/controllers/exercise_plan_controller.dart';
 import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/input_fields.dart';
@@ -185,7 +185,7 @@ class SetInputBottomSheet extends StatelessWidget {
   }
 }
 
-class WeightSetInputSection extends GetView<AddExerciseController> {
+class WeightSetInputSection extends GetView<ExercisePlanController> {
   final bool bodyWeight;
   const WeightSetInputSection({
     Key? key,
@@ -220,7 +220,7 @@ class WeightSetInputSection extends GetView<AddExerciseController> {
       height: bodyWeight ? 150 : 240,
       width: context.width,
       color: Colors.white,
-      child: GetBuilder<AddExerciseController>(
+      child: GetBuilder<ExercisePlanController>(
         builder: (_) {
           return Column(
             children: [

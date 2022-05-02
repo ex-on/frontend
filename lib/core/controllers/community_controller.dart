@@ -138,14 +138,10 @@ class CommunityController extends GetxController
       update();
     });
     postCategory.listen((val) {
-      postCategoryRefreshController.requestRefresh(needCallback: false);
       postCategoryListCallback(val);
-      postCategoryRefreshController.refreshCompleted();
     });
     qnaCategory.listen((val) {
-      qnaCategoryRefreshController.requestRefresh(needCallback: false);
       qnaCategoryListCallback(val);
-      qnaCategoryRefreshController.refreshCompleted();
     });
     postListScrollController.addListener(onPostListScroll);
     qnaListScrollController.addListener(onQnaListScroll);
@@ -257,45 +253,33 @@ class CommunityController extends GetxController
   }
 
   void onBookmarkedPostsRefresh() async {
-    setLoading(true);
     await getBookmarkedPosts();
     bookmarkedPostsRefreshController.refreshCompleted();
-    setLoading(false);
   }
 
   void onBookmarkedQnasRefresh() async {
-    setLoading(true);
     await getBookmarkedQnas();
     bookmarkedQnasRefreshController.refreshCompleted();
-    setLoading(false);
   }
 
   void onSavedUserPostsRefresh() async {
-    setLoading(true);
     await getSavedUserPosts();
     savedUserPostsRefreshController.refreshCompleted();
-    setLoading(false);
   }
 
   void onSavedUserCommentedPostsRefresh() async {
-    setLoading(true);
     await getSavedUserCommentedPosts();
     savedUserCommentedPostsRefreshController.refreshCompleted();
-    setLoading(false);
   }
 
   void onSavedUserQnasRefresh() async {
-    setLoading(true);
     await getSavedUserQnas();
     savedUserQnasRefreshController.refreshCompleted();
-    setLoading(false);
   }
 
   void onSavedUserAnsweredQnasRefresh() async {
-    setLoading(true);
     await getSavedUserAnsweredQnas();
     savedUserAnsweredQnasRefreshController.refreshCompleted();
-    setLoading(false);
   }
 
   void setSearchOpen(bool val) {
@@ -824,8 +808,12 @@ class CommunityController extends GetxController
     var resData = await CommunityApiService.getPostCount(postId);
     postCount = resData;
     if (postContentList.isNotEmpty) {
-      postContentList.firstWhere(
-          (element) => element['post_data']['id'] == postId)['count'] = resData;
+      var list = postContentList
+          .where((element) => element['post_data']['id'] == postId)
+          .toList();
+      if (list.isNotEmpty) {
+        list[0]['count'] = resData;
+      }
     }
     update();
   }
@@ -834,8 +822,12 @@ class CommunityController extends GetxController
     var resData = await CommunityApiService.getQnaCount(qnaId);
     qnaCount = resData;
     if (qnaContentList.isNotEmpty) {
-      qnaContentList.firstWhere(
-          (element) => element['qna_data']['id'] == qnaId)['count'] = resData;
+      var list = qnaContentList
+          .where((element) => element['qna_data']['id'] == qnaId)
+          .toList();
+      if (list.isNotEmpty) {
+        list[0]['count'] = resData;
+      }
     }
     update();
   }
@@ -844,49 +836,55 @@ class CommunityController extends GetxController
     setLoading(true);
     var resData = await CommunityApiService.getSaved();
     savedData = resData;
-    update();
     setLoading(false);
   }
 
   Future<void> getBookmarkedPosts() async {
+    setLoading(true);
     var resData = await CommunityApiService.getBookmarkedPosts();
     bookmarkedPostsList = resData;
-    update();
+    setLoading(false);
   }
 
   Future<void> getBookmarkedQnas() async {
+    setLoading(true);
     var resData = await CommunityApiService.getBookmarkedQnas();
     bookmarkedQnasList = resData;
-    update();
+    setLoading(false);
   }
 
   Future<void> getSavedUserPosts() async {
+    setLoading(true);
     var resData = await CommunityApiService.getSavedUserPosts();
     savedUserPostsList = resData;
-    update();
+    setLoading(false);
   }
 
   Future<void> getSavedUserCommentedPosts() async {
+    setLoading(true);
     var resData = await CommunityApiService.getSavedUserCommentedPosts();
     savedUserCommentedPostsList = resData;
-    update();
+    setLoading(false);
   }
 
   Future<void> getSavedUserQnas() async {
+    setLoading(true);
     var resData = await CommunityApiService.getSavedUserQnas();
     savedUserQnasList = resData;
-    update();
+    setLoading(false);
   }
 
   Future<void> getSavedUserAnsweredQnas() async {
+    setLoading(true);
     var resData = await CommunityApiService.getSavedUserAnsweredQnas();
     savedUserAnsweredQnasList = resData;
-    update();
+    setLoading(false);
   }
 
   Future<void> postQnaSelectedAnswer(int answerId) async {
+    setLoading(true);
     var res = await CommunityApiService.postQnaSelectedAnswer(answerId);
-    update();
+    setLoading(false);
   }
 
   Future<dynamic> delete(int id, String category) async {

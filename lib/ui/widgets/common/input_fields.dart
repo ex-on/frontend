@@ -598,15 +598,20 @@ class NumberInputFieldDisplay extends StatelessWidget {
 
 class TitleInputField extends StatelessWidget {
   final String? hintText;
+  final Function(String)? onChanged;
   final TextEditingController controller;
-  const TitleInputField(
-      {Key? key, required this.controller, this.hintText = '제목'})
-      : super(key: key);
+  const TitleInputField({
+    Key? key,
+    this.hintText = '제목',
+    this.onChanged,
+    required this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      onChanged: onChanged,
       maxLength: 30,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(
@@ -646,15 +651,18 @@ class TitleInputField extends StatelessWidget {
 
 class ContentInputField extends StatelessWidget {
   final TextEditingController controller;
+  final Function(String)? onChanged;
   const ContentInputField({
     Key? key,
     required this.controller,
+    this.onChanged,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      onChanged: onChanged,
       decoration: const InputDecoration(
         contentPadding: EdgeInsets.only(
           left: 2,

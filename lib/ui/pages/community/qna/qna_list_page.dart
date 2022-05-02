@@ -34,6 +34,7 @@ class QnaListPage extends StatelessWidget {
     }
 
     void _onWritePressed() {
+      controller.resetQnaWrite();
       Get.toNamed('community/qna/write');
     }
 

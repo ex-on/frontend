@@ -25,7 +25,6 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
       backgroundColor: Colors.white,
       body: GetBuilder<ExerciseBlockController>(
         builder: (_) {
-          print(_.postedExerciseRecord);
           if (_.postLoading || _.postedExerciseRecord == null) {
             return const LoadingIndicator();
           } else {
@@ -72,7 +71,8 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
 
             void _onGoHomePressed() {
               HomeController.to.getTodayExerciseStatus();
-              Get.offAllNamed('/home');
+              Get.until((route) => Get.currentRoute == '/home');
+              // Get.offAllNamed('/home');
             }
 
             return Stack(
@@ -390,8 +390,9 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
                       width: context.width - 80,
                       child: Row(
                         children: [
-                          ElevatedActionButton(      width: context.width / 2 - 45,
-                          height: 65,
+                          ElevatedActionButton(
+                            width: context.width / 2 - 45,
+                            height: 65,
                             buttonText: '셀프 축하',
                             backgroundColor: Colors.white,
                             textStyle: const TextStyle(
@@ -406,8 +407,9 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
                             onPressed: _onCelebratePressed,
                           ),
                           horizontalSpacer(10),
-                          ElevatedActionButton( width: context.width / 2 - 45,
-                          height: 65,
+                          ElevatedActionButton(
+                            width: context.width / 2 - 45,
+                            height: 65,
                             buttonText: '홈으로',
                             backgroundColor: darkSecondaryColor,
                             textStyle: const TextStyle(

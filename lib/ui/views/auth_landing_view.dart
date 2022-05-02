@@ -22,6 +22,7 @@ const Color _registerButtonColor = Color(0xffEEEEEE);
 final Color _kakaoLoginTextColor = Colors.black.withOpacity(0.85);
 final Color _googleLoginTextColor = Colors.black.withOpacity(0.54);
 const Color _facebookLoginTextColor = Colors.white;
+const String _privacyPolicyUrl = endPointUrl + '/user/policy/privacy';
 
 class AuthLandingView extends GetView<AuthController> {
   AuthLandingView({Key? key}) : super(key: key);
@@ -161,21 +162,21 @@ class AuthLandingView extends GetView<AuthController> {
             style: TextStyle(fontSize: 10),
           ),
         ),
-        TextActionButton(
-          buttonText: '이용약관',
-          onPressed: () => Get.toNamed('/terms_of_use'),
-          fontSize: 10,
-        ),
-        const Padding(
-          padding: EdgeInsets.only(top: 5, bottom: 5),
-          child: Text(
-            '및',
-            style: TextStyle(fontSize: 10),
-          ),
-        ),
+        // TextActionButton(
+        //   buttonText: '이용약관',
+        //   onPressed: () => Get.toNamed('/terms_of_use'),
+        //   fontSize: 10,
+        // ),
+        // const Padding(
+        //   padding: EdgeInsets.only(top: 5, bottom: 5),
+        //   child: Text(
+        //     '및',
+        //     style: TextStyle(fontSize: 10),
+        //   ),
+        // ),
         TextActionButton(
           buttonText: '개인정보처리방침',
-          onPressed: () => Get.toNamed('/privacy_policy'),
+          onPressed: () => UrlLauncher.launchInApp(_privacyPolicyUrl),
           fontSize: 10,
         ),
         const Padding(

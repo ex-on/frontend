@@ -26,7 +26,7 @@ class ExercisePlanBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _onPressed() async {
-      Get.toNamed('add_exercise/update');
+      Get.toNamed('exercise_plans');
     }
 
     void _onStartPressed() async {
@@ -563,7 +563,7 @@ class _DailyExerciseStatWeightBlockState
                                             TextSpan(
                                               text: getCleanTextFromDouble(
                                                       _recordData[
-                                                          'max_one_rm']) +
+                                                          'total_volume']) +
                                                   'kg',
                                               style: const TextStyle(
                                                 fontSize: 15,

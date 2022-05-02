@@ -1,14 +1,14 @@
 import 'package:badges/badges.dart';
 import 'package:exon_app/constants/constants.dart';
-import 'package:exon_app/core/controllers/add_exercise_controller.dart';
+import 'package:exon_app/core/controllers/exercise_plan_controller.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/core/controllers/notification_controller.dart';
 import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/bubble_tooltips.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
+import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
 import 'package:exon_app/ui/widgets/exercise/exercise_blocks.dart';
-import 'package:exon_app/ui/widgets/common/loading_indicator.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
 import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/home/exercise_time_counter.dart';
@@ -23,7 +23,7 @@ class MainHomePage extends GetView<HomeController> {
   const MainHomePage({Key? key}) : super(key: key);
 
   void _onAddPressed() {
-    AddExerciseController.to.jumpToPage(0);
+    ExercisePlanController.to.jumpToPage(0);
     Get.toNamed('/add_exercise');
   }
 
@@ -268,8 +268,7 @@ class MainHomePage extends GetView<HomeController> {
                       theme: _.theme,
                       totalExerciseTime: (_.weekExerciseStatus.isEmpty)
                           ? 0
-                          :
-                          _.totalExerciseTime,
+                          : _.totalExerciseTime,
                     );
                   },
                 ),
@@ -375,15 +374,7 @@ class MainHomePage extends GetView<HomeController> {
                   return SmartRefresher(
                     controller: _.refreshController,
                     onRefresh: _.onRefresh,
-                    header: CustomHeader(
-                      height: 80,
-                      builder: (context, mode) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child: LoadingIndicator(icon: true),
-                        );
-                      },
-                    ),
+                    header: const CustomRefreshHeader(),
                     child: ListView(
                       children: [
                         _isEmpty

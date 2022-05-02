@@ -20,7 +20,7 @@ class SavedPostQnasPage extends GetView<CommunityController> {
       Duration.zero,
       () {
         if (controller.savedData.isEmpty) {
-          controller.savedRefreshController.requestRefresh();
+          controller.getSaved();
         }
       },
     );

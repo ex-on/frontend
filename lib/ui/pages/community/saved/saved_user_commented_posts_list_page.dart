@@ -11,11 +11,14 @@ class SavedUserCommentedPostsListPage extends GetView<CommunityController> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () {
-      if (controller.savedUserCommentedPostsList.isEmpty) {
-        controller.savedUserCommentedPostsRefreshController.requestRefresh();
-      }
-    });
+    Future.delayed(
+      Duration.zero,
+      () {
+        if (controller.savedUserCommentedPostsList.isEmpty) {
+          controller.savedUserCommentedPostsRefreshController.requestRefresh();
+        }
+      },
+    );
 
     return GetBuilder<CommunityController>(
       builder: (_) {

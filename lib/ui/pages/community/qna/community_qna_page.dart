@@ -48,6 +48,7 @@ class CommunityQnaPage extends GetView<CommunityController> {
     }
 
     void _onAnswerPressed() {
+      controller.resetQnaAnswerWrite();
       Get.toNamed('community/qna/answer/write');
     }
 

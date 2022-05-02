@@ -47,12 +47,12 @@ class PostEditPage extends GetView<CommunityController> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: GetBuilder<CommunityController>(builder: (_) {
-          return Stack(
-            children: [
-              Column(
-                children: [
-                  Header(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                GetBuilder<CommunityController>(builder: (_) {
+                  return Header(
                     onPressed: _onBackPressed,
                     title: _headerTitle,
                     actions: [
@@ -64,73 +64,79 @@ class PostEditPage extends GetView<CommunityController> {
                           onPressed: _onSubmitPressed,
                           fontSize: 16,
                           textColor: brightPrimaryColor,
+                          activated:
+                              _.postTitleTextController.text.isNotEmpty &&
+                                  _.postContentTextController.text.isNotEmpty,
                           isUnderlined: false,
                         ),
                       )
                     ],
-                  ),
-                  Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.only(top: 15, left: 30, right: 30),
-                      children: [
-                        TitleInputField(
-                          controller: controller.postTitleTextController,
+                  );
+                }),
+                Expanded(
+                  child: ListView(
+                    padding:
+                        const EdgeInsets.only(top: 15, left: 30, right: 30),
+                    children: [
+                      TitleInputField(
+                        onChanged: (String val) => controller.update(),
+                        controller: controller.postTitleTextController,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: ContentInputField(
+                          onChanged: (String val) => controller.update(),
+                          controller: controller.postContentTextController,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: ContentInputField(
-                            controller: controller.postContentTextController,
-                          ),
-                        ),
-                        Divider(
-                          thickness: 0.5,
-                          height: 0.5,
-                          color: Color(0xffAEADAD),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: mainBackgroundColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '엑손 게시판 이용규칙',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w300,
-                                      color: Color(0xffA1A0A0),
-                                    ),
+                      ),
+                      const Divider(
+                        thickness: 0.5,
+                        height: 0.5,
+                        color: Color(0xffAEADAD),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: mainBackgroundColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  '엑손 게시판 이용규칙',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w300,
+                                    color: Color(0xffA1A0A0),
                                   ),
                                 ),
                               ),
                             ),
-                            Text(
-                              '1. 욕설 및 비방 금지',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w300,
-                                color: Color(0xffA1A0A0),
-                              ),
+                          ),
+                          const Text(
+                            communityGuidelines,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xffA1A0A0),
                             ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                ],
-              ),
-              _.apiPostLoading
-                  ? const LoadingIndicator()
-                  : const SizedBox.shrink(),
-            ],
-          );
-        }),
+                ),
+              ],
+            ),
+            controller.apiPostLoading
+                ? const LoadingIndicator()
+                : const SizedBox.shrink(),
+          ],
+        ),
       ),
     );
   }

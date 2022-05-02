@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:exon_app/core/services/user_api_service.dart';
-import 'package:exon_app/helpers/parse_jwt.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +20,7 @@ class RegisterController extends GetxController {
   Timer? verificationCodeTimeLimitCounter;
   int page = 0;
   bool loading = false;
-  bool isEmailValid = true;
+  bool isEmailValid = false;
   bool isEmailAvailable = true;
   bool isPasswordFormValid = false;
   bool isPhoneNumValid = false;
