@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "497984438265",
+    "project_id": "exon-notification",
+    "storage_bucket": "exon-notification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497984438265:android:ebea060dfa8adced9d4728",
+        "android_client_info": {
+          "package_name": "com.example.exon_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497984438265-h3r7c3bfjjhqmch35g1dt20jou0cdcl9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk3YGDw88H-92GeHkS67WIMyrPYwcu3V0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497984438265-h3r7c3bfjjhqmch35g1dt20jou0cdcl9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "497984438265-0s2vnqge4qs4lmge0nv5p38cmgengbn0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.exonverse.exonApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497984438265:android:1d957c1f1c585cd89d4728",
+        "android_client_info": {
+          "package_name": "com.exonverse.exonApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497984438265-lcddtsu0jtpi23h8pkel75d56478949p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.exonverse.exonApp",
+            "certificate_hash": "093b55892d45159af1658489d405149851546caa"
+          }
+        },
+        {
+          "client_id": "497984438265-h3r7c3bfjjhqmch35g1dt20jou0cdcl9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk3YGDw88H-92GeHkS67WIMyrPYwcu3V0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497984438265-h3r7c3bfjjhqmch35g1dt20jou0cdcl9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "497984438265-0s2vnqge4qs4lmge0nv5p38cmgengbn0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.exonverse.exonApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
