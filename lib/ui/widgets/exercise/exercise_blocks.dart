@@ -25,7 +25,7 @@ class ExercisePlanBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _onPressed() async {
+    void _onPressed() {
       Get.toNamed('exercise_plans');
     }
 
@@ -146,7 +146,9 @@ class ExerciseRecordBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _onPressed() {}
+    void _onPressed() {
+      Get.toNamed('exercise_plans');
+    }
 
     return Container(
       height: 95,
@@ -159,7 +161,7 @@ class ExerciseRecordBlock extends StatelessWidget {
         type: MaterialType.transparency,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          // onTap: _onPressed,
+          onTap: _onPressed,
           child: Padding(
             padding: const EdgeInsets.only(
               top: 15,
@@ -477,7 +479,9 @@ class _DailyExerciseStatWeightBlockState
                                               _exerciseData[
                                                   'exercise_method']]! +
                                           ' / ' +
-                                          _recordData['total_sets'].toString() +
+                                          _recordData['sets']
+                                              .length
+                                              .toString() +
                                           '세트',
                                     ),
                                   ],

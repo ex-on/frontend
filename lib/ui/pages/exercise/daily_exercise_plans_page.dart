@@ -1,13 +1,13 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/exercise_plan_controller.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
-import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/helpers/utils.dart';
 import 'package:exon_app/ui/widgets/common/buttons.dart';
 import 'package:exon_app/ui/widgets/common/color_labels.dart';
 import 'package:exon_app/ui/widgets/common/custom_refresh_header.dart';
 import 'package:exon_app/ui/widgets/common/header.dart';
 import 'package:exon_app/ui/widgets/common/spacer.dart';
+import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -90,7 +90,7 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
       );
     }
 
-    Widget _exerciseSetBlock(int index, int setNum) {
+    Widget _exerciseSetBlock(int index, int setNum, bool plan) {
       return SizedBox(
         height: 50,
         child: DecoratedBox(
@@ -116,30 +116,58 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
                     fontSize: 16,
                   ),
                 ),
-                Text(
-                  (controller.dailyExercisePlans[index]['exercise_data']
-                                  ['exercise_method'] ==
-                              1
-                          ? '--'
-                          : getCleanTextFromDouble(
-                              controller.dailyExercisePlans[index]['plan_data']
-                                  ['sets'][setNum]['target_weight'])) +
-                      'kg',
-                  style: const TextStyle(
-                    color: clearBlackColor,
-                    fontSize: 16,
+                if (plan)
+                  Text(
+                    (controller.dailyExercisePlans[index]['exercise_data']
+                                    ['exercise_method'] ==
+                                1
+                            ? '--'
+                            : getCleanTextFromDouble(controller
+                                    .dailyExercisePlans[index]['plan_data']
+                                ['sets'][setNum]['target_weight'])) +
+                        'kg',
+                    style: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 16,
+                    ),
+                  )
+                else
+                  Text(
+                    (controller.dailyExerciseRecords[index]['exercise_data']
+                                    ['exercise_method'] ==
+                                1
+                            ? '--'
+                            : getCleanTextFromDouble(controller
+                                    .dailyExerciseRecords[index]['record_data']
+                                ['sets'][setNum]['record_weight'])) +
+                        'kg',
+                    style: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                Text(
-                  controller.dailyExercisePlans[index]['plan_data']['sets']
-                              [setNum]['target_reps']
-                          .toString() +
-                      '회',
-                  style: const TextStyle(
-                    color: clearBlackColor,
-                    fontSize: 16,
+                if (plan)
+                  Text(
+                    controller.dailyExercisePlans[index]['plan_data']['sets']
+                                [setNum]['target_reps']
+                            .toString() +
+                        '회',
+                    style: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 16,
+                    ),
+                  )
+                else
+                  Text(
+                    controller.dailyExerciseRecords[index]['record_data']
+                                ['sets'][setNum]['record_reps']
+                            .toString() +
+                        '회',
+                    style: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
                 const SizedBox.shrink(),
               ],
             ),
@@ -148,7 +176,7 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
       );
     }
 
-    Widget _exerciseCardioBlock(int index) {
+    Widget _exerciseCardioBlock(int index, bool plan) {
       return SizedBox(
         height: 50,
         child: DecoratedBox(
@@ -168,32 +196,63 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const SizedBox.shrink(),
-                Text(
-                  (controller.dailyExercisePlans[index]['plan_data']
-                                  ['target_distance'] ==
-                              null
-                          ? '--'
-                          : getCleanTextFromDouble(
-                              controller.dailyExercisePlans[index]['plan_data']
-                                  ['target_distance'])) +
-                      'km',
-                  style: const TextStyle(
-                    color: clearBlackColor,
-                    fontSize: 16,
+                if (plan)
+                  Text(
+                    (controller.dailyExercisePlans[index]['plan_data']
+                                    ['target_distance'] ==
+                                null
+                            ? '--'
+                            : getCleanTextFromDouble(
+                                controller.dailyExercisePlans[index]
+                                    ['plan_data']['target_distance'])) +
+                        'km',
+                    style: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 16,
+                    ),
+                  )
+                else
+                  Text(
+                    (controller.dailyExerciseRecords[index]['record_data']
+                                    ['record_distance'] ==
+                                null
+                            ? '--'
+                            : getCleanTextFromDouble(
+                                controller.dailyExerciseRecords[index]
+                                    ['record_data']['record_distance'])) +
+                        'km',
+                    style: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                Text(
-                  controller.dailyExercisePlans[index]['plan_data']
-                              ['target_duration'] ==
-                          null
-                      ? '--'
-                      : formatTimeToText(controller.dailyExercisePlans[index]
-                          ['plan_data']['target_duration']),
-                  style: const TextStyle(
-                    color: clearBlackColor,
-                    fontSize: 16,
+                if (plan)
+                  Text(
+                    controller.dailyExercisePlans[index]['plan_data']
+                                ['target_duration'] ==
+                            null
+                        ? '--'
+                        : formatTimeToText(controller.dailyExercisePlans[index]
+                            ['plan_data']['target_duration']),
+                    style: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 16,
+                    ),
+                  )
+                else
+                  Text(
+                    controller.dailyExerciseRecords[index]['record_data']
+                                ['record_duration'] ==
+                            null
+                        ? '--'
+                        : formatTimeToText(
+                            controller.dailyExerciseRecords[index]
+                                ['record_data']['record_duration']),
+                    style: const TextStyle(
+                      color: clearBlackColor,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
                 const SizedBox.shrink(),
               ],
             ),
@@ -202,24 +261,33 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
       );
     }
 
-    Widget _exercisePlanDetails(int index) {
+    Widget _exerciseDetails(int index, bool plan) {
+      late Map<String, dynamic> exerciseData;
+      late Map<String, dynamic> data;
+
+      if (plan) {
+        exerciseData = controller.dailyExercisePlans[index]['exercise_data'];
+        data = controller.dailyExercisePlans[index]['plan_data'];
+      } else {
+        exerciseData = controller.dailyExerciseRecords[index]['exercise_data'];
+        data = controller.dailyExerciseRecords[index]['record_data'];
+      }
+
       return Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Builder(
           builder: (context) {
-            if (controller.dailyExercisePlans[index]['exercise_data']['type'] ==
-                0) {
+            if (exerciseData['type'] == 0) {
               return Column(
                 children: List.generate(
-                  controller
-                      .dailyExercisePlans[index]['plan_data']['sets'].length,
+                  data['sets'].length,
                   (setNum) {
-                    return _exerciseSetBlock(index, setNum);
+                    return _exerciseSetBlock(index, setNum, plan);
                   },
                 ),
               );
             } else {
-              return _exerciseCardioBlock(index);
+              return _exerciseCardioBlock(index, plan);
             }
           },
         ),
@@ -239,7 +307,7 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
             padding: const EdgeInsets.only(left: 30, right: 30),
             child: Text(
               _totalExercisePlanNumText +
-                  HomeController.to.indexDayExercisePlanList.length.toString() +
+                  controller.dailyExercisePlans.length.toString() +
                   '개',
               style: const TextStyle(
                 color: softGrayColor,
@@ -261,14 +329,15 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
                       : ListView.separated(
                           padding: const EdgeInsets.fromLTRB(30, 8, 30, 30),
                           itemBuilder: (context, index) {
-                            var exerciseData = HomeController
-                                    .to.indexDayExercisePlanList[index]
-                                ['exercise_data'];
-                            var planData = HomeController.to
-                                .indexDayExercisePlanList[index]['plan_data'];
-                            if (index > _.dailyExercisePlans.length) {
+                            if (index >
+                                (_.dailyExercisePlans.length +
+                                    _.dailyExerciseRecords.length)) {
                               return const SizedBox.shrink();
-                            } else {
+                            } else if (index < _.dailyExercisePlans.length) {
+                              var exerciseData =
+                                  _.dailyExercisePlans[index]['exercise_data'];
+                              var planData =
+                                  _.dailyExercisePlans[index]['plan_data'];
                               return Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -315,7 +384,7 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
                                                     targetMuscle: exerciseData[
                                                         'target_muscle'],
                                                     text:
-                                                        '${targetMuscleIntToStr[exerciseData['target_muscle']]} / ${exerciseMethodIntToStr[exerciseData['exercise_method']]} / ${planData['num_sets']}세트',
+                                                        '${targetMuscleIntToStr[exerciseData['target_muscle']]} / ${exerciseMethodIntToStr[exerciseData['exercise_method']]} / ${planData['sets'].length}세트',
                                                   ),
                                                 ],
                                               )
@@ -407,7 +476,93 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
                                         ),
                                       ],
                                     ),
-                                    _exercisePlanDetails(index),
+                                    _exerciseDetails(index, true),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              index = index - _.dailyExercisePlans.length;
+                              var exerciseData = _.dailyExerciseRecords[index]
+                                  ['exercise_data'];
+                              var recordData =
+                                  _.dailyExerciseRecords[index]['record_data'];
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        const CompleteIcon(),
+                                        horizontalSpacer(15),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              exerciseData['name'],
+                                              style: const TextStyle(
+                                                height: 1.0,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: clearBlackColor,
+                                              ),
+                                            ),
+                                            verticalSpacer(10),
+                                            (exerciseData['target_muscle'] !=
+                                                    null)
+                                                ? Row(
+                                                    children: [
+                                                      TargetMuscleLabel(
+                                                        text: targetMuscleIntToStr[
+                                                                exerciseData[
+                                                                    'target_muscle']]! +
+                                                            ' / ' +
+                                                            exerciseMethodIntToStr[
+                                                                exerciseData[
+                                                                    'exercise_method']]!,
+                                                        targetMuscle:
+                                                            exerciseData[
+                                                                'target_muscle'],
+                                                      ),
+                                                      horizontalSpacer(10),
+                                                      ExerciseRecordLabel(
+                                                        text: recordData[
+                                                                    'total_volume'] !=
+                                                                0
+                                                            ? '${recordData['sets'].length}세트 / ${getCleanTextFromDouble(recordData['total_volume'])}kg'
+                                                            : '${recordData['sets'].length}세트 / ${recordData['total_reps']}회',
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Row(
+                                                    children: [
+                                                      CardioLabel(
+                                                        text: '유산소 / ' +
+                                                            cardioMethodIntToStr[
+                                                                exerciseData[
+                                                                    'exercise_method']]!,
+                                                      ),
+                                                      horizontalSpacer(10),
+                                                      ExerciseRecordLabel(
+                                                          text: getCleanTextFromDouble(
+                                                                  recordData[
+                                                                      'record_calories']) +
+                                                              'kcal'),
+                                                    ],
+                                                  ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    _exerciseDetails(index, false),
                                   ],
                                 ),
                               );
@@ -415,7 +570,8 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
                           },
                           separatorBuilder: (context, index) =>
                               verticalSpacer(24),
-                          itemCount: _.dailyExercisePlans.length,
+                          itemCount: _.dailyExercisePlans.length +
+                              _.dailyExerciseRecords.length,
                         ),
                 );
               },

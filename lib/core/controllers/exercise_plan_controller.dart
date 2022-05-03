@@ -42,6 +42,7 @@ class ExercisePlanController extends GetxController
   List<dynamic> exerciseDataListCardio = [];
   List<dynamic> selectedExerciseDataList = [];
   List<dynamic> dailyExercisePlans = [];
+  List<dynamic> dailyExerciseRecords = [];
 
   @override
   void onInit() {
@@ -552,7 +553,8 @@ class ExercisePlanController extends GetxController
 
   Future<void> getDailyExercisePlans() async {
     var res = await ExerciseApiService.getExerciseDetailsList();
-    dailyExercisePlans = res;
+    dailyExercisePlans = res['plans'];
+    dailyExerciseRecords = res['records'];
     update();
   }
 
