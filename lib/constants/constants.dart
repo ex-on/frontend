@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Server
-const String endPointUrl = 'exonverse.com';
+const String endPointUrl = 'http://exonverse.com';
 // Colors
 const Color splashViewBackgroundColor = Colors.white;
 const Color mainBackgroundColor = Color(0xffF4F3F8);
