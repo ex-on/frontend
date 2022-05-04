@@ -23,7 +23,8 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
     const String _totalExercisePlanNumText = '총 운동 ';
 
     Future.delayed(Duration.zero, () {
-      if (controller.dailyExercisePlans.isEmpty) {
+      if (controller.dailyExercisePlans.isEmpty &&
+          controller.dailyExerciseRecords.isEmpty) {
         controller.exercisePlansRefreshController.requestRefresh();
       }
     });
@@ -322,7 +323,8 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
                   controller: _.exercisePlansRefreshController,
                   onRefresh: _.onExercisePlansRefresh,
                   header: const CustomRefreshHeader(),
-                  child: _.dailyExercisePlans.isEmpty
+                  child: _.dailyExercisePlans.isEmpty &&
+                          _.dailyExerciseRecords.isEmpty
                       ? ListView(
                           children: const [],
                         )
