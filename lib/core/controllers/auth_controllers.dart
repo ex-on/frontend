@@ -81,7 +81,7 @@ class AuthController extends GetxController {
     if (idToken != null) {
       Map<String, dynamic> data = parseJwt(idToken);
       log(data.toString());
-      String cognitoGroup = data['cognito:groups'][0];
+      String cognitoGroup = data['cognito:groups'][data['cognito:groups'].length - 1];
       late String authProvider;
       if (data['identities'] != null) {
         print(data['identities'][0]['providerName']);
@@ -96,6 +96,9 @@ class AuthController extends GetxController {
           break;
         case 'ap-northeast-2_EuYr8s0Rp_Google':
           authProvider = 'Google';
+          break;
+        case 'ap-northeast-2_EuYr8s0Rp_SignInWithApple':
+          authProvider = 'Apple';
           break;
         default:
           authProvider = cognitoGroup;

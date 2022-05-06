@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 const String _title = '환영합니다';
 const String _titleLabel = 'EXON에서 운동을 기록하고\n사람들과 공유해보세요';
 const String _kakaoLoginButtonText = '카카오 로그인';
+const String _appleLoginButtonText = 'Apple로 로그인';
 const String _googleLoginButtonText = 'Google 계정으로 로그인';
 const String _facebookLoginButtonText = 'Facebook으로 로그인';
 const String _registerButtonText = '회원가입';
@@ -23,6 +24,7 @@ final Color _kakaoLoginTextColor = Colors.black.withOpacity(0.85);
 final Color _googleLoginTextColor = Colors.black.withOpacity(0.54);
 const Color _facebookLoginTextColor = Colors.white;
 const String _privacyPolicyUrl = endPointUrl + '/user/policy/privacy';
+const String _termsOfUseUrl = endPointUrl + '/user/policy/terms_of_use';
 
 class AuthLandingView extends GetView<AuthController> {
   AuthLandingView({Key? key}) : super(key: key);
@@ -86,10 +88,15 @@ class AuthLandingView extends GetView<AuthController> {
     );
 
     Widget _registerButtonSection = SizedBox(
-      height: 260,
+      height: 300,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          AppleLoginButton(
+            onPressed: () => UrlLauncher.launchInBrowser(
+              AmplifyService.getSocialLoginUrl('SignInWithApple'),
+            ),
+          ),
           KakaoLoginButton(
             onPressed: _onKakaoLoginPressed,
           ),
@@ -162,18 +169,18 @@ class AuthLandingView extends GetView<AuthController> {
             style: TextStyle(fontSize: 10),
           ),
         ),
-        // TextActionButton(
-        //   buttonText: '이용약관',
-        //   onPressed: () => Get.toNamed('/terms_of_use'),
-        //   fontSize: 10,
-        // ),
-        // const Padding(
-        //   padding: EdgeInsets.only(top: 5, bottom: 5),
-        //   child: Text(
-        //     '및',
-        //     style: TextStyle(fontSize: 10),
-        //   ),
-        // ),
+        TextActionButton(
+          buttonText: '이용약관',
+          onPressed: () => UrlLauncher.launchInApp(_termsOfUseUrl),
+          fontSize: 10,
+        ),
+        const Padding(
+          padding: EdgeInsets.only(top: 5, bottom: 5),
+          child: Text(
+            '및',
+            style: TextStyle(fontSize: 10),
+          ),
+        ),
         TextActionButton(
           buttonText: '개인정보처리방침',
           onPressed: () => UrlLauncher.launchInApp(_privacyPolicyUrl),
@@ -255,6 +262,57 @@ class KakaoLoginButton extends StatelessWidget {
   }
 }
 
+class AppleLoginButton extends StatelessWidget {
+  final Function() onPressed;
+  const AppleLoginButton({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle _style = ButtonStyle(
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      backgroundColor: MaterialStateProperty.all(Colors.black),
+      overlayColor: MaterialStateProperty.all(Colors.black),
+      elevation: MaterialStateProperty.all(0),
+    );
+
+    return SizedBox(
+      width: 250,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: _style,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(right: 3),
+              child: AppleWhiteIcon(
+                height: 50,
+              ),
+            ),
+            const Text(
+              _appleLoginButtonText,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 21.5,
+              ),
+            ),
+            horizontalSpacer(20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class GoogleLoginButton extends StatelessWidget {
   final Function() onPressed;
   const GoogleLoginButton({
@@ -274,8 +332,6 @@ class GoogleLoginButton extends StatelessWidget {
       overlayColor: MaterialStateProperty.all(lightGrayColor.withOpacity(0.15)),
       elevation: MaterialStateProperty.all(1),
     );
-
-    double x = 1;
 
     return SizedBox(
       width: 250,

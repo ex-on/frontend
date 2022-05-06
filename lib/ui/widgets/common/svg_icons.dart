@@ -5,6 +5,8 @@ const String _exonLogo = "assets/exonLogo.svg";
 const String _exonIconLogo = "assets/exonIconLogo.svg";
 
 const String _kakaoIcon = 'assets/icons/kakaoIcon.svg';
+const String _appleWhiteIcon = 'assets/icons/appleWhiteIcon.svg';
+const String _appleBlackIcon = 'assets/icons/appleBlackIcon.svg';
 const String _googleIcon = 'assets/icons/googleIcon.svg';
 const String _facebookIcon = 'assets/icons/facebookIcon.png';
 const String _facebookColorIcon = 'assets/icons/facebookColorIcon.png';
@@ -113,6 +115,50 @@ class KakaoIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       _kakaoIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class AppleWhiteIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const AppleWhiteIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _appleWhiteIcon,
+      width: width,
+      height: height,
+      color: color,
+    );
+  }
+}
+
+class AppleBlackIcon extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final Color? color;
+  const AppleBlackIcon({
+    Key? key,
+    this.width,
+    this.height,
+    this.color,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      _appleBlackIcon,
       width: width,
       height: height,
       color: color,

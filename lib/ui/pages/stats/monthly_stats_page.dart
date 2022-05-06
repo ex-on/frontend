@@ -787,14 +787,12 @@ class MonthlyStatsPage extends GetView<StatsController> {
                               trackballBehavior:
                                   _.monthlyStatsTrackballBehavior,
                               series: <ChartSeries>[
-                                StackedLineSeries<dynamic, String>(
+                                LineSeries<dynamic, String>(
                                   dataSource: weeklyData,
                                   color: brightPrimaryColor,
                                   width: 3,
                                   markerSettings: const MarkerSettings(
                                     isVisible: true,
-                                    // color: brightPrimaryColor,
-                                    // borderColor: Colors.white,
                                     width: 10,
                                     height: 10,
                                   ),
@@ -804,14 +802,12 @@ class MonthlyStatsPage extends GetView<StatsController> {
                                     return data[1];
                                   },
                                 ),
-                                StackedLineSeries<dynamic, String>(
+                                LineSeries<dynamic, String>(
                                   dataSource: previousWeeklyData,
                                   color: lightGrayColor,
                                   width: 3,
                                   markerSettings: const MarkerSettings(
                                     isVisible: true,
-                                    // color: lightGrayColor,
-                                    // borderColor: Colors.white,
                                     width: 10,
                                     height: 10,
                                   ),

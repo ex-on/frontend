@@ -26,10 +26,11 @@ const String _informationSettingsLabelText = '정보';
 const String _privacyAllLabelText = '활동 내역 전체 공개';
 const String _privacyCommunityLabelText = '커뮤니티 활동 공개';
 const String _privacyPhysicalDataLabelText = '신체 기록 공개';
-// const String _exonUserAgreementLabelText = '이용약관';
+const String _termsOfUseLabelText = '이용약관';
 const String _privacyPolicyLabelText = '개인정보처리방침';
 const String _appVersion = '앱 버전';
 
+const String _termsOfUseUrl = endPointUrl + '/user/policy/terms_of_use';
 const String _privacyPolicyUrl = endPointUrl + '/user/policy/privacy';
 const String _instagramUrl = 'https://www.instagram.com/official_exon/';
 const String _nativeInstagramUrl = "instagram://user?username=official_exon";
@@ -69,6 +70,10 @@ class SettingsView extends GetView<SettingsController> {
 
     void _onFeedbackPressed() {
       UrlLauncher.launchInApp(_feedbackUrl, nativeUrl: _nativeFeedbackUrl);
+    }
+
+    void _onTermsOfUsePressed() {
+      UrlLauncher.launchInApp(_termsOfUseUrl);
     }
 
     void _onPrivacyPolicyPressed() {
@@ -214,6 +219,10 @@ class SettingsView extends GetView<SettingsController> {
                                     width: 18,
                                     height: 18,
                                   );
+                                case 4:
+                                  return const AppleBlackIcon(
+                                    height: 50,
+                                  );
                                 default:
                                   return const SizedBox.shrink();
                               }
@@ -338,8 +347,8 @@ class SettingsView extends GetView<SettingsController> {
                             _informationSettingsLabelText),
                       ),
                       _divider,
-                      // _getSettingsMenuItem(
-                      //     () => null, _exonUserAgreementLabelText),
+                      _getSettingsMenuItem(
+                          _onTermsOfUsePressed, _termsOfUseLabelText),
                       _getSettingsMenuItem(
                           _onPrivacyPolicyPressed, _privacyPolicyLabelText),
                       _getSettingsMenuItem(

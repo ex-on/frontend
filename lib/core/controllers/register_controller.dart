@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
@@ -408,6 +409,7 @@ class RegisterInfoController extends GetxController {
     } else if (authProvider == 'Kakao') {
       email = idTokenData['email'];
     }
+    log(idTokenData.toString());
     var res = await UserApiService.registerUserInfo(
       authProvider,
       genderToInt[gender]!,
