@@ -377,7 +377,7 @@ class CommunityController extends GetxController
     setApiPostLoading(false);
   }
 
-  void resetContent() {
+  void resetPostContent() {
     postListStartIndex.value = 0;
     postContentList = [];
     update();
@@ -451,6 +451,26 @@ class CommunityController extends GetxController
 
   void updateSelectedAnswerIndex(int? val) {
     selectedAnswerIndex = val!;
+    update();
+  }
+
+  void resetAll() {
+    postContentList = [];
+    qnaContentList = [];
+    postContent = {};
+    postCount = {};
+    qnaContent = {};
+    qnaCount = {};
+    postCommentList = [];
+    qnaAnswerList = [];
+    qnaAnswerCommentList = [];
+    savedData = {};
+    bookmarkedPostsList = [];
+    bookmarkedQnasList = [];
+    savedUserPostsList = [];
+    savedUserCommentedPostsList = [];
+    savedUserQnasList = [];
+    savedUserAnsweredQnasList = [];
     update();
   }
 

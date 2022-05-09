@@ -19,7 +19,7 @@ class QnaCategoryPage extends GetView<CommunityController> {
   Widget build(BuildContext context) {
     Future.delayed(Duration.zero, () {
       if (controller.qnaContentList.isEmpty) {
-        controller.qnaCategoryRefreshController.requestRefresh();
+        controller.qnaCategoryListCallback(controller.qnaCategory.value);
       }
     });
 

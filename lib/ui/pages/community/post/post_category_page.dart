@@ -20,7 +20,6 @@ class PostCategoryPage extends GetView<CommunityController> {
     Future.delayed(Duration.zero, () {
       if (controller.postContentList.isEmpty) {
         controller.postCategoryListCallback(controller.postCategory.value);
-        // controller.postCategoryRefreshController.requestRefresh();
       }
     });
 
@@ -95,11 +94,11 @@ class PostCategoryPage extends GetView<CommunityController> {
                                     child: () {
                                       switch (index) {
                                         case 0:
-                                          return HotIcon();
+                                          return const HotIcon();
                                         case 1:
-                                          return EditIcon();
+                                          return const EditIcon();
                                         case 2:
-                                          return InfoIcon();
+                                          return const InfoIcon();
                                         default:
                                           break;
                                       }

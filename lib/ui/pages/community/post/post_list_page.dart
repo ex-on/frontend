@@ -29,7 +29,7 @@ class PostListPage extends StatelessWidget {
     });
 
     void _onBackPressed() {
-      controller.resetContent();
+      controller.resetPostContent();
       controller.postCategoryRefreshController.requestRefresh();
       Get.back();
     }

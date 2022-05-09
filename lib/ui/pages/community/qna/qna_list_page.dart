@@ -28,7 +28,7 @@ class QnaListPage extends StatelessWidget {
     });
 
     void _onBackPressed() {
-      controller.resetContent();
+      controller.resetPostContent();
       controller.qnaCategoryRefreshController.requestRefresh();
       Get.back();
     }

@@ -1,4 +1,5 @@
 import 'package:exon_app/core/controllers/auth_controllers.dart';
+import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/core/controllers/connection_controller.dart';
 import 'package:exon_app/core/services/user_api_service.dart';
 import 'package:get/get.dart';
@@ -63,5 +64,24 @@ class ProfileController extends GetxController
       userProfileData = resData;
     }
     setLoading(false);
+  }
+
+  Future<dynamic> reportUser() async {
+    setLoading(true);
+    var resData =
+        await UserApiService.reportUser(userProfileData['user']['username']);
+    setLoading(false);
+    return resData;
+  }
+
+  Future<dynamic> blockUser() async {
+    setLoading(true);
+    var resData =
+        await UserApiService.blockUser(userProfileData['user']['username']);
+    setLoading(false);
+    if (resData == 200) {
+      CommunityController.to.resetAll();
+    }
+    return resData;
   }
 }

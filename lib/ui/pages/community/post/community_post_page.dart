@@ -194,28 +194,30 @@ class CommunityPostPage extends GetView<CommunityController> {
           ),
         );
       } else {
-        Get.bottomSheet(CupertinoActionSheet(
-          actions: [
-            CupertinoActionSheetAction(
-              onPressed: () => _onReportPressed(id, category),
+        Get.bottomSheet(
+          CupertinoActionSheet(
+            actions: [
+              CupertinoActionSheetAction(
+                onPressed: () => _onReportPressed(id, category),
+                child: const Text(
+                  '신고',
+                  style: TextStyle(
+                    color: clearBlackColor,
+                  ),
+                ),
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              onPressed: () => Get.back(),
               child: const Text(
-                '신고',
+                '취소',
                 style: TextStyle(
                   color: clearBlackColor,
                 ),
               ),
             ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            onPressed: () => Get.back(),
-            child: const Text(
-              '취소',
-              style: TextStyle(
-                color: clearBlackColor,
-              ),
-            ),
           ),
-        ));
+        );
       }
     }
 

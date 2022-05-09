@@ -186,7 +186,7 @@ class UserApiService extends ApiService {
 
     Map<String, dynamic> data = {
       'privacy': privacy,
-    // toggle 0: 모두, 1: 커뮤니티 활동, 2: 신체 기록
+      // toggle 0: 모두, 1: 커뮤니티 활동, 2: 신체 기록
     };
 
     try {
@@ -224,6 +224,40 @@ class UserApiService extends ApiService {
       return res.data;
     } catch (e) {
       print(e);
+    }
+  }
+
+  static Future<dynamic> reportUser(String username) async {
+    String path = '/user/report';
+
+    Map<String, dynamic> data = {
+      'username': username,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      print(res);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<dynamic> blockUser(String username) async {
+    String path = '/user/block';
+
+    Map<String, dynamic> data = {
+      'username': username,
+    };
+
+    try {
+      var res = await ApiService.post(path, data);
+      print(res);
+      return res.statusCode;
+    } catch (e) {
+      print(e);
+      return false;
     }
   }
 }

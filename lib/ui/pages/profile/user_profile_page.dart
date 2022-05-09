@@ -1,4 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/core/controllers/community_controller.dart';
+import 'package:exon_app/core/controllers/home_navigation_controller.dart';
 import 'package:exon_app/core/controllers/profile_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/helpers/utils.dart';
@@ -11,6 +13,7 @@ import 'package:exon_app/ui/widgets/common/svg_icons.dart';
 import 'package:exon_app/ui/widgets/community/loading_blocks.dart';
 import 'package:exon_app/ui/widgets/profile/monthly_exercise_level_info_dialog.dart';
 import 'package:exon_app/ui/widgets/rank/activity_level_info_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -46,6 +49,132 @@ class UserProfilePage extends GetView<ProfileController> {
       Get.dialog(const MonthlyExerciseLevelInfoDialog());
     }
 
+    void _onReportPressed() async {
+      var success = await controller.reportUser();
+
+      if (success == 200) {
+        Get.back();
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              '사용자 신고가 완료되었습니다',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      } else if (success == 208) {
+        Get.back();
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              '이미 신고한 사용자입니다',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      }
+    }
+
+    void _onBlockPressed() async {
+      var success = await controller.blockUser();
+
+      if (success == 200) {
+        Get.until((route) => Get.currentRoute == '/home');
+        if (CommunityController.to.communityMainTabController.index == 0) {
+          CommunityController.to.postCategoryListCallback(
+              CommunityController.to.postCategory.value);
+        } else if (CommunityController.to.communityMainTabController.index ==
+            1) {
+          CommunityController.to.qnaCategoryListCallback(
+              CommunityController.to.qnaCategory.value);
+        } else {
+          CommunityController.to.getSaved();
+        }
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              '사용자 차단이 완료되었습니다',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      } else if (success == 208) {
+        Get.back();
+        Get.showSnackbar(
+          GetSnackBar(
+            messageText: const Text(
+              '이미 차단한 사용자입니다',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            borderRadius: 10,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            duration: const Duration(seconds: 2),
+            isDismissible: false,
+            backgroundColor: darkSecondaryColor.withOpacity(0.8),
+          ),
+        );
+      }
+    }
+
+    void _onMenuPressed() {
+      Get.bottomSheet(
+        CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: _onReportPressed,
+              child: const Text(
+                '사용자 신고',
+                style: TextStyle(
+                  color: clearBlackColor,
+                ),
+              ),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () => _onBlockPressed(),
+              child: const Text(
+                '사용자 차단',
+                style: TextStyle(
+                  color: cancelRedColor,
+                ),
+              ),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Get.back(),
+            child: const Text(
+              '취소',
+              style: TextStyle(
+                color: clearBlackColor,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: mainBackgroundColor,
       body: SafeArea(
@@ -54,7 +183,19 @@ class UserProfilePage extends GetView<ProfileController> {
 
           return Column(
             children: [
-              Header(onPressed: _onBackPressed),
+              Header(
+                onPressed: _onBackPressed,
+                actions: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.more_vert_rounded,
+                      color: clearBlackColor,
+                    ),
+                    splashRadius: 20,
+                    onPressed: () => _onMenuPressed(),
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
                 child: Row(
