@@ -15,7 +15,7 @@ import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/ui/widgets/common/home_navigation_bar.dart';
 import 'package:get/get.dart';
 
-class HomeNavigationView extends StatelessWidget {
+class HomeNavigationView extends GetView<HomeNavigationController> {
   HomeNavigationView({Key? key}) : super(key: key);
 
   final List<Widget> _pages = [
@@ -34,26 +34,34 @@ class HomeNavigationView extends StatelessWidget {
     Get.put<StatsController>(StatsController());
     Get.put<ProfileController>(ProfileController());
     Get.put<TooltipController>(TooltipController());
+
+    Future<bool> _onBackPressed() async {
+      return await controller.onBackPressed();
+    }
+
     return GetBuilder<HomeNavigationController>(
       builder: (_) {
-        return Scaffold(
-          extendBody: true,
-          backgroundColor: _.currentIndex == 2 || _.currentIndex == 4
-              ? mainBackgroundColor
-              : Colors.white,
-          body: SafeArea(
-            bottom: false,
-            maintainBottomViewPadding: false,
-            child: _pages[_.currentIndex],
-          ),
-          bottomNavigationBar: AnimatedSize(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOut,
-            child: HomeNavigationBar(
-              currentIndex: _.currentIndex,
-              onIconTap: _.onIconTap,
-              height: 60 + context.mediaQueryPadding.bottom,
-              bottomPadding: context.mediaQueryPadding.bottom,
+        return WillPopScope(
+          onWillPop: _onBackPressed,
+          child: Scaffold(
+            extendBody: true,
+            backgroundColor: _.currentIndex == 2 || _.currentIndex == 4
+                ? mainBackgroundColor
+                : Colors.white,
+            body: SafeArea(
+              bottom: false,
+              maintainBottomViewPadding: false,
+              child: _pages[_.currentIndex],
+            ),
+            bottomNavigationBar: AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              child: HomeNavigationBar(
+                currentIndex: _.currentIndex,
+                onIconTap: _.onIconTap,
+                height: 60 + context.mediaQueryPadding.bottom,
+                bottomPadding: context.mediaQueryPadding.bottom,
+              ),
             ),
           ),
         );

@@ -3,6 +3,7 @@ import 'package:exon_app/core/services/amplify_service.dart';
 import 'package:get/get.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 bool _initialLinkIsHandled = false;
 
@@ -48,16 +49,20 @@ class DeepLinkController extends GetxController {
     // the foreground or in the background.
     _sub = linkStream.listen(
       (String? link) async {
+        print(link);
         int index = link!.indexOf('?');
         int codeIndex = link.indexOf('code=') + 'code='.length;
         String parsedLink = '/' + link.substring("exon://".length, index);
-        String authCode = link.substring(codeIndex);
+        String authCode = link.substring(codeIndex, codeIndex + 36);
         bool success = await AmplifyService.getAuthTokensWithAuthCode(authCode);
         print('got link: $parsedLink');
         print(success);
         _updateLatestLink(parsedLink);
         _updateErr(null);
         if (success) {
+          if (GetPlatform.isIOS) {
+            closeWebView();
+          }
           Get.offAllNamed(parsedLink);
         }
       },

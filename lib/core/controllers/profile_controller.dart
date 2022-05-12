@@ -1,6 +1,7 @@
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/community_controller.dart';
 import 'package:exon_app/core/controllers/connection_controller.dart';
+import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/user_api_service.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -16,6 +17,17 @@ class ProfileController extends GetxController
   int currentQnaIndex = 0;
   Map<String, dynamic> myProfileData = {};
   Map<String, dynamic> userProfileData = {};
+
+  @override
+  void onInit() {
+    Future.delayed(Duration.zero, () async {
+      await RegisterInfoController.to.checkUserInfo();
+      if (!RegisterInfoController.to.userInfoExists) {
+        Get.offAllNamed('/register_info');
+      }
+    });
+    super.onInit();
+  }
 
   void onRefresh() async {
     await AuthController.to.getUserInfo();

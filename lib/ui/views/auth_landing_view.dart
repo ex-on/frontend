@@ -93,7 +93,7 @@ class AuthLandingView extends GetView<AuthController> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           AppleLoginButton(
-            onPressed: () => UrlLauncher.launchInBrowser(
+            onPressed: () => UrlLauncher.launchInApp(
               AmplifyService.getSocialLoginUrl('SignInWithApple'),
             ),
           ),
@@ -101,12 +101,12 @@ class AuthLandingView extends GetView<AuthController> {
             onPressed: _onKakaoLoginPressed,
           ),
           GoogleLoginButton(
-            onPressed: () => UrlLauncher.launchInBrowser(
+            onPressed: () => UrlLauncher.launchInApp(
               AmplifyService.getSocialLoginUrl('Google'),
             ),
           ),
           FacebookLoginButton(
-            onPressed: () => UrlLauncher.launchInBrowser(
+            onPressed: () => UrlLauncher.launchInApp(
               AmplifyService.getSocialLoginUrl('Facebook'),
             ),
           ),
@@ -295,14 +295,20 @@ class AppleLoginButton extends StatelessWidget {
               padding: EdgeInsets.only(right: 3),
               child: AppleWhiteIcon(
                 height: 50,
+                width: 50,
               ),
             ),
-            const Text(
-              _appleLoginButtonText,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 21.5,
+            const Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  _appleLoginButtonText,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 21.5,
+                  ),
+                ),
               ),
             ),
             horizontalSpacer(20),

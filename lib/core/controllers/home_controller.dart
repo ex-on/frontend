@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/connection_controller.dart';
+import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/exercise_api_service.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:get/get.dart';
@@ -26,6 +28,13 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    Future.delayed(Duration.zero, () async {
+      await RegisterInfoController.to.checkUserInfo();
+      if (!RegisterInfoController.to.userInfoExists) {
+        Get.offAllNamed('/register_info');
+      }
+    });
+    AuthController.to.readIdToken();
     if (currentDateTime.hour < 18 && currentDateTime.hour > 5) {
       theme = ColorTheme.day;
     } else {

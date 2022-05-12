@@ -61,7 +61,7 @@ class DioAuthInterceptor extends Interceptor {
         TokenErrorType.tokenNotFound) {
       Get.offNamed('/auth');
       return;
-    } else if (err.response!.statusCode == 303) {
+    } else if (err.response != null ? err.response!.statusCode == 303 : false) {
       Get.toNamed('/register_info');
       return;
     } else {

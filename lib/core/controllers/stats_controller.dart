@@ -1,5 +1,6 @@
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/connection_controller.dart';
+import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/stats_api_service.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/helpers/utils.dart';
@@ -57,6 +58,12 @@ class StatsController extends GetxController
   @override
   void onInit() {
     super.onInit();
+    Future.delayed(Duration.zero, () async {
+      await RegisterInfoController.to.checkUserInfo();
+      if (!RegisterInfoController.to.userInfoExists) {
+        Get.offAllNamed('/register_info');
+      }
+    });
     cumulativeStatsTabController = TabController(length: 2, vsync: this);
     byPeriodStatsTabController = TabController(length: 3, vsync: this);
     monthlyStatsTrackballBehavior = TrackballBehavior(

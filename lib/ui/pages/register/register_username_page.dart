@@ -18,11 +18,6 @@ class RegisterUsernamePage extends GetView<RegisterInfoController> {
     const String _nextButtonText = '다음';
     final double _height = Get.height;
 
-    void _onBackPressed() {
-      // RegisterController.to.jumpToPage(2);
-      // Get.back();
-    }
-
     void _onNextPressed() {
       controller.jumpToPage(1);
     }
@@ -63,7 +58,8 @@ class RegisterUsernamePage extends GetView<RegisterInfoController> {
 
     return Column(
       children: [
-        Header(onPressed: _onBackPressed),
+        // Header(onPressed: _onBackPressed),
+        verticalSpacer(56),
         Expanded(
           child: DisableGlowListView(
             padding: const EdgeInsets.only(top: 20),

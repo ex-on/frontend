@@ -62,8 +62,8 @@ class UserApiService extends ApiService {
 
   static Future<bool> registerUserInfo(
     String authProvider,
-    int gender,
-    String birthDate,
+    int? gender,
+    String? birthDate,
     String username,
     String? phoneNumber,
     String? email,

@@ -1,4 +1,5 @@
 import 'package:exon_app/core/controllers/connection_controller.dart';
+import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/rank_api_service.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,12 @@ class RankController extends GetxController
   Map<String, dynamic> weightRankData = {};
   @override
   void onInit() {
+    Future.delayed(Duration.zero, () async {
+      await RegisterInfoController.to.checkUserInfo();
+      if (!RegisterInfoController.to.userInfoExists) {
+        Get.offAllNamed('/register_info');
+      }
+    });
     rankMainTabController = TabController(length: 3, vsync: this);
     super.onInit();
   }

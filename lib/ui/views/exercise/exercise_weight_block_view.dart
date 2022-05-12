@@ -95,8 +95,6 @@ class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
       controller.startNextSet();
     }
 
-    print(controller.exerciseData);
-
     Widget _inputSetRecordDialog = Scaffold(
       backgroundColor: Colors.transparent,
       body: Align(

@@ -53,8 +53,8 @@ class RegisterPasswordPage extends GetView<RegisterController> {
     }
 
     String? _passwordCheckValidator(String? text) {
-      if (text != controller.passwordInputController.text &&
-          _passwordCheckInput) {
+      if ((text != controller.passwordInputController.text) &&
+          !_passwordCheckInput) {
         return '비밀번호가 일치하지 않아요';
       } else {
         return null;

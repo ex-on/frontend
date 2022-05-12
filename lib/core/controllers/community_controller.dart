@@ -1,3 +1,4 @@
+import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/core/services/community_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -130,6 +131,12 @@ class CommunityController extends GetxController
   @override
   void onInit() {
     super.onInit();
+    Future.delayed(Duration.zero, () async {
+      await RegisterInfoController.to.checkUserInfo();
+      if (!RegisterInfoController.to.userInfoExists) {
+        Get.offAllNamed('/register_info');
+      }
+    });
     communityMainTabController = TabController(length: 3, vsync: this);
     bookmarkedListTabController = TabController(length: 2, vsync: this);
     postActivityListTabController = TabController(length: 2, vsync: this);

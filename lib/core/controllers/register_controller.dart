@@ -412,8 +412,8 @@ class RegisterInfoController extends GetxController {
     log(idTokenData.toString());
     var res = await UserApiService.registerUserInfo(
       authProvider,
-      genderToInt[gender]!,
-      DateFormat('yyyy-MM-dd').format(birthDate!),
+      gender != null ? genderToInt[gender]! : null,
+      birthDate != null ? DateFormat('yyyy-MM-dd').format(birthDate!) : null,
       usernameController.text,
       phoneNumber,
       email,
@@ -450,6 +450,8 @@ class RegisterInfoController extends GetxController {
     isWeightFieldOpen = false;
     isBodyFatPercentageFieldOpen = false;
     isMuscleMassFieldOpen = false;
+    heightController.clear();
+    weightController.clear();
     update();
   }
 }

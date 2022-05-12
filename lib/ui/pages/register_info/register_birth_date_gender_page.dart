@@ -1,3 +1,4 @@
+import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/register_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/ui/widgets/common/keep_alive_wrapper.dart';
@@ -13,6 +14,7 @@ const String _titleLabelText = '입력하신 정보를 토대로\n맞춤형 서�
 const String _birthDateFieldLabelText = '생년월일';
 const String _genderFieldLabelText = '성별';
 const String _nextButtonText = '다음';
+const String _skipButtonText = '건너뛰기';
 
 class RegisterBirthDateGenderPage extends GetView<RegisterInfoController> {
   const RegisterBirthDateGenderPage({Key? key}) : super(key: key);
@@ -32,6 +34,10 @@ class RegisterBirthDateGenderPage extends GetView<RegisterInfoController> {
       controller.jumpToPage(2);
     }
 
+    void _onSkipPressed() {
+      controller.jumpToPage(2);
+    }
+
     void _onBirthDateFieldPressed() {
       controller.toggleBirthDateField();
     }
@@ -46,7 +52,6 @@ class RegisterBirthDateGenderPage extends GetView<RegisterInfoController> {
 
     void _onGenderChanged(Gender? gender) {
       controller.updateGender(gender);
-      print(controller.gender);
     }
 
     return Column(
@@ -135,6 +140,18 @@ class RegisterBirthDateGenderPage extends GetView<RegisterInfoController> {
                 activated: _.birthDate != null && _.gender != null,
               );
             }),
+          ],
+        ),
+        verticalSpacer(3),
+        Flex(
+          direction: Axis.horizontal,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextActionButton(
+              buttonText: _skipButtonText,
+              onPressed: _onSkipPressed,
+              textColor: deepGrayColor,
+            ),
           ],
         ),
         const SizedBox(

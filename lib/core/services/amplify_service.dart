@@ -13,6 +13,8 @@ import 'package:exon_app/constants/constants.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AmplifyService {
+  static Dio dio = Dio();
+
   static String getSocialLoginUrl(String identityProvider) {
     return 'https://$cognitoPoolUrl.amazoncognito.com/'
         'oauth2/authorize?identity_provider=$identityProvider'
@@ -51,9 +53,9 @@ class AmplifyService {
   }
 
   static Future<bool> getAuthTokensWithAuthCode(String authCode) async {
-    var dio = Dio();
     const String url = 'https://$cognitoPoolUrl.amazoncognito.com/oauth2/token';
     try {
+      print(authCode);
       var response = await dio.post(
         url,
         data: {
@@ -302,7 +304,10 @@ class AmplifyService {
       storage.delete(key: 'username');
       storage.delete(key: 'activity_level');
       storage.delete(key: 'created_at');
-      await Amplify.Auth.signOut();
+      var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
+      var cognitoUser = CognitoUser(email, userPool);
+      cognitoUser.signOut();
+      // await Amplify.Auth.signOut();
       return true;
     } on AuthException catch (e) {
       print(e);
