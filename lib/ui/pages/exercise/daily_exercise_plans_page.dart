@@ -371,14 +371,21 @@ class DailyExercisePlansPage extends GetView<ExercisePlanController> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    exerciseData['name'],
-                                                    style: const TextStyle(
-                                                      height: 1.0,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: clearBlackColor,
+                                                  SizedBox(
+                                                    width: 200,
+                                                    child: FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        exerciseData['name'],
+                                                        style: const TextStyle(
+                                                          height: 1.0,
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              clearBlackColor,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                   verticalSpacer(10),

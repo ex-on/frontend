@@ -691,6 +691,7 @@ class CommunityController extends GetxController
   Future<void> postQnaAnswer() async {
     if (qnaAnswerContentTextController.text != '') {
       setApiPostLoading(true);
+      
       var res = await CommunityApiService.postQnaAnswer(
           qnaAnswerContentTextController.text, qnaId!);
       setApiPostLoading(false);

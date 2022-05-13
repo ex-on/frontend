@@ -68,7 +68,9 @@ class AddExerciseDetailsPage extends GetView<ExercisePlanController> {
           controller.postExerciseCardioPlan();
         }
         HomeController.to.updateRefreshModeWeek(false);
-        HomeController.to.refreshController.requestRefresh();
+        Future.delayed(Duration.zero, () {
+          HomeController.to.refreshController.requestRefresh();
+        });
 
         Get.back();
       }
@@ -673,10 +675,14 @@ class AddExerciseDetailsPage extends GetView<ExercisePlanController> {
                   bool _isSame = true;
                   _.inputSetControllerList.asMap().forEach(
                     (index, element) {
-                      _isSame = _isSame &&
-                          (int.parse(element[1].text) ==
-                              _.previousExercisePlan['sets'][index]
-                                  ['target_reps']);
+                      if (index < _.previousExercisePlan.length) {
+                        _isSame = _isSame &&
+                            (int.parse(element[1].text) ==
+                                _.previousExercisePlan['sets'][index]
+                                    ['target_reps']);
+                      } else {
+                        _isSame = false;
+                      }
                     },
                   );
                   if (_isSame) {
@@ -694,14 +700,18 @@ class AddExerciseDetailsPage extends GetView<ExercisePlanController> {
                   bool _isSame = true;
                   _.inputSetControllerList.asMap().forEach(
                     (index, element) {
-                      _isSame = _isSame &&
-                          (double.parse(element[0].text) ==
-                              _.previousExercisePlan['sets'][index]
-                                  ['target_weight']);
-                      _isSame = _isSame &&
-                          (int.parse(element[1].text) ==
-                              _.previousExercisePlan['sets'][index]
-                                  ['target_reps']);
+                      if (index < _.previousExercisePlan.length) {
+                        _isSame = _isSame &&
+                            (double.parse(element[0].text) ==
+                                _.previousExercisePlan['sets'][index]
+                                    ['target_weight']);
+                        _isSame = _isSame &&
+                            (int.parse(element[1].text) ==
+                                _.previousExercisePlan['sets'][index]
+                                    ['target_reps']);
+                      } else {
+                        _isSame = false;
+                      }
                     },
                   );
                   if (_isSame) {

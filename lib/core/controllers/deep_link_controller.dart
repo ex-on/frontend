@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:exon_app/core/services/amplify_service.dart';
+import 'package:exon_app/helpers/url_launcher.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart';
@@ -50,18 +52,28 @@ class DeepLinkController extends GetxController {
     _sub = linkStream.listen(
       (String? link) async {
         print(link);
-        int index = link!.indexOf('?');
-        int codeIndex = link.indexOf('code=') + 'code='.length;
-        String parsedLink = '/' + link.substring("exon://".length, index);
-        String authCode = link.substring(codeIndex, codeIndex + 36);
-        bool success = await AmplifyService.getAuthTokensWithAuthCode(authCode);
-        print('got link: $parsedLink');
-        print(success);
-        _updateLatestLink(parsedLink);
-        _updateErr(null);
-        if (success) {
+        if (link!.contains('code=')) {
+          int index = link.indexOf('?');
+          int codeIndex = link.indexOf('code=') + 'code='.length;
+          String parsedLink = '/' + link.substring("exon://".length, index);
+          String authCode = link.substring(codeIndex, codeIndex + 36);
+          bool success =
+              await AmplifyService.getAuthTokensWithAuthCode(authCode);
+          print('got link: $parsedLink');
+          print(success);
+          _updateLatestLink(parsedLink);
+          _updateErr(null);
+          if (success) {
+            if (GetPlatform.isIOS) {
+              await UrlLauncher.webView.close();
+            }
+            Get.offAllNamed(parsedLink);
+          }
+        } else {
+          int index = link.indexOf('exon://') + 'exon://'.length;
+          String parsedLink = '/' + link.substring(index);
           if (GetPlatform.isIOS) {
-            closeWebView();
+            await UrlLauncher.webView.close();
           }
           Get.offAllNamed(parsedLink);
         }

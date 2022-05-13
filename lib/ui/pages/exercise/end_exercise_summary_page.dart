@@ -2,6 +2,7 @@ import 'package:confetti/confetti.dart';
 import 'package:exon_app/constants/constants.dart';
 import 'package:exon_app/core/controllers/auth_controllers.dart';
 import 'package:exon_app/core/controllers/exercise_block_controller.dart';
+import 'package:exon_app/core/controllers/exercise_plan_controller.dart';
 import 'package:exon_app/core/controllers/home_controller.dart';
 import 'package:exon_app/helpers/transformers.dart';
 import 'package:exon_app/helpers/utils.dart';
@@ -71,6 +72,7 @@ class EndExerciseSummaryPage extends GetView<ExerciseBlockController> {
 
             void _onGoHomePressed() {
               HomeController.to.getTodayExerciseStatus();
+              ExercisePlanController.to.getDailyExercisePlans();
               Get.until((route) => Get.currentRoute == '/home');
               // Get.offAllNamed('/home');
             }

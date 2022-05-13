@@ -10,7 +10,12 @@ import 'package:exon_app/amplifyconfiguration.dart';
 import 'package:amazon_cognito_identity_dart_2/cognito.dart';
 import 'package:dio/dio.dart';
 import 'package:exon_app/constants/constants.dart';
+import 'package:exon_app/core/controllers/auth_controllers.dart';
+import 'package:exon_app/helpers/url_launcher.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AmplifyService {
   static Dio dio = Dio();
@@ -127,11 +132,11 @@ class AmplifyService {
         log(value);
       });
 
-      SignInResult res = await Amplify.Auth.signIn(
-        username: email,
-        password: password,
-      );
-      inspect(res);
+      // SignInResult res = await Amplify.Auth.signIn(
+      //   username: email,
+      //   password: password,
+      // );
+      // inspect(res);
 
       return true;
     } on AuthException catch (e) {
@@ -181,7 +186,7 @@ class AmplifyService {
     var authDetails =
         AuthenticationDetails(username: email, password: password);
     try {
-      var session = await cognitoUser.authenticateUser(authDetails);
+      await cognitoUser.authenticateUser(authDetails);
       return true;
     } on CognitoUserNewPasswordRequiredException catch (e) {
       // handle New Password challenge
@@ -225,8 +230,14 @@ class AmplifyService {
   static Future<bool> updateCognitoPassword(
       String oldPassword, String newPassword) async {
     try {
-      await Amplify.Auth.updatePassword(
-          oldPassword: oldPassword, newPassword: newPassword);
+      var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
+      var email = await AuthController.to.userInfo['email'];
+      var cognitoUser = CognitoUser(email, userPool);
+
+      cognitoUser.changePassword(oldPassword, newPassword);
+
+      // await Amplify.Auth.updatePassword(
+      //     oldPassword: oldPassword, newPassword: newPassword);
 
       return true;
     } on AmplifyException catch (e) {
@@ -304,11 +315,26 @@ class AmplifyService {
       storage.delete(key: 'username');
       storage.delete(key: 'activity_level');
       storage.delete(key: 'created_at');
-      var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
-      var cognitoUser = CognitoUser(email, userPool);
-      cognitoUser.signOut();
+      // var userPool = CognitoUserPool(cognitoPoolId, cognitoClientId);
+      // var cognitoUser = CognitoUser(email, userPool);
+      // cognitoUser.signOut();
+
       // await Amplify.Auth.signOut();
-      return true;
+
+      const String url = 'https://$cognitoPoolUrl.amazoncognito.com/logout';
+
+      try {
+        await UrlLauncher.launchInApp(url +
+            '?response_type=code&client_id=$cognitoClientId&logout_uri=$logoutUri');
+
+        var webView = ChromeSafariBrowser();
+        await webView.close();
+        // closeWebView();
+        return true;
+      } catch (e) {
+        print(e);
+        return false;
+      }
     } on AuthException catch (e) {
       print(e);
       return false;

@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:exon_app/helpers/utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
   const ExerciseWeightBlockView({Key? key}) : super(key: key);
@@ -1096,9 +1097,25 @@ class ExerciseWeightBlockView extends GetView<ExerciseBlockController> {
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            XIcon(),
-                            CheckIcon(),
+                          children: [
+                            const XIcon(),
+                            Shimmer.fromColors(
+                              baseColor: brightPrimaryColor.withOpacity(0.3),
+                              // baseColor: lightGrayColor,
+                              highlightColor:
+                                  brightPrimaryColor.withOpacity(0.8),
+                              // highlightColor: Colors.white,
+                              child: const Text(
+                                '< 밀어서 선택하기 >',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w200,
+                                  color: lightGrayColor,
+                                  fontSize: 16,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ),
+                            const CheckIcon(),
                           ],
                         ),
                       ),
